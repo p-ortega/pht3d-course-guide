@@ -1,0 +1,222 @@
+\section[PHT3D Exercise 8: Reductive dissolution of Fe-oxides]{PHT3D Exercise 8: Reductive dissolution of Fe-oxides}
+
+Millions of humans worldwide are exposed to the consumption
+of groundwater contaminated with arsenic concentrations that
+exceed the World Health Organizations acceptable drinking
+water limit of 10 \micro g/L. 
+
+Arsenic occurs naturally in sediments, particularly in low-lying flood plain type environments with the most noteworthy occurrences in parts of Argentina, Bangladesh, Chile, China, Hungary, India, Mexico, Romania, Taiwan, and Vietnam. Understanding the coupled geochemical and hydrological processes that control arsenic mobility is vital for minimizing health impacts through the development of suitable mitigation strategies. 
+
+Under oxidising aquifer conditions, at circumneutral pH, arsenic generally does not pose
+a significant threat to groundwater resources because it strongly
+sorbs onto Fe-phases such as ferrihydrite or goethite. 
+However, the intrusion of reactive organic carbon from sources such as
+carbon-rich sediments, constructed ponds, recent degradation
+of plants, and wastewater has in the meantime been
+identified as triggers for microbially mediated reductive
+dissolution of these iron phases, accompanied by the release
+of ferrous iron and trace elements such as arsenic.
+
+This exercise illustrates the key geochemical processes that are involved in the
+release and transport of arsenic as it may occur 
+during the intrusion of (reactive) organic carbon into an aquifer that is initially characterised by low concentrations of dissolved arsenic.
+For the exercise we assume that dissolved organic carbon enters an aerobic aquifer via groundwater 
+recharge as a point source. A more comprehensive discussion of modelling reductive dissolution of iron oxides and the associated fate of arsenic can be found in \cite{Rawson20162459}, who constrained their model development with the experimental data collected earlier by \cite{Tufano20084777}.  
+
+
+\subsection[Groundwater flow]{Groundwater flow}
+
+In this exercise we use a pre-constructed model for groundwater flow and reactive transport 
+while the focus of the exercise is to append the specific model input required to
+study iron mineral reactions and the fate of arsenic.
+
+\begin{itemize}
+
+\item In ORTI, load the copy of the numerical model that was readily prepared 
+for this exercise. The details of the flow model 
+and its discretisation are listed in \ref{arse_setup}.
+%The model files are located in the folder {\color{red} \textbf{2d\_iron\_red}}.
+The groundwater flow in this vertical transect model is driven by a specified flux at the 
+upstream end of the model and by groundwater recharge. At the downstream end the hydraulic head is controlled by a specified head boundary condition.
+The model aquifer is characterised by two discrete
+depth zones of differing hydraulic conductivity. 
+The upper, less permeable zone has a hydraulic conductivity of $5 m/day$ while the lower zone has a hydraulic conductivity of $100 m/day$
+and is therefore significantly more permeable.
+
+\item Load the model file {\color{red} \textbf{as\_exercise\_basic.orti}} into ORTI. 
+
+\item Inspect which aqueous species are included in the basic model. 
+
+\item Run first MODFLOW and then PHT3D to inspect the results of the base case simulation. Given that the model setup assumes the same water composition for the initial water composition, the recharge water composition and the upstream inflow water composition no concentration changes should  occur within the model domain and over time. 
+ 
+
+\end{itemize}
+
+\begin{table}
+\caption{Flow and transport parameters used in the arsenic transport modelling exercise.}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Flow simulation                     & steady state \\
+Total simulation time        & 2190 $(days)$ \\
+Stress periods                       & 1 \\
+Model \  length\                &  150 $m$           \\
+Model \  thickness\          &  4  $m$           \\
+Grid \ spacing\ $\Delta x $               &    5  $m$          \\
+Grid \ spacing\ $\Delta z $                 &    0.2  $m$          \\
+Porosity\     $            $         &  0.20           \\
+Horizontal hydraulic conductivity upper zone \                  &  5 $m/d$         \\ 
+Horizontal hydraulic conductivity lower zone \          &  100 $m/d$         \\ 
+Vertical hydraulic conductivity upper zone \          &  5 $m/d$         \\ 
+Vertical hydraulic conductivity lower zone \         &  100 m/d         \\ 
+Flux upstream boundary\         &    0.2  $m^{3}$    \\ 
+Piezometric head downstream boundary\               &  19 $m$          \\ 
+Longitudinal dispersivity\          &  1.0 $m$         \\ 
+Transversal  dispersivity\          &  0.01 $m$         \\ 
+\bottomrule
+
+\end{tabular}
+\label{arse_setup}
+\end{center}
+\end{table}
+
+
+\begin{table}
+\caption{Basic water composition used in the arsenic transport modelling exercise.}
+\begin{center}
+\begin{tabular}{l c  }
+\toprule
+      & Water composition   \\
+      & $C_{aqu}$ \\
+      &    $mol\ l^{-1}$    \\ 
+\midrule
+Na       & 1.090 $\times$ $10^{-3}$     \\
+K        & 9.750 $\times$ $10^{-5}$     \\
+Ca       & 5.181 $\times$ $10^{-3}$     \\
+Mg       & 3.200 $\times$ $10^{-3}$     \\
+Cl       & 1.587 $\times$ $10^{-2}$     \\
+O(0)     & 4.000 $\times$ $10^{-4}$     \\
+Fe(3)    & 3.234 $\times$ $10^{-8}$     \\
+Fe(2)    &    $0$                      \\ 
+C(4)     & 2.325 $\times$ $10^{-3}$     \\ 
+C(-4)    &  $0$                        \\ 
+As(5)    & 1.00 $\times$ $10^{-8}$     \\
+As(3)    &    $0$                      \\ 
+pH    & 7.171                            \\
+pe    & 13.333                            \\
+\bottomrule
+
+\end{tabular}
+\label{red_dis_caqu}
+\end{center}
+\end{table}
+
+
+
+\subsection[Tracer transport]{Tracer transport}
+
+Next we inspect the conservative transport behaviour by adding a conservative tracer to the simulation.   
+
+\begin{itemize}
+
+\item Select Parameters $\rightarrow$ Chemistry $\rightarrow$ Solutions and 
+activate the species (tick the checkbox) {\color{red} \textbf{Tracer}} 
+
+\item Add a recharge concentration of 0.001 $mol\ l^{-1}$ for the zone between x = 30 m and x = 45 m for {\color{red} \textbf{Tracer}}. This involves two steps. First we create an additional water composition (olution 1) by copying the background water composition to Solution 1. This can be done in the Parameters $\rightarrow$ Chemistry $\rightarrow$ Solutions Tab. Then add a concentration of 0.001 for Tracer to Solution 1. 
+Secondly we need to define where we want to apply this water composition. To do this select Spatial attributes $\rightarrow$ PHT3D $\rightarrow$ PH  $\rightarrow$ ph5 Recharge  $\rightarrow$ rech and add near the top of the model a new line between x = 30 m and x = 45 m and define for this line that Solution 1 will be used as recharge composition.    
+
+\item Rerun the (reactive) transport model and inspect the concentration output for {\color{red} \textbf{Tracer}}
+  
+
+\end{itemize}
+
+You should see how the tracer moves downwards towards the more permeable, deeper part of the aquifer. The concentrations in the more permeable, deeper aquifer zone decreases due to the stronger dilution with groundwater from upstream.  
+
+\subsection[Arsenic sorption]{Arsenic sorption} 
+
+So far the model contains only aqueous components. The aqueous composition includes a small concentration of arsenate, i.e., As(V). In the next step, we add the mineral {\color{red} \textbf{Goethite}} and the associated sorption sites to the reaction network.  
+
+\begin{itemize}
+
+\item Select Parameters $\rightarrow$ Chemistry $\rightarrow$ Phases and 
+activate the species (tick the checkbox) {\color{red} \textbf{Goethite}} 
+
+\item Select Parameters $\rightarrow$ Chemistry $\rightarrow$ Surface and 
+activate the species (tick the checkbox) {\color{red} \textbf{Surf}} 
+
+
+
+\item Under Surface $\rightarrow$ Name {\color{red} add \textbf{Goethite equil}} and under Surface $\rightarrow$ Switch {\color{red} add \textbf{equil}}to the text box. This will tell PHT3D that the sorption site concentration will be proportional to the concentration of Goethite. Define the ratio $mol\ of\ sorption\ sites per mol\ of\ Goethite$ where normally the initial concentrations for {\color{red} \textbf{Surf}} are defined.
+For this example enter 0.05 as the ratio of sorption sites per mass of goethite. 
+
+\item Add an initial concentration of 2.0 $\times$ $10^{-1}$ $mol\ l\_{vol}^{-1}$ for {\color{red} \textbf{Goethite}} 
+
+\item Adding the surface {\color{red} \textbf{Surf}} to the model will cause the equilibration of the aqueous solution with the surface. The concentrations of the surface complexes on the {\color{red} \textbf{Surf}} surface can be inspected by opening the file phout.dat, which is created by PHT3D during the model execution. In this case it can be seen that $Surf\_wOHAsO_4^{-3}$ is the most abundant arsenic surface complex and that its concentration is ordes of magnitude higher than the aqueous concentration. This means that the mass of arsenic in the aquifer is mostly stored as sorbed arsenic.  
+
+\end{itemize}
+
+Rerunning PHT3D at this stage would show no significant aqueous concentration changes over the entire simulation period because the aqueous composition is already in equilibrium with {\color{red} \textbf{Goethite}} and {\color{red} \textbf{Surf}} at the start of the simulation.
+
+\subsection[Organic carbon transport and degradation]{Organic carbon transport and degradation} 
+
+Now we add an organic carbon source to the simulation. We implement this by  
+
+\begin{itemize}
+
+\item adding dissolved organic carbon (DOC) to the reaction network. Select Parameters $\rightarrow$ Chemistry $\rightarrow$ Solutions and 
+activate the species (tick the checkbox) {\color{red} \textbf{Orgc}} 
+
+\item then define a concentration of 1.0 $\times$ $10^{-2}$ $mol\ l^{-1}$ for {\color{red}\textbf{Orgc}} into Solution 1, which is the solution defining the water composition between x = 30m and x = 45m.
+
+\item leave the reaction rate parameters for {\color{red} \textbf{Orgc}} at the preset values
+
+\item Rerun PHT3D and inspect the results. 
+
+\item Check out how the {\color{red} \textbf{Orgc}} plume evolves over time
+
+\item Check out the changes of the two electron acceptors that participate in the 
+degradation of {\color{red} \textbf{Orgc}}, i.e., {\color{red} \textbf{O(0)}} 
+and {\color{red} \textbf{Goethite}}
+
+\item Check how the arsenic plume evolves over time and compare the maximum 
+concentrations of As(3) and As(5).
+
+\item Check out how the pH changes in space and with time.
+
+
+\end{itemize}
+
+\subsection[Calcite]{Calcite} 
+
+While the intrusion of organic carbon initiates the reductive dissolution of {\color{red} \textbf{Goethite}}, it also triggers some further secondary mineral reactions. First we also consider now {\color{red} \textbf{Calcite}} in the reaction network. 
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Simulation Settings and activate the equilibrium mineral (tick the checkbox) {\color{red} \textbf{Calcite}} 
+
+\item Define an initial concentration of 1.0 $\times$ $10^{-1}$ $mol\ l\_{vol}^{-1}$ for {\color{red} \textbf{Calcite}} throughout the model domain. 
+
+\item Rerun the model
+
+\item Check out how pH and {\color{red} \textbf{Calcite}} concentrations changes in space and with time.
+
+\end{itemize}
+
+\subsection[Other possible iron mineral reaction]{Other possible iron mineral reactions} 
+
+Finally we investigate whether other iron minerals may play a role in this simulation problem.
+
+\begin{itemize}
+
+\item Check out if {\color{red} \textbf{Siderite}} or {\color{red} \textbf{Magnetite}}  
+would form during the simulation.
+
+
+\end{itemize}
+ 
+
+
+
+
+
+

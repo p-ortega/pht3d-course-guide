@@ -1,0 +1,472 @@
+%\newpage
+\begin{figure}[b]
+\centering
+\includegraphics[width=0.7\textwidth]{eh_april91_vcs}
+\caption[Measured benzene, toluene and sulphate concentrations (vertical cross-section)
+at the Eden Hill field site, after \cite{davis99}.]{Measured benzene, toluene and sulphate concentrations (vertical cross-section) at the Eden Hill field site, after \cite{davis99}.}
+\label{fig:eh_april91_vcs}
+\end{figure}
+
+%\begin{figure}[tb]
+%\centering
+%\includegraphics[width=\textwidth]{edenhill}
+%\caption[Measured benzene, toluene and sulphate concentrations at the Eden Hill field site %after \cite{davis99}]{Measured benzene, toluene and sulphate concentrations at the Eden Hill %field site after \cite{davis99}}
+%\label{fig:edenhill}
+%\end{figure}
+
+\section[PHT3D Exercise 4: Microbially mediated petroleum hydrocarbon degradation under sulfate-reducing conditions]{PHT3D Exercise 4: Microbially mediated petroleum hydrocarbon degradation under sulfate-reducing conditions}
+
+Numerical modelling is widely used to analyse and predict the risk associated with
+using natural attenuation as a remediation scheme. With few exceptions, most
+practical model applications to contaminated field sites involve a vertically averaged two-dimensional simulation model. This assumes that vertical concentration gradients 
+over the aquifer depth are negligible. 
+However, as pointed out, for example, by \citet{grathwohl2000}, 
+transversal vertical mixing can
+be a critical (physical) factor for controlling the length of a naturally
+attenuating contaminant plume.
+
+Unfortunately, most contaminated sites are not well characterised with respect
+to the vertical distribution of dissolved contaminants and inorganic groundwater
+constituents within the aquifer. Therefore the identification and quantification
+of the vertical mixing process (and how to model it) is generally rather
+difficult.
+
+The present exercise is loosely based on the field  \citep[e.g.,][]{barber91,thierrin92,thierrin95,davis99} and corresponding 
+modelling studies \citep[e.g.,][]{prommer_tueb, prommer_og, prommer_jch}
+that provided a detailed investigation on the fate of hydrocarbon compounds at a 
+contaminated site in Perth, Western Australia. 
+At this site detailed information of hydrochemical parameters have been intensively
+recorded. The data show that toluene, ethylbenzene and xylenes were mineralised under
+sulfate-reducing conditions in a seasonally varying groundwater flow field while
+benzene was shown to be persistent. Figure \ref{fig:eh_april91_vcs} shows 
+measured concentrations of benzene, toluene and
+sulphate for a vertical cross-section along the contaminant plume.
+The observed long, thin plumes within the relatively
+homogeneous sand aquifer indicate low transversal dispersivities, providing a significant
+challenge to achieve an accurate numerical description. 
+
+In the exercise you will prepare a simple vertical cross-sectional model 
+along a flow path of the contaminant plume within the unconfined aquifer. 
+The main purpose of the exercise is to demonstrate the
+
+\begin{itemize}
+
+\item incorporation of microbial kinetics into reactive transport models
+
+\item simulation of multi-component NAPL (Non Aqueous Phase Liquid) dissolution with the PHREEQC/PHT3D framework and the effect of an ageing NAPL source 
+
+\item numerical problems that may be associated with advection dominated reactive transport
+
+\end{itemize}
+
+The exercise has been designed such that all the major phenomena that 
+characterise the behaviour of petroleum hydrocarbon plumes occur within
+the relatively short simulation period. In reality NAPL concentrations near the water table
+might be higher and the mixture of compounds within the NAPL phase can 
+also differ from the one used in the present example.
+
+\begin{table}
+\caption{Flow and transport parameters used for PHT3D Exercise 4.}
+\begin{center}
+\begin{tabular}{lc} \hline
+Flow simulation                     & steady state \\
+Total simulation time $(days)$       & 600 \\
+Stress periods                       & 1 \\
+Time steps           & 120 \\
+Model \  length\     $ (m)                $         &  150            \\
+Model \  thickness\  $ (m)                $         &  4            \\
+Aquifer top\               $(m)        $         &  20 m          \\
+Aquifer bottom\            $(m)        $         &  16 m          \\
+Grid \ spacing\      $\Delta x $ (m)                &    5            \\
+Grid \ spacing\      $\Delta z $ (m)                &    0.20         \\
+Porosity\            $            $         &  0.2           \\
+Horizontal hydraulic conductivity\ $(m/day)           $         & 20         \\ 
+Vertical   hydraulic conductivity\ $ (m/day)           $         & 20       \\ 
+Flux at upstream boundary\ $(m/day)          $         &  0.05          \\ 
+Groundwater recharge\ $(m/day)          $         &  0.001          \\ 
+Piezometric head downstream boundary\ $(m)        $         &  19 m          \\ 
+Longitudinal dispersivity\ $(m)         $         &  0.1          \\  
+Transversal  dispersivity\ $(m)         $         &  0.01          \\ \hline
+
+\end{tabular}
+\label{edenhill_flow}
+\end{center}
+\end{table}
+
+\subsection[Setting up the flow problem]{Setting up the flow problem}
+
+A cross-sectional model will be set up.
+Groundwater flow in the model domain is driven by both, inflow from the upstream boundary
+and by groundwater recharge. To set up the flow model proceed as follows:
+
+\begin{itemize} 
+
+\item Define the model grid according to the discretisation suggested in Table \ref{edenhill_flow}.
+
+\item Set the time units to {\color{red} \textbf{days}} and define a 600 day long stress period as total simulation time, subdivided into 120 {\color{red} \textbf{Time Steps}}. 
+
+\item Define the horizontal/vertical hydraulic conductivity (20 $m/day$) and the porosity (0.2).
+
+\item Define a fixed head boundary condition at the downstream end. Note, a fixed head
+boundary condition will not work for grid cells that are positioned above the water table.
+
+\item Allocate suitable initial hydraulic heads.
+
+\item Enter a recharge rate of 0.001 $m/day$ and define a fixed flow boundary with 
+a flow rate of 0.05 $m/day$ at the upstream boundary (or 0.01 $m^3/day$ per grid cell).
+Also make sure that the recharge is always applied to the highest active grid cell.
+
+\item To prevent drying grid cells activate MODFLOWs (re)wetting capabilities by selecting Models $\rightarrow$ MODFLOW $\rightarrow$ Flow packages $\rightarrow$ Wetting Capability.
+Set the wetting factor {\color{red} \textbf{WETFCT}} to a value of 0.1 and select the option 
+{\color{red} \textbf{h = BOT + WETFCT $\times \mid$ THRESH $\mid$}}. Set the wetting treshold
+{\color{red} \textbf{$\mid$ TRESH $\mid$}} to a value of -.01.
+
+\item As a check your simulated head at the upstream boundary should be 19.56 m.
+\end{itemize} 
+
+\subsection[Simulating nonreactive transport]{Simulating nonreactive transport}
+
+Before the reactive transport simulations are started we will briefly check
+the setup of the model with a tracer transport simulation. On the first sight 
+this step might appear as a waste of time. However, experience shows
+that when reactive transport simulations fail to work it is more often than not
+caused by a problem related to the flow or the general model setup. 
+As a brief check perform the following steps (see also PHT3D Exercise 2 for comparison):
+
+\begin{itemize} 
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ Simulation Settings and define
+a species called {\color{red} \textbf{Tracer}}.
+
+\item Define the settings for advective and dispersive transport. 
+
+\item Set the initial concentrations to 0.
+
+\item Decide what type of boundary conditions would suit the problem.
+
+\item Add additional {\color{red} \textbf{Output Times}} to see intermediate results.
+
+\item Define a contaminant source by defining a concentration value of 1 for the recharge water in the zone between x = $15 m$ and x = $35 m$.
+
+\item Run the simulations and evaluate the plausability of the results. 
+
+\end{itemize}
+
+\subsection[Simulating the dissolution from a multi-component NAPL source]{Simulating the dissolution from a multi-component NAPL source}
+ 
+The first part of the simulation considers only the mass transfer 
+process in a NAPL-containing source zone and the 
+subsequent advective-dispersive transport. In the source zone, 
+dissolution of NAPL compounds,
+\citep[e.g.,][]{miller_trapped_90} acts as a continuous contamination source
+for the passing groundwater. The rate at which mass is transferred
+from the NAPL into the aqueous phase is a function of
+
+\begin{itemize}
+    \item Interfacial area between the NAPL phase and the aqueous phase
+    \item Extent and morphology of the source (in particular the
+maximum cross-sectional area perpendicular to the main groundwater
+flow direction)
+    \item Groundwater flow velocity
+    \item Solubility of individual hydrocarbon compounds
+    \item Composition of the NAPL source (mole fraction)
+\end{itemize}
+
+Notwithstanding the relative importance of each of these factors,
+the concentration of individual hydrocarbon compounds in the
+groundwater will, within the contamination source zone, very often
+reach an equilibrium concentration that is equal or close to the
+multi-component solubility of the compound \citep{eberhardt02}.
+This multicomponent solubility $C_{i_{sat},mc}$ is described
+by Raoult's law \citep{schwarzb}:
+\begin{equation}
+{C_{i}^{sat,mc} = C_{i}^{sat} \gamma_{i} m_{i} \ }
+\label{eq:raoult2}
+\end{equation}
+where $C_{i}^{sat}$ is the single-species aqueous-phase
+solubility
+\citep[available from tabulated sources, e.g.,][]{schwarzb} 
+of the organic compound in question within a
+mixture of compounds with different physico-chemical properties,
+$\gamma_{i}$ is the activity coefficient of the $i^{th}$ organic
+compound (typically assumed to be unity) and $m_{i}$ is the
+mole fraction of the $i^{th}$ organic compound within the NAPL
+mixture. It is defined as
+\begin{equation}
+{m_i  = \frac {C_n^i} {C_n^{tot}}} \label{eq:raoult_mc}
+\end{equation}
+where $C_n^i$ is the molar concentration of compound $i$ in the
+NAPL phase and $C_n^{tot}$ is the total molar concentration of all
+organic compounds in the NAPL phase. A high groundwater flow
+velocity, among other factors, might result in a kinetically
+limited dissolution of NAPL compounds. The simplest model that
+describes the concentration change of the $i^{th}$ compound in
+groundwater is
+\begin{equation}
+{r_{dis_i} = \omega_i (C_{sat,mc}^i - C_i)}
+\label{eq:raoult_dis}
+\end{equation}
+where $C_{i}$ is the concentration of the $i^{th}$ organic
+compound in the groundwater and $\omega_i$ is a mass-transfer rate
+coefficient that is a product of a mass transfer coefficient and
+the specific interfacial area between NAPL phase and water. The
+combination of (\ref{eq:raoult2}) and (\ref{eq:raoult_dis})
+applies to arbitrary dissolution rates. Note that $\omega$
+approaches infinity for equilibrium dissolution. In that case
+$C_{i}$ equals $C_{i}^{sat,mc}$.
+\par For the modelling exercise we use Eqn. (\ref{eq:raoult_dis}) to
+compute NAPL dissolution. The equation was translated into a rate expression 
+for the PHREEQC/ PHT3D database. We assume that the NAPL source
+consists of the four BTEX compounds and that the remaining 
+fraction can be represented by a fifth compound that is 
+assumed insoluble. The computation of benzene 
+dissolution within such a multicomponent NAPL mix can be programmed
+as follows:
+\\
+{\color{red}
+\begin{quote}
+Benznapl \\
+  -start  \\
+\#  Compute kinetic dissolution from multicomp. NAPL: \\
+   10  mBenznapl = tot("Benznapl")    \\
+   15  if (mBenznapl $<=$ 1e-10) then goto 200  \\
+   20  solub\_Benz = 0.022820  \\
+   25  mBenz = tot("Benz")  \\
+   32  mTolunapl = tot("Tolunapl")  \\
+   34  mEthynapl = tot("Ethynapl")  \\
+   36  mXylnapl  = tot("Xylnapl")  \\
+   38  mLowsolubnapl  = tot("Lowsolubnapl")  \\
+   40  m\_napl\_tot = mBenznapl + mTolunapl + mEthynapl \\
+   41  m\_napl\_tot = m\_napl\_tot + mXylnapl + mLowsolubnapl  \\
+   42  if (m\_napl\_tot $<=$ 1e-10) then goto 200  \\
+   50  msolub\_Benz =  mBenznapl $/$ m\_napl\_tot $*$ solub\_Benz  \\
+   60  rate = parm(2) $/$ 86400  $*$ (msolub\_Benz - mBenz)\\                                   
+   70  moles = rate $*$ time  \\
+   80  if (moles $>$ m) then moles = m  \\
+   200 save moles\\
+  -end  \\
+ \end{quote}
+ }
+ 
+The above rate expression as well as those for the dissolution
+of toluene, ethylbenzene and xylene have been included into the database
+for this exercise. The values used for $C_{i}^{sat}$ are 
+listed in Table \ref{solub_single_species}. Note the much higher
+solubility of benzene, which is considered the most toxic of the
+BTEX compounds.
+
+\begin{table}[b]
+\caption{Single species solubilities of BTEX compounds used for the simulations
+in PHT3D Exercise 4.}
+\begin{center}
+\begin{tabular}{l c }
+\toprule
+Aqueous component    & $C_{i}^{sat}$     \\
+                     & $(mol/l)$        \\ 
+\midrule
+Benzene              &  0.022820  \\
+Toluene              &  0.005978  \\
+Ethylbenzene         &  0.00193   \\
+Xylene               &  0.001800  \\
+\bottomrule
+
+\end{tabular}
+\label{solub_single_species}
+\end{center}
+\end{table}
+
+To start the reactive transport modelling
+
+\begin{itemize}
+
+\item copy the two files {\color{red} \textbf{pht3d\_datab.ex\_eden\_hill}} (which contains the reaction database) and
+{\color{red} \textbf{pmwin\_pht3dv2.ex\_eden\_hill}} into  
+the database library folder {\color{red} \textbf{C:$\backslash$ \ldots $\backslash$pht3d$\backslash$database}} and include
+the module in the file {\color{red} \textbf{pht3d\_module\_definition.txt}}
+which lists all available reaction modules. 
+
+\item Select the newly installed reaction module and define
+a very simple water composition that contains only {\color{red} \textbf{Na}}, 
+{\color{red} \textbf{Cl}}, {\color{red} \textbf{Benz}} (= dissolved benzene), 
+{\color{red} \textbf{Tolu}} (= dissolved toluene), {\color{red} \textbf{Ethy}} (= dissolved ethylbenzene) and {\color{red} \textbf{Xyl}} (= dissolved xylene).
+Include also the species {\color{red} \textbf{Benznapl}}, {\color{red} \textbf{Tolunapl}}, {\color{red} \textbf{Ethynapl}}, {\color{red} \textbf{Xylnapl}} and {\color{red} \textbf{Lowsolubnapl}} which together represent the (immobile) NAPL source.  
+
+\item For both the ambient water and the recharge water define concentrations 
+of 0.001 $mol/l$ for {\color{red} \textbf{Na}} and {\color{red} \textbf{Cl}}, respectively. 
+Set the initial values (initial concentrations) of {\color{red} \textbf{pH}} to 7 
+and set the {\color{red} \textbf{pe}} to 4.0. 
+
+\item Define a NAPL-polluted source area near the water table (20 m $\geq$ z $\geq$ 19 m) 
+between x = $15 m$ and x = $35 m$. Select an initial concentration of
+0.018 $mol/l$ for the 4 NAPL compounds representing BTEX. Enter an initial concentration
+of 0.072 $mol/l$ for the compound {\color{red} \textbf{Lowsolubnapl}} to all the grid cells
+that sit above a level of 19 m.
+Note, that the concentration of these immobile NAPL compounds
+is defined in units of $mol/l$.
+
+\item Define the settings for advective transport: Use the MMOC scheme in this and other 
+PHT3D simulations that include free water tables. 
+
+\item Define a longitudinal dispersivity of $0.05m$ and a transversal 
+dispersivity of $5mm$.
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Simulation Settings 
+$\rightarrow$ OK $\rightarrow$ Options $\rightarrow$ Threshold values for executing PHREEQC $\rightarrow$ and set the value for \textbf{Changes in pH} to 0.0001.
+
+\item Run the simulation and visualise the results. 
+
+\item Define some observation points and visualise the breakthrough curves
+of benzene and xylene.
+
+\item What explains the different characteristics of the BTCs ?
+
+\end{itemize}
+
+In the next part of this exercise we use instead of the Na-Cl solution
+the measured and charge-balanced water composition from the Eden Hill site as given in \cite{prommer_jch} and as listed in Table \ref{eh_caqu}.
+The water is anaerobic and only sulphate will act as electron acceptor. 
+As discussed in the earlier PHREEQC example/exercise we will include 
+microbial growth and decay in the simulations. Microbial growth
+will only occur where both toluene and sulfate are present simultaneously.
+The rate expression used in the PHREEQC Exercise 5 was slightly 
+modified and compared to Eqn. (\ref{eq:v_m_ea}) an additional biomass 
+inhibition term was included:
+
+\begin{equation}
+v_{m} = v_{max} I_{bio} \frac{C_{org}}{K_{org} + C_{org}} \frac{C_{ea}}{K_{ea} + C_{ea}} X
+\end{equation}
+
+This additional term $I_{bio}$ goes back to some conceptual models for biologically 
+mediated degradation reactions which suggest that with increasing 
+biomass concentrations and thus increasing biofilm thickness, 
+degradation rates might become limited by the supply of reactants. 
+In order to avoid solving the diffusional transport of reactants 
+at a microscopic (i.e., within biofilm) level, a macroscopic formulation 
+can be used to account for the rate-limitation resulting 
+from excessive biomass accumulation. 
+The biomass inhibition term is computed from
+
+\begin{equation}
+{ I_{bio} = \frac{\theta_{bio,max} - X_{tot}}{\theta_{bio,max}} }
+\label{eq:lambda_diff}
+\end{equation}
+%
+
+The above equation was used as a base for the computation 
+of the degradation rates with PHREEQC/PHT3D: 
+
+{\color{red}
+\begin{quote}
+Tolu \\
+  -start \\
+   10 mSulfred  = tot("Sulfred")  \\
+   20 mSulf     = tot("S(6)")  \\
+   30 mTolu     = tot("Tolu")  \\
+   35 if (mTolu  $<$ 1e-10) then goto 220  \\
+   40 if (mSulf  $<$ 1e-10) then goto 220  \\
+   68 v\_up\_max\_Tolu = parm(1) $/$ 86400  \\
+   84 theta\_bio\_max  = parm(2)  \\
+   90 inhib\_bio = (theta\_bio\_max-mSulfred) $/$ theta\_bio\_max  \\
+   95 monSulf = mSulf $/$ (0.0001 + mSulf)  \\
+  100 monTolu = mTolu $/$ (0.0001 + mTolu)  \\
+  150 v\_up\_Tolu = v\_up\_max\_Tolu $*$ monTolu $*$ monSulf  \\
+  160 v\_up\_Tolu = v\_up\_Tolu $*$ inhib\_bio \\
+  190 rate = v\_up\_Tolu $*$ mSulfred  \\
+  200 moles = rate $*$ time  \\
+  220 SAVE moles  \\
+ -end  \\
+\end{quote}
+}
+
+To proceed and include the biodegradation reactions in the simulations:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Simulation Settings and
+activate the relevant components to simulate the water composition listed in
+Table \ref{eh_caqu}. Activate also
+sulfate reducing bacteria, i.e., {\color{red} \textbf{Sulfred}}.
+
+\item Define the initial concentrations of the aqueous components
+and the recharge water composition according to Table \ref{eh_caqu}.
+
+\item Enter a value of 1e-07 $mol/l$ as initial concentration for 
+the sulfate reducing bacteria. 
+
+\item Check if the boundary conditions for the transport are defined correctly 
+such that the inflowing water at the upstream boundary has the composition
+of the ambient and the recharge water.  
+
+\item Allocate the reaction rate parameters listed in 
+Table \ref{tab:eh_rate_const}. To enter the values select
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Simulation Settings
+
+\item Run the model
+
+\item Visualise the $microbial$ $fringe$.
+
+\end{itemize}
+
+\begin{table}
+\caption{Measured and equilibrated aqueous concentrations of 
+the ambient water composition at the Eden Hill field site.}
+\begin{center}
+\begin{tabular}{l c }
+\toprule
+Aqueous component & $C_{init},C_{rech}$      \\
+                  & $(mol\ l^{-1}_w)$        \\ 
+\midrule
+pH              &  5.14               \\
+pe              &  8.01               \\
+O(0)            &             0              \\
+N$_{tot}$       &  1.00 $\times$ $10^{-4}$   \\ 
+C(4)            &  7.96 $\times$ $10^{-3}$   \\
+C(-4)            &            0              \\
+S(6)            &  7.85 $\times$ $10^{-4}$   \\
+S(-2)           &             0              \\
+Fe(2)           &  5.20 $\times$ $10^{-5}$   \\
+Fe(3)           &  1.46 $\times$ $10^{-5}$   \\
+Ca              &  8.42 $\times$ $10^{-4}$   \\
+K               &  2.59 $\times$ $10^{-4}$   \\
+Mg              &  5.67 $\times$ $10^{-4}$   \\
+Na              &  5.25 $\times$ $10^{-3}$   \\
+Cl              &  6.46 $\times$ $10^{-3}$   \\
+\bottomrule
+
+\end{tabular}
+\label{eh_caqu}
+\end{center}
+\end{table}
+
+\begin{table}[hb]
+\topcaption{Rate constants for the reactive transport simulation of BTEX degradation
+under sulfate reducing conditions.}
+
+\centering
+\footnotesize
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc}
+\toprule
+Rate Expression & Parameter Nr & Parameter & Unit & Value \\
+\midrule
+Benz        & 1 & $v_{max,sulf,benzene}$     & (1/day)     & 0.0   \\
+Tolu        & 1 & $v_{max,sulf,toluene}$     & (1/day)     & 5.0   \\
+Ethy        & 1 & $v_{max,sulf,ethylbenzene}$& (1/day)     & 2.0   \\
+Xyl         & 1 & $v_{max,sulf,xylene}   $   & (1/day)     & 2.0   \\
+Benz        & 2 & $\theta_{bio,max}$ & (mol/l)              &  $1.0 \cdot 10^{-5}$  \\
+Tolu        & 2 & $\theta_{bio,max}$ & (mol/l)              &  $1.0 \cdot 10^{-5}$  \\
+Ethy        & 2 & $\theta_{bio,max}$ & (mol/l)              &  $1.0 \cdot 10^{-5}$  \\
+Xyl         & 2 & $\theta_{bio,max}$ & (mol/l)              &  $1.0 \cdot 10^{-5}$  \\
+Benznapl    & 1 & not used         & -   &  1  \\
+Tolunapl    & 1 & not used         & -   &  1  \\
+Ethynapl    & 1 & not used         & -   &  1  \\
+Xylnapl     & 1 & not used         & -   &  1  \\
+Benznapl    & 2 & $\omega$  & (1/day)       & 0.025   \\
+Tolunapl    & 2 & $\omega$  & (1/day)       & 0.025   \\
+Ethynapl    & 2 & $\omega$  & (1/day)       & 0.025   \\
+Xylnapl     & 2 & $\omega$  & (1/day)       & 0.025   \\
+Sulfred & 1 & $v_{dec} $    & (1/day)                      &   0.1   \\
+Sulfred & 2 & $C_{init}$    & (mol/l)                      &  $1.0 \cdot 10^{-7}$  \\
+\bottomrule
+\end{tabular*}
+\label{tab:eh_rate_const}
+\end{table}

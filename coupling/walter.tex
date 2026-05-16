@@ -1,0 +1,217 @@
+\section[PHT3D Exercise 2: Precipitation/dissolution fronts in acid mine drainage]{PHT3D Exercise 2: Precipitation/dissolution fronts in acid mine drainage}
+
+%\subsection{Introduction}
+
+This exercise is a second simulation problem that involves mineral dissolution and precipitation reactions as the principle geochemical reactions. Compared to the first 
+exercise it is somewhat more complicated as it contains significantly more 
+aqueous components and mineral reactions that also occur in a more complex flow field.
+It was first presented by \cite{walt94a} and later also used as a benchmark problem by \cite{gmt3d}. In contrast to the previous exercise this case includes now also redox reactions. 
+The simulations demonstrate the typical hydrogeochemical changes that occur when acidic mine tailings leach into an anaerobic carbonate
+aquifer. Aqueous complexation and dissolution/precipitation are all considered as equilibrium reactions. If the original reaction network
+defined by \cite{walt94a} is used, the simulation includes 17 aqueous components, 15 of which are transported, 54 aqueous species and six minerals. 
+
+\subsection[Spatial discretisation and flow problem]{Spatial discretisation and flow problem}
+
+The problem is set up as a simple two-dimensional flow and transport problem with dimensions and properties as defined in \ref{ex3_flow}. To construct the MODFLOW model that underlies the transport problem proceed as follows:
+
+\begin{figure}[b]
+\centering
+\includegraphics[width=80mm]{walter.eps}
+\caption[Initial definition of the model grid for PHT3D Exercise 2]{Initial definition of the model grid for PHT3D Exercise 2}
+\label{fig:mesh_walter}
+\end{figure}
+
+\begin{table}[t]
+\caption{Flow and transport parameters for the simulation.}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Flow simulation                     & steady state \\
+Total simulation period\ $ (days)      $         &  2000            \\
+Model \  length\ $ (m)      $         &  100            \\
+Model \  thickness\ $(m)$                        &  10            \\
+Grid \ spacing\ $\Delta x $ $(m)$                &    4            \\
+Grid \ spacing\ $\Delta z $ $(m)$                &    1            \\
+Porosity\     $            $         &  0.35           \\
+Horizontal hydraulic conductivity\ $(m/day)$               &  1         \\ 
+Vertical   hydraulic conductivity\ $(m/day)$               &  1         \\ 
+Piezometric head upstream boundary\ $(m)          $         &  12           \\ 
+Piezometric head downstream boundary\ $(m)        $         &  10           \\ 
+Longitudinal dispersivity\ $(m)         $         &  0.5          \\ 
+Transversal  dispersivity\ $(m)         $         &  0.05          \\ 
+\bottomrule
+\end{tabular}
+\label{ex3_flow}
+\end{center}
+\end{table}
+
+\begin{itemize}
+
+\item In PMWIN, create a new model and save it in a new and separate directory.
+
+\item Select Grid $\rightarrow$ Mesh size... to specify the model domain. As shown in Figure \ref{fig:mesh_walter}, select Number of Layers: 10; Model Thickness: 10 m; Model Top elevation: 10 m; Number of Rows: 1; Model Extent: 1; Number of Columns: 25; Model Extent (Column direction): 100; Vertical Exaggeration: 5;
+
+\item Select Grid $\rightarrow$ Layer property... and simply click OK. 
+
+\item Set the boundary conditions for heads by selecting Select Grid $\rightarrow$ Cell Status $\rightarrow$ IBOUND (Modflow). First change the IBOUND values for all grid cells by selecting $\rightarrow$ Value $\rightarrow$ Reset Matrix and change the standard value to 1 (active cell) and click ok. Then change the values at the upstream (left) and the downstream boundary (right side) to -1 (fixed head). Leave the editor and save your changes.
+
+\item Select Parameters $\rightarrow$ Time $\rightarrow$ and set the Simulation Time Unit to days before entering a Period length of 2000 days and setting the value for No. of Time Steps to 50 (2000 days will be discretised into 50 steps). 
+
+\item Select Parameters $\rightarrow$ Initial \& Prescribed Hydraulic Heads $\rightarrow$ Reset Matrix and set the value to 10 m and click ok. Then change the value at the upstream boundary to 12 m. Leave the editor and save your changes.
+
+\item Select Parameters $\rightarrow$ Horizontal Hydraulic Conductivity $\rightarrow$ Reset Matrix and set the value to 1 m/d. Leave the editor and save your changes.
+
+\item Select Parameters $\rightarrow$ Vertical Hydraulic Conductivity $\rightarrow$ Reset Matrix and set the value to 1 m/d. Leave the editor and save your changes.
+
+\item Select Parameters $\rightarrow$ Effective Porosity $\rightarrow$ Reset Matrix and set the value to 0.35. Leave the editor and save your changes.
+
+% Maybe lets not use recharge here to save time
+%\item Add a value for recharge by selecting Models $\rightarrow$ MODFLOW $\rightarrow$ Flow 
+% Packages $\rightarrow$ Recharge $\rightarrow$ Reset Matrix and change the value for the Recharge % flux to 0.001 m/d (365 mm/year) and click ok. 
+
+\item Run the flow model by selecting Models $\rightarrow$ MODFLOW $\rightarrow$ Run $\rightarrow$ OK.
+
+
+\end{itemize}
+
+Before starting with the construction of the reactive transport model, it is recommended to always 
+build a nonreactive transport model first in order to get an initial understanding for travel times, solute spreading etc. To set up the input for a nonreactive transport simulation with
+MT3DMS proceed as follows:
+
+\begin{itemize}
+
+\item Set the boundary conditions for concentrations by selecting Select Grid $\rightarrow$ Cell Status $\rightarrow$ ICBUND (Cell Status). Set all values at the left boundary (all 10 cells of the first column) to -1 to define a fixed concentration boundary. Leave the editor and click Yes to save your changes.
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ Simulation Settings ... Define a new species by adding a name like Tracer to the Description list. Make it active by placing a tick mark in the box behind it and then click OK.
+
+\item Define the initial concentrations by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Initial Concentrations. Click Edit to start editing the initial concentration of Tracer (or any other name that you have chosen for the species). Use  Reset Matrix to change the value for all initial concentrations to 0 mol/l. Then, add the pollution source by defining a 3 m thick source (= 3 grid cells) at the upper left corner (inflow boundary) by setting the concentration values to 1. Leave the editor and save your changes.
+
+\item Determine which advection package will be used by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Advection. Select 3rd-order TVD Scheme (ULTIMATE) as the Solution Scheme and click OK.
+
+\item Define the dispersivity to be used by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Dispersion. In the window that appears, click OK (which confirms the default setting that the transversal dispersivity will be one tenth of the longitudinal dispersivity). In the editor, use Reset Matrix to change the value for the longitudinal dispersivity to 0.5 m. Leave the editor and save your changes.
+
+%\item Define the pollution source by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ %Sink/Source Concentration $\rightarrow$ Constant Head Cells $\rightarrow$ Edit Tracer (or any %other name that you have chosen for the species) $\rightarrow$ and define a 3 m thick source (= 3 %grid cells) at the upper left corner (inflow boundary) by setting the concentration values to 1. %Leave the editor and save your changes.
+
+%\item Define the concentration value in the recharge water by selecting Models $\rightarrow$ %MT3DMS $\rightarrow$ Sink/Source Concentration $\rightarrow$ Recharge $\rightarrow$ Edit Tracer %(or any other name that you have chosen for the species) $\rightarrow$ Reset Matrix and set the  %concentration value to 0. Leave the editor and save your changes
+
+\item To visualise not only the results from the last time steps of each stress period but also some intermediate results select Models $\rightarrow$ MT3DMS $\rightarrow$ Output Control. Click on the Output Times tab and configure the settings such that results are printed every 200 days.
+
+\item Run the (nonreactive) transport model by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Run and clicking OK.
+
+\item Visualise the simulation results by selecting Tools $\rightarrow$ 2D-Visualisation. On the MT3DMS tab select 1: Tracer (or any other name that you have chosen for the species) and click OK.
+
+\end{itemize}
+
+Finally set up the reactive transport model. The initial and inflow source/sink
+concentrations to be used for the simulation are shown in Table \ref{ex3_caqu} for the aqueous
+components, while the initial concentrations of the minerals are
+given in Table \ref{ex3_cmin}. 
+
+\begin{itemize}
+
+\item Set the boundary conditions for concentrations by selecting Select Grid $\rightarrow$ Cell Status $\rightarrow$ ICBUND (Transport Models). To define a fixed concentration 
+boundary set the values of all cells at the left boundary to -1,
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Simulation Settings and select Example 3 Database as the chemical reaction module. Activate all (aqueous) equilibrium components (tick the checkboxes) and all equilibrium minerals. Click OK to leave the editor.
+
+\item Define all initial concentrations of components and minerals and the concentrations at the boundary (which will be allocated to the inflowing groundwater) by selecting Models $\rightarrow$ PHT3D $\rightarrow$ Initial Concentrations. Set always first the initial concentration of the ambient water (non-acidic solution and minerals) before subsequently editing the concentrations of
+components within the tailings water (3 grid cells at the upper left corner). 
+Start for example with C(4): Select C(4) and click Edit. In the editor, select Values $\rightarrow$ Reset Matrix and enter a concentration of 3.94e-3 mol/l. Then click OK and allocate a concentration of 4.92e-4 mol/l to the 3 grid cells that represent the pollution source.
+
+Edit all other initial concentrations of aqueous components and minerals as defined in Table \ref{ex3_caqu} and \ref{ex3_cmin}, respectively. Note,
+that the mineral concentrations will be the same in the whole domain, i.e., no extra editing is needed for the pollution source. 
+
+\item Define the advection package to be used by selecting Models $\rightarrow$ PHT3D $\rightarrow$ Advection. Select 3rd-order TVD Scheme (ULTIMATE) as the Solution Scheme and click OK.
+
+\item Run the reactive transport model by selecting Models $\rightarrow$ PHT3D $\rightarrow$ Run and clicking OK.
+
+\item After the end of the simulation visualise the results by selecting Tools $\rightarrow$ 2D Visualisation. On the PHT3D tab select pH, Al, \ldots 
+
+You can adjust the contour scale by selecting Options $\rightarrow$ Environment. Select the Contours tab and make sure that Visible and Filled are ticked. You can try different contour levels and colour schemes if you like.
+
+\end{itemize}
+
+\begin{table}
+\caption{Aqueous concentrations used in the Walter et al. Example.}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+Aqueous  component        & $C_{init}$ & $C_{tailing}$      \\
+                  & $(mol\ l^{-1}_w)$   & $(mol\ l^{-1}_w)$      \\ \hline
+pH             &   6.96    &  3.99           \\
+pe              &   1.67    &  7.69           \\
+C(4)            &  3.94 $\times$ $10^{-3}$ & 4.92 $\times$ $10^{-4}$  \\
+S(6)            &  7.48 $\times$ $10^{-3}$ & 5.00 $\times$ $10^{-2}$  \\
+S(-2)           &     -             &     -              \\
+Fe(2)           &  5.39 $\times$ $10^{-5}$ & 3.06 $\times$ $10^{-2}$   \\
+Fe(3)           &  2.32 $\times$ $10^{-8}$ & 1.99 $\times$ $10^{-7}$   \\
+Mn(2)           &  4.73 $\times$ $10^{-5}$ & 9.83 $\times$ $10^{-6}$   \\
+Ca              &  6.92 $\times$ $10^{-3}$ & 1.08 $\times$ $10^{-2}$   \\
+Mg              &  1.96 $\times$ $10^{-3}$ & 9.69 $\times$ $10^{-4}$   \\
+Na              &  1.30 $\times$ $10^{-3}$ & 1.39 $\times$ $10^{-3}$   \\
+K               &  6.65 $\times$ $10^{-5}$ & 7.93 $\times$ $10^{-4}$   \\
+Cl              &  1.03 $\times$ $10^{-3}$ & 1.19 $\times$ $10^{-4}$   \\
+Al              &  1.27 $\times$ $10^{-7}$ & 4.30 $\times$ $10^{-3}$   \\
+Si              &  1.94 $\times$ $10^{-3}$ & 2.08 $\times$ $10^{-3}$   \\ \hline
+\end{tabular}
+\label{ex3_caqu}
+\end{center}
+\end{table}
+
+\begin{table}
+\caption{Mineral concentrations Walter et al. Example.}
+\begin{center}
+\begin{tabular}{ l c }
+\hline
+Mineral        & $C_{init}$  \\
+                  & $(mol\ l^{-1}_{v})$  \\ \hline
+Calcite \   $(CaCO_3)  $  & 1.95 $\times$ $10^{-2}$  \\
+Siderite  \ $(FeCO_3)  $  & 4.22 $\times$ $10^{-3}$     \\
+Gibbsite \ $(Al(OH)_3) $  & 2.51 $\times$ $10^{-3}$     \\
+amorphous \ $Fe(OH)_3  $  & 1.86 $\times$ $10^{-3}$      \\
+Gypsum \ $(CaSO_4.2H_2O) $ & 0.0                  \\
+amorphous  \ $SiO_2    $  & 4.07 $\times$ $10^{-1}$  \\ \hline
+\end{tabular}
+\label{ex3_cmin}
+\end{center}
+\end{table}
+
+
+\subsection[Simulation results]{Simulation results}
+
+\par Only a few aspects of the geochemical evolution
+observed in the model simulation are described
+in the following. For a detailed description see \cite{walt94a}.
+The acidic inflow solution is initially buffered by 
+calcite ($CaCO_3$), maintaining the $p$H
+at an almost neutral level (6.5 - 7). In this zone, gypsum
+($CaSO_4.2H_2O$) is formed from calcium released during calcite
+dissolution and sulphate ($S(6)$) from the inflow solution
+($C_{in,S(6)} > C_{backgr,S(6)}$). Similarly, siderite ($FeCO_3$)
+can form from $C(4)$ ($CO_3$) released during dissolution and the
+$Fe(2)$-rich inflow solution. At locations where calcite is
+completely dissolved, siderite becomes the buffering mineral,
+dissolving until it is also entirely removed. Finally, gibbsite
+($Al(OH)_3$) precipitation is the buffer mechanism at locations
+where both calcite and siderite are completely removed. The three
+different buffering mechanisms lead to three distinct levels of
+$p$H. Also three distinct
+$p$e levels evolve with fronts from more reduced to more oxidised
+water. The fronts have the same positions as those in the $p$H
+plot. As the $p$e of the solution is completely controlled by the
+redox couple $Fe(2)/Fe(3)$, the $p$e changes reflect the changes
+in their concentration ratio. Both $Fe(2)$ and $Fe(3)$
+concentrations are strongly controlled by the $p$H of the
+solution. Generally, their solubility increases with a decreasing
+$p$H. However, as the increase of their solubilities is not
+proportional, the $Fe(2)/Fe(3)$ ratio can change and so does the
+$p$e.
+
+\begin{itemize}
+
+\item To see the effect of calcite buffering rerun the model with a much 
+smaller initial calcite concentration and compare how far the 
+low pH zone and dissolved aluminium are migrating in this case.
+
+\end{itemize}
+

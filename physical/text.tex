@@ -1,0 +1,65 @@
+\chapter{Physical processes affecting water chemistry: Mixing and evaporation}
+\def\shorttitle{Mixing and evaporation} % Abbreviated chapter title for right top header
+
+\section{Evaporation}
+
+\subsection{Exercise: evaporation of acid rain}
+When rain falls its concentration is increased by interception and evapotranspiration before it recharges groundwater. Evaporation is easily modelled in PHREEQC by simply removing \wa. In this exercise, evapotranspiration increases concentrations by a factor of 1.5 and the sample is brought in equilibrium with gibbsite and atmospheric oxygen. This increases the concentrations of \al\ and oxidises all \nh\ to \no.
+
+The input file for this exercise is `klosterhede.phrq'. The composition of solution 1 represent throughfall at Klosterhede, Denmark (Hansen and Postma, 1995).
+
+\begin{quote}
+\# Acidification, ... throughfall concentrated 1.5 times \\
+\# \\
+SOLUTION 1	\# Throughfall at Klosterhede \\
+	temp	10 \\
+	pH	 4.33	charge \# Measured pH =4.33, lowered by NH4+ to NO3- \\
+	pe	10.0	O2(g)	-0.66 \\
+	units	umol/kgw \\
+	Na	986. \\
+	K	100. \\
+	Mg	127. \\
+	Ca	 54. \\
+ \\
+	Cl	1080. \\
+	N(5)	 221.	\# sum of NH4+ and NO3- \\
+	S(6)	 154. \\
+REACTION 1 \\
+	H2O	-1.0 \\
+	18.503		\# Concentrate 1.5*, remove 1/3 of H2O \\
+SAVE solution 2 \\
+END \\
+MIX \\
+	2	1.5	\# Make volume up to 1 kg water \\
+EQUILIBRIUM\_PHASES 2 \\
+	Gibbsite   0.29 \\
+	O2(g)	  -0.66 \\
+SELECTED\_OUTPUT \\
+    -file klost\_dk.prn \\
+    -reset false \\
+    -sim true \\
+    -pH true \\
+    -pe true \\
+    -mol O2 \\
+USER\_PUNCH \\
+    -heading m\_NO3 mg\_Al/l \\
+    -start \\
+    10 PUNCH MOL("NO3-") \\
+    20 PUNCH  \\
+    -end \\
+END
+\end{quote}
+
+By default, a solution in PHREEQC has a mass of 1 kg. Concentrating the solutes by a factor of 1.5 corresponds to removing 1/3 of the \wa. One kilogram of water contains 55.5 moles of \wa\, so $1/3 \cdot 55.5 = 18.52$ moles have to be removed. To restore the total amount of solution to 1 kg again, the keyword \textbf{MIX} is used. Following the MIX keyword is a list of solution numbers (number 2 in this case) and their fraction in the mixture. A fraction of 1.5 corresponds to a mulitplication of all the concentrations of the solution (also that of \wa) by 1.5.
+
+The keywords \textbf{SELECTED\_OUTPUT} and \textbf{USER\_PUNCH} control the output that is written to the file `klost\_dk.prn'. The standard PHREEQC output file can become quite large and is not easily read in a spreadsheet. The \textbf{SELECTED\_OUTPUT} keyword can be used to create output files in a spreadsheet format. The \textbf{-reset} identifier is set to false, which means that the default output options are turned of. The identifiers on the next lines specify that only the simulation number, pH, pe and the concentration of \ox\ are written to the file.
+
+The \textbf{USER\_PUNCH} keyword is slightly more complicated. It uses BASIC statements to control the output. The identifier \textbf{-headings} is used to specify the column headings that will appear above the numbers in the file. The identifiers \textbf{-start} and \textbf{-end} surround the block of BASIC statements. The lines with the BASIC statements have to be numbered in ascending order. A special PHREEQC BASIC statement PUNCH writes a number to the output file. An other special PHREEQC statement is MOL, which is used to get the molar concentration of a species, \no\ in this example. Try to see if you can complete the BASIC statements to write the total Al concentration in mg/l to the output file. Hints: the total concentration is obtained with the TOT("") BASIC statement. You can directly recalculate the concentration using formulas and the gram formula weight of Al can be found in the database.
+
+The pH after concentrating is \ldots\ldots. Now impose equilibrium with gibbsite so that pH changes to \ldots\ldots (field data indicate the porewater to be in equilibrium with slightly more soluble \gi, therefore SI is set to 0.29). The pH increase is due to the reaction:
+
+ \ldots\ldots
+
+The \al\ concentration is:  \ldots\ldots mg/l.
+
+Repeat the same calculation for a `dry' year. In a dry year the solutes are concentrated 4 times. Thus, \ldots\ldots moles of \wa\ is removed from 1 kg of solution. The pH now becomes \ldots\ldots. With MIX the concentrated solution is brought to 1 kgw. Equilibrium with gibbsite gives a pH = \ldots\ldots and \al\ = \ldots\ldots mg/l. How does this compare to the maximum allowable concentration of Al in drinking water, which is 0.2 mg/l?

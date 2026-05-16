@@ -1,0 +1,238 @@
+\chapter{Modelling kinetically controlled reactions}
+\def\shorttitle{Chemical kinetics} % Abbreviated chapter title for right top header
+
+In the preceding chapters we have only considered equilibrium chemistry, i.e. situations where chemical reactions occur instantaneously. For reactive transport problems the simplifying assumption of instantaneous reactions is warranted as long as the reaction time scale is fast compared to the transport time scale, which is known as the local equilibrium assumption \citep[LEA, e.g.,][]{rubin83}.
+
+For many applications, however, the kinetics of chemical reactions have to be considered. Examples include the (slow) dissolution of sillicate minerals, microbially mediated decay of organic pollutants and the oxidation of reduced mineral substances. The versatility of PHREEQC allows for simultaneous modelling of both equilibrium and kinetic processes, which will be the topic of the present chapter. The PHREEQC cases that will be discussed were taken from \cite{prommer_barry_2005}.
+
+\section{MT3DMS Exercise 2: Aerobic biodegradation of hydrocarbons}
+
+\subsection{Objective}
+
+The purpose of this exercise is to gain hands-on experience 
+in modeling aerobic biodegradation
+of fuel hydrocarbons (BTEX) based on three simple 
+approaches, i.e., instantaneous reaction, first-order
+kinetics and Monod kinetics. 
+The simulation code used in this excise is MT3D99,
+however, the same exercise can be carried out 
+using RT3D or BIOPLUME III.
+
+\begin{figure}[b]
+\centering
+\includegraphics[height=0.9\textwidth,angle=270]{mt3dms_ex2_grid.eps}
+\caption[Illustration of the model grid used for MT3DMS Example 2.]{Illustration of the model grid used for MT3DMS Example 2.}
+\label{fig:mt3dms_ex2_grid}
+\end{figure}
+
+\subsection{Problem Description}
+
+The sample problem considered in this exercise involves 
+two-dimensional transport from a
+continuous point source in a confined aquifer 
+under steady-state flow conditions. The model
+grid consists of 46 columns, 31 rows and 1 layer 
+and is aligned with the flow direction along the
+x axis (see Figure \ref{fig:mt3dms_ex2_grid}). 
+The flow model is surrounded 
+by constant-head boundaries on the east and
+west borders and no-flow boundaries on the north 
+and south borders. The head values at the
+constant-head boundaries are arbitrarily chosen to 
+establish the required hydraulic gradient. 
+One injection well is located at column 16 and row 16. 
+The injection rate is sufficiently small so that
+the flow field remains approximately uniform. 
+
+\begin{table}[hb]
+\caption{Flow and solute transport parameters used for MT3DMS Exercise 2.}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Parameter                                            &         Value \\
+\midrule
+Cell width along columns (i-direction) $\Delta x $ $(m)$        &    10 \\
+Cell width along rows (j-direction) $\Delta y $ $(m)$           &    10 \\
+Layer thickness $\Delta z $ $(m)$                 &    10 \\
+Groundwater seepage velocity $(m/day)$              &   1/3 \\
+Porosity $\theta$                                         &     0.3 \\
+Longitudinal dispersivity $\alpha_L$ $(m)$        &   10 \\
+Ratio of transverse to longitudinal dispersivity  &  0.3 \\
+Volumetric injection rate $(m^3/day)$               &   1  \\
+Simulation time $(days)$                            & 730  \\
+\bottomrule
+\end{tabular}
+\label{aerobic_flow}
+\end{center}
+\end{table}
+
+\subsection{Flow model}
+
+Set up the flow model using the aquifer dimensions and properties 
+listed in Table \ref{aerobic_flow}. Set the hydraulic conductivity K and the
+upstream hydraulic heads $h_{upstream}$ to values that will lead to a flow velocity of 1/3 $m/day$.
+
+\begin{equation}
+v = 1/3 = K \frac{h_{upstream} -  h_{downstream}} {\theta L}
+%\label{eq:retard}
+\end{equation}
+
+where $L$ is the distance between the upstream and downstream boundary. To
+ascertain confined conditions make sure that
+the downstream hydraulic head $h_{downstream}$ is $\ge$ the top of the aquifer.
+Do not forget to add the injection well that will be used to inject the contaminant.
+Once the model setup is finished:
+
+\begin{itemize}
+
+\item Run MODFLOW
+
+\item Check the flow velocity with the particle tracking software PMPATH.
+Select Models $\rightarrow$ PMPATH $\rightarrow$ Options $\rightarrow$ Particle tracking.
+Set the Tracking step length to 100 $days$ and use the mouse to define a starting point
+near the upstream boundary for a particle tracking simulation. Run the particle tracking simulation.
+
+\end{itemize}
+
+\subsection{Transport model}
+
+Assume that the injected water contains hydrocarbon (species 1) with 
+a constant concentration of 1000 $ppm$ ($mg/L$). Further assume that the background concentration of oxygen (species 2) in
+the aquifer is 9 $ppm$. The background oxygen concentration is 
+modeled by setting the initial
+concentration of species 2 to 9 $ppm$ in all model cells and by 
+assigning 9 $ppm$ to the species 2
+concentration of the inflow from the constant-head boundary. 
+Hydrocarbon and oxygen are
+assumed to react instantaneously; 
+the stoichiometric ratio for the reaction is approximately 3.0.
+To start the setup of the reactive transport model
+
+\begin{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[height=0.89\textwidth,angle=270]{mt3dms_ex2_hc.eps}
+\caption[Calculated hydrocarbon concentration distributions at 730 $days$ assuming
+instantaneous reactions.]{Calculated hydrocarbon concentration distributions at 730 $days$ assuming
+instantaneous reactions.}
+\label{fig:mt3dms_ex2_hc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[height=0.89\textwidth,angle=270]{mt3dms_ex2_ox.eps}
+\caption[Calculated oxygen concentration distributions at 730 $days$ assuming
+instantaneous reactions.]{Calculated oxygen concentration distributions at 730 $days$ assuming
+instantaneous reactions.}
+\label{fig:mt3dms_ex2_ox}
+\end{figure}
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ Reaction definition and
+select Instantaneous reaction among species .
+Define Hydrocarbons as species 1 and Oxygen as species 2. Go to 
+the Stoichiometry Tab and define the reaction stoichiometry (3.0) for Species pair 
+No. 1 - No. 2. Then click OK. Note that the stoichiometric ratio depends on the 
+concentration units. If $mol/l$ was used (like it is the case for all PHT3D
+concentrations) the value would differ.
+
+\item Set the boundary conditions for concentrations by selecting Select Grid $\rightarrow$ Boundary condition $\rightarrow$ ICBUND (MT3D family). Assign a value of -1
+to the cells at the upstream boundary (fixed concentration). 
+The default value for ICBUND of 1 (= active cell) will remain
+at all other grid cells.
+
+\item Define the initial concentrations by selecting Models $\rightarrow$ 
+MT3DMS $\rightarrow$ Initial concentrations. Assign a value of 0 for Hydrocarbons
+and a value of 9 $ppm$ for Oxygen.
+
+\item Define the concentration of Hydrocarbons in the 
+injected water that simulates the pollution source by selecting Models $\rightarrow$ 
+MT3DMS $\rightarrow$ Sink/Source Concentration $\rightarrow$ Well. 
+Assign a value of 1000 $ppm$ for Hydrocarbons and a value of 0 $ppm$ for Oxygen
+at the grid cell that represents the source zone (column 16, row 16). 
+
+\item Determine which advection package will be used by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Advection. Select 3rd-order TVD Scheme (ULTIMATE) as the Solution Scheme and click OK.
+
+\item Define the dispersivity to be used by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Dispersion. In the window that appears, change TRPT to a value of 0.3.
+In the editor, use Reset Matrix to change the value for 
+the longitudinal dispersivity to 10.0 m. 
+
+\item Run the transport model and visualise the results.
+
+\end{itemize}
+
+The calculated concentrations for hydrocarbon and oxygen at the end of the two-year simulation
+period are shown in Figures \ref{fig:mt3dms_ex2_hc} and \ref{fig:mt3dms_ex2_ox}. The maximum concentration of hydrocarbon is approximately 50
+ppm at the injection point, as shown in Figure \ref{fig:mt3dms_ex2_hc}. 
+The oxygen plume is depleted where the
+concentration of hydrocarbon is above zero. 
+
+\subsection{Comparison with First-Order Kinetics}
+
+Next, we will try to simulate the aerobic biodegradation of BTEX using single-species, first-order and Monod kinetics, and compare the simulated BTEX plumes with Figure \ref{fig:mt3dms_ex2_hc}.
+
+First, make a backup copy of the folder that contains the 
+instantaneous reaction simulation. 
+Then modify the Type of Reaction. Proceeds as follows:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ Reaction definition and
+select First-order irreversible reaction. Clck OK and leave Editor.
+
+\item  Estimate a first-order rate coefficient and enter the value 
+by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ 
+Chemical Reactions. Click Edit and start editing the data for
+hydrocarbons by selecting Value $\rightarrow$ Reset matrix.
+Add your estimated value for the first-order decay rate coefficient.
+
+\item  Run the model and compare the model results (simulated hydrocarbon 
+concentrations) with the results from the instantaneous reaction case.
+If the two do not agree, the modify the reaction rate coefficient.
+Repeat the procedure until you obtain the first-order rate coefficient that leads to a
+reasonable match between the simulated plume 
+and Figure \ref{fig:mt3dms_ex2_hc} ? What is the final value ?
+
+\end{itemize}
+
+\subsection{Comparison with Monod Kinetics}
+
+Make another copy of the model and use the new copy to explore the effect 
+of Monod Kinetics. 
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ Reaction definition and
+select Monod Kinetics. Click OK and leave Editor.
+
+\end{itemize}
+
+Note that Monod kinetics is a nonlinear reaction,
+which requires the outer iteration number of the GCG solver 
+to be greater than 1. 
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ Solver $\rightarrow$ 
+GCG. Assign a value of 10 for the max. number of outer iterations.
+
+\end{itemize}
+
+Set values for the two Monod kinetics parameters you feel appropriate. Proceed
+as follows:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ 
+Chemical Reactions. Click Edit and start editing the two
+parameters.
+
+\item  Run the model and compare the model results (simulated hydrocarbon 
+concentrations) with the results from the instantaneous reaction case.
+
+\end{itemize}
+
+If the two do not agree, modify the two parameters. Repeat the
+procedure until you obtain the parameter values that result 
+in a reasonable match between the
+simulated plume and Figure \ref{fig:mt3dms_ex2_hc}. What are the final values?

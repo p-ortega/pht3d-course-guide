@@ -1,0 +1,88 @@
+\newpage
+\noident
+\section[PHT3D Exercise 6: Degradation of chlorinated ethenes and isotopes]{PHT3D Exercise 6: Degradation of chlorinated ethenes and isotopes}
+
+In this exercise we investigate the sequential degradation of chlorinated ethenes and the use of 
+stable isotopes to provide forensic evidence that will allow us to attribute elevated vinyl chloride concentrations to a particular contamination source.   
+
+
+
+The principle modelling scenario consists of an aquifer that is contaminated by two different contamination sources. Both sources are assumed to be formed by NAPL pools that are located on top of lenses of lower permeability. One of the NAPL sources is assumed to consist of PCE, while the other is assumed to consist of TCE and Toluene. Both a river and a pumping well (installed for river bank filtration - RBF) act as sinks for contaminated groundwater. The RBF well is located between the PCE source and the river while the TCE source zone is located on the Eastern side of the river.
+
+In the model we assume that PCE does not degrade under the aerobic conditions, 
+while TCE might be degraded via a sequential degradation 
+pathway (TCE $\rightarrow$ DCE $\rightarrow$ VC $\rightarrow$ Ethene) that is known to occur 
+under anaerobic geochemical conditions . 
+
+For each of the transformation reactions a first-order rate expression was implemented.
+
+Also, to simulate the carbon isotope ratio within the contaminant plumes each of the 
+chlorinated ethene species was divided into two separate species representing the light and
+heavy isotopes, respectively.
+That means that each dissolved compound occurs twice in the reaction database to represent the 
+molecules containing either $^{12}$C or $^{13}$C. 
+
+The contamination sources are modelled by defining two discrete NAPL contaminated zones.
+On the Western side of the river a PCE source is defined by allocating an initial 
+concentration of 1 mol/l of Pcenapl to a specific zone while the Eastern source
+is defined by allocating 1 mol/l of Tcenapl and 1 mol/l of Tolunapl to a discrete zone.
+
+When groundwater passes through these zones, dissolution (mass transfer to the aqueous phase) will
+occur, therefore creating a PCE plume on the Western side of the river and both a TCE as well as a toluene 
+plume on the Eastern side of the river. Over the simulation period of 10 years the plumes
+become stable. Besides the plumes of the primary contaminats there are also plumes of the 
+transformation products developing. On the Eastern side of the river the toluene released from the NAPL source
+undergoes aerobic degradation, thereby consuming oxygen and creating anaerobic conditions.
+In those anaerobic zones reductive dechlorination of TCE takes place. The DCE produced from TCE degradation
+is subsequently further degraded to VC, the most toxic compound. 
+
+As a result we can find a complex mix of chlorinated ethenes in the extraction well.
+
+
+
+\begin{table}
+\caption{Selected Model input parameter.}
+\begin{center}
+\begin{tabular}{lc} \hline
+Source 1 & \\ 
+Pce\_l (light)                   &  0.009892  \\
+Pce\_h (heavy)                   &  0.000108  \\
+Source 2 & \\ 
+Tce\_l (light)                   &  0.00098925  \\
+Tce\_h (heavy)                   &  0.00001075  \\
+Total simulation time $(days)$       & 3650  \\
+Longitudinal dispersivity\ $(m)         $         &  1          \\ 
+Transversal  dispersivity\ $(m)         $         &  0.01          \\ \hline
+
+\end{tabular}
+\label{ex_6_input}
+\end{center}
+\end{table}
+
+Carbon isotope ratios ($^{13}$C/$^{12}$C) can be expressed 
+as permil ($\permil$) deviations from 
+the Vienna Pee Dee Belemnite (V-PDB) standard in the conventional notation:
+
+\begin{equation}
+{ \delta ^{13}C  = ((({^{13}C} / ^{12}C})_{Sample} - ({^{13}C} / ^{12}C})_{Std}) /  ({^{13}C} / ^{12}C})_{Sample}) \times 1000 }
+\label{eq:vpdb}
+\end{equation}
+
+with 
+
+\begin{equation}
+{({^{13}C} / ^{12}C})_{Std}) = 0.0112372 }
+\label{eq:vpdb_std}
+\end{equation}
+
+We can now compute the simulated carbon isotope ratios within the model domain.
+For example, to compute $\delta ^{13}C_{PCE}$ we can use the simulated values
+and substitute them into Eqn. \ref{eq:vpdb}.   
+
+\item To compare xxx  
+
+
+
+
+
+

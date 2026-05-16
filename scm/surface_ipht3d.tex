@@ -1,0 +1,174 @@
+\chapter{Surface complexation reactions}
+\def\shorttitle{Surface complexation reactions} % Abbreviated chapter title for right top header
+
+\section{Background}
+
+
+Oxides, hydroxides and organic matter carry functional groups at their surface, 
+which  enable them to sorb cations, anions, and neutral species from solution.  
+Typically, these functional groups behave as Bronsted acids and/or bases, 
+which is to say they can accept hydrogen ions, release hydrogen ions, or, 
+in some cases, both. The sorption behaviour depends on the type 
+of mineral, crystal morphology, even which crystal face(s) dominate, 
+as well as the composition and pH of the solution.
+In response to uptake/release of hydrogen or other ions from/to solution, 
+a net charge on the surface develops.
+
+It can be shown that for a dissociation reaction (Appelo and Postma, 2005):
+\begin{equation}
+\log K_{\text{a}} = \log K_{\text{int}} + \frac{zF\psi_0}{RT \ln 10}
+\end{equation}
+in which $K_{\text{a}}$ is the apparent dissociation constant, $K_{\text{int}}$ is the intrinsic dissociation constant, $z$ is the charge of the ion, $F$ the Faraday constant (96,485 C/mol), $\psi_0$ the potential at the surface, $R$ the gas constant (8.314 J/K/mol) and $T$ the absolute temperature.
+
+The intrinsic dissociation constant, $K_{\text{int}}$, applies to the chemical binding of the ion and the surface. The PRHEEQC database contains a compilation by Dzombak and Morel (1990) of laboratory-determined values of intrinsic dissociation constants for hydrous ferric oxide.
+
+The apparent dissociation `constant' ($K_{\text{a}}$), however, varies with the potential and thus the charge at the surface. In order to calculate the $K_{\text{a}}$, the $\psi_0$ needs to be known. PHREEQC uses a double-layer model to relate the charge density on the surface ($\sigma_s$) with ionic strength ($I$, equation \ref{eq:ionic_strength}) and $\psi_0$ \citep{phreeqc2}.
+
+\section{PHREEQC Exercise 5: Surface complexation reactions}
+\subsection{Calculation of a charged surface composition}
+This exercise demonstrates the use of the \textbf{SURFACE} keyword, which is used in PHREEQC for surface complexation calculations. The input file has already been prepared and is called {\color{red}kd\_surf.phrq}. The definition of the surface is as follows:
+
+\begin{quote}
+	SURFACE 1 \\
+	Hfo\_w	2e-4	600	0.088 \\
+	Hfo\_s	5e-6 \\
+	-equilibrate 1 
+\end{quote}
+
+The names {\color{red}Hfo\_w} and {\color{red}Hfo\_s} correspond to the names of the master species in the PRHEEQC database that refer to the weak- and the strong surface sites, respectively. The number that follows is the number of surface sites in moles. For the weak sites, the surface area (600 m$^2$/g) and mass of ferrihydrite (88 mg) are also specified. Unless these values are explicitly typed for Hfo\_s as well, they apply to both the weak and the strong sites.
+
+The input file contains BASIC statements that control the output to a text file in spreadsheet format. The distribution coefficient of Zn is calculated for both the weak and the strong sites, as well as an overall distribution coefficient. The file is called {\color{red}kd\_surf.prn} and can be opened in the Grid tab of PRHEEQC for Windows after the calculation has finished.
+
+What is the value of the overall distribution coefficient for Zn? 
+
+Answer: $K_d$ = \ldots\ldots.
+
+Test the effect on the $K_d$ of:
+
+\begin{itemize}
+
+\item doubling the Zn concentration? Answer: $K_d$ = \ldots\ldots.
+
+\item doubling the Mg concentration? Answer: $K_d$ = \ldots\ldots.
+
+\item doubling the amount of ferrihydrite? Answer: $K_d$ = \ldots\ldots.
+
+\item changing pH from 7 to 5? Answer: $K_d$ = \ldots\ldots.
+
+\end{itemize}
+
+\subsection{Uranium sorption at the Hanford site}
+
+This exercise is based on uranium sorption over the range of chemical 
+conditions at the Hanford 300 area in Richland, Washington, United States.  
+You will simulate uranium sorption on hydrous ferric oxide under three 
+sets of chemical conditions: groundwater with a large Columbia River signal, 
+Hanford groundwater with moderate $Ca$ concentrations, 
+and Hanford groundwater with high $Ca$.
+
+Use the provided input file template to construct the 
+input file ({\color{red}\textbf{SCM\_Exercise\_Template.xlsx}}).  
+The template has the thermodynamic data for $Ca$- and $Mg-U(6)-CO3-2$ solution species.  
+It also has thermodynamic data for the $U(6)$ sorption on hydrous ferric 
+oxide from \cite{mahoney_2009}, 
+who fit the best available data for $U(6)$ sorption 
+on hydrous ferric oxide in the presence and absence of 
+$CO_2$ using the thermodynamic data from the Wateq4f database.  
+
+The simulation is based on the following set of laboratory batch experiments
+\begin{itemize}
+\item Equilibrate hydrous ferric oxide with {\color{red}\textbf{Groundwater 2}} that does not have uranium;
+\item React the equilibrated hydrous ferric oxide with {\color{red}\textbf{River}} 
+composition, which represents groundwater with a large Columbia River signal;
+\item React the equilibrated hydrous ferric oxide with {\color{red}\textbf{Groundwater 1}} 
+composition, which represents groundwater from the Hanford formation with moderate Ca concentration;
+\item React the equilibrated hydrous ferric oxide with {\color{red}\textbf{Groundwater 2}} 
+composition, which represents groundwater from the Hanford formation with high $Ca$.
+\item Enter the solution composition for {\color{red}\textbf{Groundwater 2}} 
+but without $U(6)$ under {\color{red}\textbf{SOLUTION 1}}.  
+This will be used to equilibrate the hydrous ferric oxide before reacting 
+with $U(6)$-containing groundwater compositions.  
+Enter the compositions of the three groundwater datasets from 
+Table \ref{tab:hanford1}
+under {\color{red}\textbf{SOLUTION 10}}, 
+{\color{red}\textbf{SOLUTION 50}}, 
+and {\color{red}\textbf{SOLUTION 55}}, respectively.  
+\end{itemize} 
+
+\begin{table}[h]
+\begin{center}
+\centering
+\caption{Groundwater compositions for the Hanford surface complexation exercise}
+\begin{tabular}{cllll}
+\toprule
+Parameter  	& River	& Groundwater 1	& Groundwater 2	& Units/comment \\
+pH	        & 6.00	& 8.11	        & 8.11	        & NIST/Fix \\
+Temperature	& 21	  & 21	          & 21	          & $^\circ$C  \\
+Alkalinity	& 0.164	& 5.00	        & 5.00	        & mmol/L \\
+Na	        & 3.9	  & 6.8	          & 6.8	          & mmol/L \\
+K	          & 0.15	& 0.2	          & 0.2	          & mmol/L \\
+Mg	        & 0.5	  & 0.4	          & 0.4	          & mmol/L \\
+Ca	        & 0.5	  & 0.5	          & 5.5	          & mmol/L \\
+Cl	        & 1.49	& 1	            & 11	          & mmol/L charge \\
+S(6)	      & 2.2	  & 1.4	          & 1.4	          & mmol/L \\
+N(5)	      & 0	    & 0	            & 0	            & mmol/L \\
+U(6)	      & 0.001	& 0.001	        & 0.001	        & mmol/L \\
+\bottomrule
+\end{tabular}
+\label{tab:hanford1}
+\end{center}
+\end{table}
+
+The keyword used for entering data for the surface assemblage is {\color{red}\textbf{SURFACE n}}.  
+The required information is the name of the site, the moles of that site, 
+the specific surface area (m2/g) of the solid, and the number of 
+grams of the solid in the simulation.  
+The specific surface area (SSA) and grams of solid (grams) 
+are needed for calculating the coulombic term in the diffuse layer model.  
+Under the {\color{red}\textbf{SURFACE 1}} keyword, 
+enter the required data, which are in Table \ref{tab:hanford2}.
+
+\begin{quote}
+{\color{red}SURFACE 1} \\
+\# Site	moles	SSA	grams \\
+\end{quote}
+
+\begin{table}[h]
+\begin{center}
+\centering
+\caption{Concentrations of sorption sites and other data required for simulating surface complexation for this exercise}
+\begin{tabular}{clll}
+\toprule
+Site name	& Moles of site              	& SSA (m2/g)	& Grams of HFO \\
+Hfo\_s	  & 5.62 $times$ 10$^{-6}$	    & 600	        & 0.10 \\
+Hfo\_w	  & 2.25 $times$ 10$^{-4}$	    & 600       	& 0.10 \\
+\bottomrule
+\end{tabular}
+\label{tab:hanford2}
+\end{center}
+\end{table}
+
+Below the section where the groundwater 
+compositions and surface assemblage data are entered 
+is a datablock to create a user-defined
+{\color{red}\textbf{SELECTED\_OUTPUT}} file.  
+This file simplifies determining the simulated sorbed $U(6)$ 
+under the three sets of chemical conditions.
+
+Below the {\color{red}\textbf{SELECTED\_OUTPUT}} file block, 
+run the simulation. Using the {\color{red}\textbf{USE SURFACE 1}} 
+and {\color{red}\textbf{USE SOLUTION n}} keywords 
+(followed by an {\color{red}\textbf{END}} statement), 
+react the equilibrated surface assemblage with the river-dominated groundwater, 
+the Hanford aquifer groundwater with moderate $Ca$, 
+and the Hanford groundwater with high $Ca$. 
+
+The {\color{red}\textbf{SELECTED\_OUTPUT}} file will be written in the directory with the input file.  
+Open the {\color{red}\textbf{SELECTED\_OUTPUT}} file 
+with Excel and answer the following questions.
+
+\begin{itemize}
+\item What is the concentration of dissolved $U$, sorbed $U$, 
+and percent of the total $U$ sorbed under each of set of conditions ?  
+\item How did the pH change during reaction with of the surface assemblage with each of the groundwater compositions ?
+\end{itemize}

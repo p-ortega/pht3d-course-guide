@@ -1,0 +1,278 @@
+\newpage
+\section[PHT3D Exercise 3: Transport and nitrification of ion exchangeable ammonium]{PHT3D Exercise 3: Transport and nitrification of ion exchangeable ammonium}
+
+This modelling example is based on a field site contamination problem near
+Mansfield UK \citep[see, e.g.,][]{broholm98, phddavison,jones1998, davison2000,
+jones2001}, where ammonium liquor, a by-product of the production
+of smokeless fuel, has polluted groundwater over several decades.
+A reactive transport modelling study that integrated 
+and reproduced the major processes that were believed to occur at the
+field site was presented by \cite{haerens_phd}. 
+One of the key features observed at the site is the
+strongly retarded migration of ammonium and the geochemical footprint that
+was left behind as a result of the cation exchange of ammonium.  
+In the modelling example the development of an ammonium plume
+and the subsequent flushing of ammonium contaminated groundwater by
+pristine background water is simulated.  The processes included in
+the example are advection, dispersion, cation exchange
+and the kinetically controlled oxidation of ammonium.
+Dispersion, ion exchange and nitrification act as attenuation 
+processes for ammonium.
+
+For simplicity the two-dimensional reactive transport problem is set up
+for the same model domain and flow-field as the previous exercise.
+However, the simulation period is now divided into two different 
+stress periods. The first stress period represents the period 
+of active contamination during which the plume grows successively
+while the second stress period represents the period after the source 
+was exhausted.
+
+\subsection[Modification of the flow problem]{Modification of the flow problem}
+
+To adapt the MODFLOW model from the previous exercise to the present case, proceed as follows:
+
+\begin{itemize}
+
+\item In PMWIN, load the copy of the flow model that was readily prepared 
+for this exercise. The details of the flow model 
+and its discretisation are listed in \ref{bruno_flow}.
+The model files are located in the folder {\color{red} \textbf{2d\_flow\_problem\_haerens}}.
+The flow model is similar to the one used in the previous exercise.
+It needs some minor modifications to be used for the new problem.
+
+\item Make a copy of the folder that contains the flow model and rename the
+folder to {\color{red} \textbf{2d\_reactive\_problem\_haerens}}. Load the model located in this
+new folder into PMWIN.
+
+\item To split the total simulation time of 3000 days
+into two separate stress periods (which will have different chemical stresses), 
+select Parameters $\rightarrow$ Time and modify the Period length 
+for the first stress period from 2000 days to 1000 days.
+Set the value for No. of Time Steps to 25 (The first 1000 days will be 
+discretised into 25 steps). Then append the values for the second stress period
+(Period length: 2000 days; No. of Time Steps: 50). 
+
+\item Rerun MODFLOW to reproduce the flow-file (mt3d.flo), which will be used later by the transport model.
+
+\end{itemize}
+
+\begin{table}
+\caption{Flow and transport parameters used for PHT3D Exercise 3.}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Flow simulation                     & steady state \\
+Total simulation time $(days)$       & 3000 \\
+Stress periods                       & 2 \\
+Length stress period 1  $(days)$             & 1000 \\
+Time steps stress period 1           & 25 \\
+Length stress period 2   $(days)$            & 2000 \\
+Time steps stress period 2           & 50 \\
+Model \  length\ $ (m)      $         &  100            \\
+Model \  thickness\ $ (m)      $         &  10            \\
+Grid \ spacing\ $\Delta x $ (m)                &    4            \\
+Grid \ spacing\ $\Delta z $ (m)                &    0.5            \\
+Porosity\     $            $         &  0.35           \\
+Horizontal hydraulic conductivity\ $(m)           $         &  1 m/d         \\ 
+Vertical   hydraulic conductivity\ $(m)           $         &  1 m/d         \\ 
+Piezometric head upstream boundary\ $(m)          $         &  12 m          \\ 
+Piezometric head downstream boundary\ $(m)        $         &  10 m          \\ 
+Longitudinal dispersivity\ $(m)         $         &  0.5          \\ 
+Transversal  dispersivity\ $(m)         $         &  0.05          \\ 
+\bottomrule
+
+\end{tabular}
+\label{bruno_flow}
+\end{center}
+\end{table}
+
+\subsection[Loading a new reaction module]{Loading a new reaction module}
+
+Many reactive transport problems require some specifically prepared reaction modules.
+A list of all available existing reaction modules is contained in a text file
+that is called {\color{red} \textbf{pht3d\_module\_definition.txt}}, which is located in 
+the folder {\color{red} \textbf{C:$\backslash$ \ldots $\backslash$pht3d$\backslash$database}}.
+Available reaction modules can also be seen by selecting Models $\rightarrow$ PHT3D 
+$\rightarrow$ Simulation Settings. The list seen here is resourced from
+the {\color{red} \textbf{pht3d\_module\_definition.txt}} and is therefore identical.
+\\
+Each PHT3D reaction module in PMWIN is defined by two files.
+The first of the two files is the database file which is used by PHT3D 
+during the simulations. The PHREEQC-2 standard database file is, 
+for example, called {\color{red} \textbf{pht3d\_datab.standard}}. 
+The second file is used by the graphical 
+user interface (PMWIN). The file that contains the GUI information
+for the PHREEQC-2 standard database is called {\color{red} \textbf{pmwin\_pht3dv2.standard}}.
+The details on how to develop new or to modify existing reaction modules
+are given in the Appendix.
+
+To add a new reaction module proceed as follows:
+
+\begin{itemize}
+
+\item Copy the files {\color{red} \textbf{pht3d\_datab.haerens}} and 
+{\color{red} \textbf{pmwin\_pht3dv210.haerens}} to the database library folder {\color{red} \textbf{C:$\backslash$ \ldots $\backslash$pht3d$\backslash$database}}.
+
+\item Use a text editor to open the file {\color{red} \textbf{pht3d\_module\_definition.txt}} that is
+stored in the database library folder {\color{red} \textbf{C:$\backslash$ \ldots $\backslash$pht3d$\backslash$database}} 
+
+\item Go to the section {\color{red} \textbf{\#Number of modules}} and increase 
+the number of modules by one (for example from 18 to 19).
+
+\item Go to the bottom end of the text file
+
+\item Append the text {\color{red} \textbf{Nitrification, Ion exchange and Phenol degradation}} 
+to define a short title for the reaction module.
+
+\item In the next ($2^{nd}$) line append the text {\color{red} \textbf{Groundwater contamination from a former coking plant.}} 
+to provide some additional information on the reaction module.
+
+\item In the next ($3^{rd}$) line append the text {\color{red} \textbf{pht3d\_datab.haerens}} to 
+supply the name of the database file that will be used by PHT3D.
+
+\item In the next ($4^{th}$) line append the text {\color{red} \textbf{pmwin\_pht3dv210.haerens}}
+to supply the name of the file that will be used by PMWIN.
+
+\end{itemize}
+
+\subsection[Preparing and running the reactive transport model]{Preparing and running the reactive transport model}
+
+With the new reaction module being implemented the model input can be defined. 
+Proceed as follows:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Simulation Settings and select 
+the newly implemented module {\color{red} \textbf{Nitrification, Ion Exchange and Phenol degradation}} as the chemical reaction module. 
+Activate the equilibrium components (tick the checkboxes) that are included
+in Table \ref{bruno_caqu} and {\color{red} \textbf{Amm}}, which is a kinetic species
+that is not in redox equilibrium with the other nitrogen species.
+Leave the reaction rate parameters for {\color{red} \textbf{Amm}} at the default values.
+Include {\color{red} \textbf{Calcite}} in the simulations. Cation exchange species will
+not be considered initially, they will be added later.
+Note, that there is no need to include aqueous components that will not play a role
+in the simulations, such as {\color{red} \textbf{Mn(2)}}, {\color{red} \textbf{Mn(3)}} and  {\color{red} \textbf{Si}}. However, consider and activate all valence
+states of redox-sensitive components. For example, activate all valence states of nitrogen,
+i.e., {\color{red} \textbf{N(5)}}, {\color{red} \textbf{N(3)}}, {\color{red} \textbf{N(0)}} and {\color{red} \textbf{Amm}}. 
+
+\item Set the boundary conditions for concentrations by selecting Select Grid $\rightarrow$ Cell Status $\rightarrow$ ICBUND (Transport Models). Set the values of the 7 lowermost cells at the left boundary to -1 to define a fixed concentration boundary. Do not fix the concentration of the upper 3 cells of the left boundary! Their values will be controlled by the Sink/Source Concentrations, which we will be specified later. Leave the editor and click Yes to save your changes.
+
+\item Define the initial concentrations of the aqueous components by using the water composition of the ambient water $C_{backgr}$ as provided in Table \ref{bruno_caqu}. 
+
+\end{itemize}
+
+\begin{table}
+\caption{Concentrations of aqueous components and initial mineral concentration in PHT3D Exercise 3.}
+\begin{center}
+\begin{tabular}{l c c c c }
+\toprule
+      & \multicolumn{1}{c}{Background and} & \multicolumn{1}{c}{Contaminated water} \\
+      & \multicolumn{1}{c}{flushing water} &                & \\
+      & \multicolumn{1}{c}{$C_{backgr}$, $C_{flush}$} & \multicolumn{1}{c}{$C_{cont.}$} \\
+      &    $mol\ l^{-1}$   & $mol\ l^{-1}$ \\ 
+\midrule
+O(0)     & 2.51 $\times$ $10^{-4}$    & $0$  \\
+Na       & 8.62 $\times$ $10^{-4}$    & 1.30 $\times$ $10^{-3}$ \\
+K        & 1.24 $\times$ $10^{-4}$    & 1.30 $\times$ $10^{-4}$ \\
+Ca       & 1.83 $\times$ $10^{-3}$    & 1.50 $\times$ $10^{-4}$ \\
+Mg       & 1.38 $\times$ $10^{-3}$    & 5.00 $\times$ $10^{-5}$ \\
+Amm      & $0$                        & 6.87 $\times$ $10^{-3}$ \\
+Cl       & 1.74 $\times$ $10^{-3}$    & 3.23 $\times$ $10^{-3}$ \\
+S(6)     & 9.89 $\times$ $10^{-4}$    & 1.56 $\times$ $10^{-3}$ \\
+N(5)     & 8.88 $\times$ $10^{-4}$    & $0$ \\
+N(3)     &                            & $0$ \\ 
+N(0)     &    $0$                     & $0$ \\ 
+C(4)     & 2.82 $\times$ $10^{-3}$    & 2.92 $\times$ $10^{-3}$ \\ 
+C(-4)    &  $0$                       &   $0$ \\ 
+ & & \\
+pH    & 7.9               & 8.3             \\
+pe    & 13.5              & 0            \\
+\midrule 
+        &      $C_{init}$       &          \\
+                &        $mol\ l_b^{-1}$     &          \\
+Calcite &      0.1             &          \\
+\bottomrule
+
+\end{tabular}
+\label{bruno_caqu}
+\end{center}
+\end{table}
+
+The latter step defines the hydrochemistry of the pristine, 
+uncontaminated aquifer and the hydrochemistry of the
+water passing through the fixed concentration boundary cells. If the concentration of
+an aqueous component is 0 it is not necessary to enter the value.
+
+The pollution source is assumed to be active during the first 1000 days, while 
+during the 2000 days following the pollution event the inflowing water is supposed
+to have the composition of the ambient water. To activate the pollution source, proceed as follows:
+
+\begin{itemize}
+
+\item To define the source during the first 1000 days select Models $\rightarrow$ PHT3D $\rightarrow$ Sink/Source Concentration $\rightarrow$ Constant Head Cells. 
+Edit the concentrations of the upper 3 grid cells of the first colum of the model domain
+to define a 3 m thick source. 
+Use the concentrations listed for $C_{cont.}$ (Table \ref{bruno_caqu}) for the first
+stress period and use the values listed for $C_{flush}$ for the second stress period. 
+Only non-0 concentrations need to be entered for the first 
+stress period. However, where a 0 concentration in the second stress period
+follows a non-0 value the 0 value needs to be entered. In the present exercise
+this concerns only {\color{red} \textbf{Amm}}. Leave the editor
+once all concentrations are defined.
+
+\item Define the advection package to be used by selecting Models $\rightarrow$ PHT3D $\rightarrow$ Advection. Select 3rd-order TVD Scheme (ULTIMATE) as the Solution Scheme and click OK.
+
+\item Define the dispersivity to be used by selecting Models $\rightarrow$ PHT3D $\rightarrow$ Dispersion. In the window that appears, click OK (which confirms the default setting that the transversal dispersivity will be one tenth of the longitudinal dispersivity). In the editor, use Reset Matrix to change the value for the longitudinal dispersivity to 0.5 m. Leave the editor and save your changes.
+
+\item To visualise not only the results from the last time steps of each stress periods but also some intermediate results select Models $\rightarrow$ PHT3D $\rightarrow$ Output Control. Click on the Output Times tab and configure the settings such that results are printed every 200 days.
+
+\item Run the reactive transport model by selecting Models $\rightarrow$ PHT3D $\rightarrow$ Run and clicking OK.
+
+\item After the end of the simulation visualise the results by selecting Tools $\rightarrow$ 2D Visualisation. On the PHT3D tab select {\color{red} \textbf{Amm}}, {\color{red} \textbf{N(5)}}, {\color{red} \textbf{O(0)}} \ldots 
+
+\item Did any calcite precipitate ?
+
+\item Why and where are nitrate (= {\color{red} \textbf{N(5)}}) concentrations above the background concentrations ?
+
+\item Plot a breakthrough curve (BTC) for ammonium concentrations in Layer 1
+and x = 50 m. To define the observation point select Models $\rightarrow$ PHT3D $\rightarrow$ Concentration Observations. To view the BTC select Models $\rightarrow$ PHT3D $\rightarrow$ View
+$\rightarrow$ Concentration Time Curves.
+
+\item Plot also a breakthrough curve (BTC) for the oxygen concentrations in Layer 1
+and x = 50 m. 
+
+\end{itemize}
+
+So far we have not considered ion exchange reactions. To include ion exchange
+we need to include the cation species in the reation network and define the
+initial concentrations on the exchanger sites. To find the concentrations
+on the exchanger sites use PHREEQC and equilibrate the aqueous solution
+with an exchange site X, given that the cation exchange capacity (CEC) 
+is 0.12 eq. 
+
+\begin{itemize}
+
+\item To add the exchanger species to the reaction network
+select Models $\rightarrow$ PHT3D $\rightarrow$ Simulation Settings. 
+Activate the exchange species {\color{red} \textbf{Ca\_ex}}, {\color{red}\textbf{K\_ex}}, {\color{red} \textbf{Mg\_ex}},
+{\color{red} \textbf{AmmH\_ex}} and {\color{red} \textbf{Na\_ex}}.
+
+\item Enter the exchanger site concentrations determined by PHREEQC as
+initial concentrations for {\color{red} \textbf{Ca\_ex}}, {\color{red}\textbf{K\_ex}}, {\color{red} \textbf{Mg\_ex}},
+{\color{red} \textbf{AmmH\_ex}} and {\color{red} \textbf{Na\_ex}}.
+
+\item Rerun the reactive transport model.
+\end{itemize}
+
+\begin{itemize}
+
+\item Once the model run is completed, plot again the breakthrough curve (BTC) for ammonium concentrations in Layer 1 and x = 50 m. 
+
+\item Plot also again the breakthrough curve (BTC) for the oxygen concentrations in Layer 1
+and x = 50 m.
+
+\item Plot the breakthrough curve (BTC) for the calcium ({\color{red} \textbf{Ca}}) concentrations in Layer 1 and x = 50 m. 
+
+\end{itemize}
+
+

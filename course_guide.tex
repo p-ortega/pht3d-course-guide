@@ -1,0 +1,199 @@
+%\documentclass[11pt,twoside,a4paper,final]{book}
+\documentclass[11pt,twoside,a4paper,final]{book}
+
+
+\bibliographystyle{myelsart-harv}
+
+%\usepackage{afterpage} % To process floats
+\usepackage{amsmath} % To be able to use \text
+\usepackage{booktabs} % To have better tables
+\usepackage[usenames]{color}
+\usepackage{fancyhdr} % To control header- and footer layout
+\usepackage{graphicx} % To include EPS figures
+\usepackage{ifthen} % To use ifthenelse in newcommand
+\usepackage[round]{natbib} % To have more versatile citations
+%\usepackage{rotating} % For sideways tables
+%\usepackage{siunitx} % To have SI units
+\usepackage{SIunits}
+\usepackage{times} %TrueType times font
+\usepackage{topcapt} % For captions above tables
+
+\usepackage[T1]{fontenc} % To use Type 1 instead of Type 3 fonts in PS file
+\usepackage{ae,aecompl}
+
+%----------------------------------------------------------------------------------------------------
+% Allow more floating material on text pages
+%----------------------------------------------------------------------------------------------------
+
+\renewcommand\floatpagefraction{.9}%
+\renewcommand\topfraction{.9}%
+\renewcommand\bottomfraction{.9}%
+\renewcommand\textfraction{.1}%
+\setcounter{bottomnumber}{4}%
+\setcounter{topnumber}{4}%
+\setcounter{totalnumber}{4}%
+
+%----------------------------------------------------------------------------------------------------
+% Create really empty pages before new chapters (from Patrick)
+%----------------------------------------------------------------------------------------------------
+
+\let\origdoublepage=\cleardoublepage
+\newcommand{\clearemptydoublepage}{%
+  \clearpage
+  {\pagestyle{empty}\origdoublepage}%
+}
+\let\cleardoublepage=\clearemptydoublepage
+
+%----------------------------------------------------------------------------------------------------
+% Typeset isotopic and chemical concentration symbols
+%----------------------------------------------------------------------------------------------------
+
+\newcommand\al{\ensuremath{\text{Al}^{3+}}} % Nitrate
+\newcommand\gi{\ensuremath{\text{Al(OH)}_{3}}} % Nitrate
+\newcommand\no{\ensuremath{\text{NO}_{3}^{-}}} % Nitrate
+\newcommand\nh{\ensuremath{\text{Nh}_{4}^{+}}} % Ammonium
+\newcommand\co{\ensuremath{\text{CO}_{2}}} % CO2
+\newcommand\ph{\ensuremath{\text{pH}}} % pH
+\newcommand\pr{\ensuremath{\text{H}^{+}}} % H+
+\newcommand\ec{\ensuremath{\text{EC}}} % EC
+\newcommand\na{\ensuremath{\text{Na}^{+}}} % Na+
+\newcommand\nax{\ensuremath{\text{NaX}}} % NaX
+\newcommand\ka{\ensuremath{\text{K}^{+}}} % K+
+\newcommand\ca{\ensuremath{\text{Ca}^{2+}}} % Ca2+
+\newcommand\cax{\ensuremath{\text{CaX}_{2}}} % CaX2
+\newcommand\caoh{\ensuremath{\text{CaOH}^{+}}} % CaOH complex
+\newcommand\cc{\ensuremath{\text{CaCO}_{3}}} % CaCO3
+\newcommand\caf{\ensuremath{\text{CaF}^{+}}} % CaF+ complex
+\newcommand\cb{\ensuremath{\text{CO}_{3}^{2-}}} % CO32-
+\newcommand\caco{\ensuremath{\text{CaCO}_{3}^{0}}} % CaCO3 complex
+\newcommand\fl{\ensuremath{\text{CaF}_{2}}} % CaF2
+\newcommand\caso{\ensuremath{\text{CaSO}_{4}^{0}}} % CaSO4 complex
+\newcommand\capo{\ensuremath{\text{CaPO}_{4}^{-}}} % CaPO4 complex
+\newcommand\gy{\ensuremath{\text{CaSO}_{4} \cdot 2 \text{H}_2\text{O}}} % CaSO4.2H2O
+\newcommand\mg{\ensuremath{\text{Mg}^{2+}}} % Mg2+
+\newcommand\cl{\ensuremath{\text{Cl}^{-}}} % Cl-
+\newcommand\bi{\ensuremath{\text{HCO}^{-}_3}} % HCO3-
+\newcommand\su{\ensuremath{\text{SO}^{2-}_4}} % SO42-
+\newcommand\si{\ensuremath{\text{H}_4\text{SiO}_4}} % H4SiO4
+\newcommand\ox{\ensuremath{\text{O}_{2}}} % O2
+\newcommand\hs{\ensuremath{\text{HS}^{-}}} % HS
+\newcommand\f{\ensuremath{\text{F}^{-}}} % F-
+\newcommand\wa{\ensuremath{\text{H}_2\text{O}}} % H2O
+
+\newcommand\half{\ensuremath{\frac{1}{2}}} % 1/2
+
+%----------------------------------------------------------------------------------------------------
+% Make sure there is no variable space between paragraphs to fill out pages vertically
+%----------------------------------------------------------------------------------------------------
+
+\raggedbottom
+
+%----------------------------------------------------------------------------------------------------
+% No extra spacing between items in bibliography
+%----------------------------------------------------------------------------------------------------
+
+\setlength{\bibsep}{0pt}
+
+%----------------------------------------------------------------------------------------------------
+% Smaller caption headings (from Patrick, copied from book.cls)
+%----------------------------------------------------------------------------------------------------
+
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{42\p@}%                                      was: 50pt
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+      \if@mainmatter
+        \huge\bfseries \@chapapp\space \thechapter%     was: huge
+        \par\nobreak
+        \vskip 17\p@%                                   was: 17pt
+      \fi
+    \fi
+    \interlinepenalty\@M
+    \LARGE \bfseries #1\par\nobreak%                    was: Huge
+    \vskip 32\p@%                                       was: 40pt
+  }}
+\def\@makeschapterhead#1{%
+  \vspace*{42\p@}%
+  {\parindent \z@ \raggedright
+    \normalfont
+    \interlinepenalty\@M
+    \huge \bfseries  #1\par\nobreak
+    \vskip 32\p@
+  }}
+\makeatother
+
+%----------------------------------------------------------------------------------------------------
+% Typeset chemical concentration symbols
+%----------------------------------------------------------------------------------------------------
+
+% SoLuTe
+\newcommand\slt[2][]{%
+    \ensuremath{%
+        \phantom{\ensuremath{m_{\text{#2}}^{#1}}}%
+        \llap{\ensuremath{m_{\text{#2}}^{#1}}}%
+    }%
+}%
+
+%-----------------------------------
+% HP additions:
+\usepackage{epsfig}
+%\usepackage[colorlinks, linkcolor = {blue}, citecolor = {blue}, urlcolor={red}]{hyperref}
+%-----------------------------------
+
+\begin{document}
+\pagestyle{empty}%
+\graphicspath{{figures/}}
+\frontmatter%
+\include{titlepage}%
+\tableofcontents%
+\mainmatter%
+%\selectlanguage{\dutch}%
+\pagestyle{fancy} % For nice headers
+\fancyfoot{} % Clear current setting
+\fancyfoot[LE,RO]{\thepage} % Page number on the left on even pages, to the right on odd pages
+\rhead[]{\normalsize\slshape \fancyplain{}{\shorttitle}}    % Right top header
+\include{intro/text_ipht3d}
+\lhead[\normalsize\slshape\fancyplain{}{Chapter \thechapter}]{} % Left top header
+\thispagestyle{empty} % Suppress page number on separator page
+
+%\include{physical/single_spec_2D_orti}
+\include{physical/single_spec_2D_ipht3d}
+\include{equilibrium/text_kigam2019}
+%\include{physical/text}
+%\include{coupling/theory}
+\include{equilibrium/phreeqc_mineral_reactions}
+\include{coupling/engesgaard_kipp_ipht3d}
+\include{coupling/franken_orti}
+\include{coupling/walter_ipht3d}
+\include{exchange/text_orti}
+\include{exchange/haerens_orti_bordeaux}
+\include{exchange/wallis_bentonite_orti}
+%\include{scm/surface_ipht3d}
+%\include{scm/kent_et_al_ipht3d}
+%\include{scm/dd_u_ipht3d_final}
+%\include{redox/redox_titration}
+\include{scm/surface_ipht3d}
+\include{scm/kent_et_al_ipht3d}
+\include{scm/dd_u_ipht3d_final}
+%\include{scm/bhasker_ipht3d}
+\include{redox/redox_titration_kigam2019}
+\include{redox/greskowiak_orti}
+
+%\include{kinetics/intro}
+%\include{kinetics/aerob}
+%\include{kinetics/kin_intro}
+%\include{kinetics/awr}
+%\include{kinetics/prommer_davis_barry_ipht3d}
+%\include{arsenic/arsenic_vp_orti}
+%\include{kinetics/prommer_stuyfzand_ipht3d_sustech}
+%\include{kinetics/isotopes_ipht3d}
+\backmatter%
+\bibliography{references/references}
+\include{acknowl}
+\include{annex/appendix_alk}
+\include{annex/appendix_pht3d_chk}
+%\include{annex/appendix_gloss}
+%\include{annex/appendix_recom}
+
+\end{document}

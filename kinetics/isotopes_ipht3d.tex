@@ -1,0 +1,244 @@
+\section[PHT3D Exercise 7: Degradation of chlorinated ethenes and isotopes]{PHT3D Exercise 7: Degradation of chlorinated ethenes and isotopes}
+
+\subsection[Modelling Scenario]{Modelling Scenario}
+
+In this exercise we investigate the sequential degradation of chlorinated ethenes and the use of 
+stable isotopes to provide forensic evidence for the origin of elevated vinyl chloride concentrations in a pumping well.   
+
+The principle modelling scenario consists of an aquifer that is contaminated by two different contaminant spillages, both positioned below sites of former metal processing companies (Company E and Company W). The modelling scenario is set up for a vertical cross section. The two different contamination sources consist of NAPL pools that are located on top of clay lenses. One of the NAPL sources is assumed to consist of PCE (tetrachlorethylene), while the other is assumed to consist of a mixture of TCE (trichlorethylene) and toluene. Groundwater is entering the model domain through the Eastern (fixed hydraulic head = 13.7 m.a.s.l) and Western boundary (fixed hydraulic head = 14.5 m.a.s.l). Under natural conditions the groundwater discharges to the river (prescribed hydraulic head = 10.8 m.a.s.l). However, there is also an active pumping well located between the PCE source and the river. The majority of the water that enters the model domain through the fixed head boundary discharges to the well during active pumping. However, some groundwater infiltrates to the river. On the other hand, some river water is also drawn towards the pumping well. The model setup is shown in Figure \ref{fig:ex6_setup}
+
+\begin{figure}[here]
+\centering
+\includegraphics[width=\textwidth]{ex6_setup}
+\caption[PHT3D Exercise 7: Model setup]{PHT3D Exercise 7: Model Setup}
+\label{fig:ex6_setup}
+\end{figure}
+
+\subsection[NAPL source zones]{NAPL source zones}
+
+The contamination sources are modelled by defining two discrete NAPL contaminated zones.
+On the Western side of the river a PCE source is defined by allocating an initial 
+concentration of 1 mol/l of Pcenapl to a discrete source zone situated on top of the clay lense.
+Similarly, the Eastern source is defined by allocating 1 mol/l of Tcenapl and 1 mol/l of Tolunapl 
+to a discrete zone.
+
+The rate expression that controls the kinetically controlled release of PCE is \\
+
+{\color{red}
+\begin{quote}   
+\#----------------------------------------------- \\
+Pcenapl		\\
+\#----------------------------------------------- \\
+  -start \\
+   10  mPcenapl = tot("Pcenapl") \\
+   15  if (mPcenapl $<=$ 1e-10) then goto 200 \\
+   20  solub\_Pce = 1.28 / 131.39 \# aqueous solubility of PCE \\
+   22  frac\_of\_solub = parm(2) \# Fraction of single species solubility\\
+   25  mPce = tot("Pce\_l") + tot("Pce\_h") \\
+   50  msolub\_Pce =  frac\_of\_solub * solub\_Pce \\
+   60  rate = parm(1) * (msolub\_Pce - mPce) \\
+   65  if (mPce $>$ msolub\_Pce) then rate = 0 \\
+   70  moles = rate * time \\
+   80  if (moles $>$ m) then moles = m \\
+   200 save moles \\
+  -end \\
+ \end{quote}
+ }
+ 
+ In the reaction database similar rate expressions are defined for TCE and toluene.
+ 
+\subsection[Formation of dissolved plumes]{Formation of dissolved plumes}
+
+When groundwater passes through these zones, dissolution (mass transfer to the aqueous phase) will
+occur, therefore creating a PCE plume on the Western side of the river. On the Eastern side of the 
+river the NAPL source creates a TCE as well as a toluene plume. 
+
+During the simulation period of 10 years these plumes grow initially but eventually become stable, given that we assume steady-state flow and constant source release conditions. This means that chemical concentrations at a particular location are not changing any further after a specific simulation time. 
+
+\subsection[Degradation reactions]{Degradation reactions}
+
+Besides the plumes of the primary contaminants there are also plumes of the transformation products developing. 
+These result from the degradation reactions that may proceed in suitable hydrochemical and microbial conditions.
+
+Under the oxic conditions found in this river valley aquifer the toluene plume released from the NAPL source
+undergoes aerobic degradation, thereby consuming oxygen. On the Eastern side of the model domain this 
+creates locally anaerobic conditions between the NAPL source and the groundwater discharge locations. 
+
+\begin{itemize}
+
+\item Visualise the contours of the toluene plume (Tolu\_l) after 10 years (3650 days) simulation time.
+
+\item Visualise the oxygen concentration contours after 10 years (3650 days) simulation time.
+ 
+\end{itemize}
+
+Where these anaerobic conditions prevail reductive dechlorination of TCE may take place.
+The transformation follows typically a sequential degradation pathway 
+(TCE $\rightarrow$ DCE $\rightarrow$ VC $\rightarrow$ Ethene).  
+In our model this reaction pathway is incorporated as a sequence of simple first oder reactions. 
+The corresponding reaction rate expression is, for exmaple for TCE:  \\
+
+{\color{red}
+\begin{quote}   
+\#----------------------------------------------- \\
+Tce\_l		\\
+\#----------------------------------------------- \\
+  -start \\
+2  if (tot("O(0)")) $>$ 1e-7 then goto 60 \\
+5  if (tot("Tce\_l")+tot("Tce\_h")) $<$ 1e-9 then goto 60 \\
+10 rate = parm(1)*(tot("Tce\_l")+tot("Tce\_h"))	 \\
+20 ratio = tot("Tce\_l")/(tot("Tce\_l")+tot("Tce\_h")) \\
+30 moles = ratio * rate * time \\
+40 put(rate, 3) \\
+50 put(ratio, 4) \\
+60 save moles \\
+-end \\
+ \end{quote}
+ }
+
+Note, that the incorporation of an "if" statement (line 2) inhibits the reaction in the presence of oxygen. 
+The DCE produced in this reaction is subsequently further degraded to VC, the most toxic 
+compound among the chlorinated ethenes. 
+While PCE could be transformed to TCE under reductive conditions, it does not degrade under the aerobic conditions that prevail on the Western side of the mode domain.
+
+\subsection[Chlorinated ethenes at the pumping well]{Chlorinated ethenes at the pumping well}
+
+As a result of the transport and chemical reactions we can find a complex mix of chlorinated ethenes in the pumping well.
+
+\begin{itemize}
+
+\item Open the model and inspect the simulation results at the pumping well.
+Use a particular grid cell that is representing the pumping well 
+(Column 13, Layer 20) for comparison of the results.
+
+\item What are the concentrations of Pce\_l, Tce\_l, Dce\_l, Vc\_l, and Eth\_l ? 
+
+\item From those concentration alone, is it possible to determine whether the contamination in the well 
+originated from Company E or from Company W ? 
+
+\item Check the oxygen concentrations at the pumping well (use again the grid cell defined by Column 13, Layer 20). 
+What would this suggest in terms of potential for reductive dechlorination ? 
+
+\end{itemize} 
+
+\subsection[Carbon isotopes] {Carbon isotopes}
+
+To analyse this modelling scenario further we make now use of the (simulated) carbon isotope ratios.
+In the model each chlorinated ethene species was divided into two separate species that represent 
+the light and heavy isotopes, respectively. 
+That means that each dissolved compound occurs twice in the reaction database to represent the 
+molecules containing either $^{12}$C or $^{13}$C. 
+Degradation of the light isotopes typically 
+proceeds faster than the reaction for the heavier isotopes.
+
+The difference between the reaction rates depends on the enrichment factor $\epsilon$.
+The enrichment factor for a specific reaction may be taken from the literature or, where possible,
+determined by site-specific experimental work. 
+
+The slight difference in reaction rates and the resulting $^{13}$C in the mother product is incorporated 
+into the reaction rate expression for the heavier isotope. For example in the case of Tce\_h the rate expression is: \\
+
+{\color{red}
+\begin{quote}   
+\#----------------------------------------------- \\
+Tce\_h		\\
+\#----------------------------------------------- \\
+  -start \\
+2  if (tot("O(0)")) $>$ 1e-7 then goto 40 \\
+5  if (tot("Tce\_l")+tot("Tce\_h")) $<$ 1e-9 then goto 40 \\
+10 rate = get(3)	\\
+20 ratio = 1-get(4) \\
+30 moles = ((parm(1)/1000)+1) * ratio * rate * time \\
+40 save moles \\
+-end \\
+ \end{quote}
+}
+
+For each of the chlorinated ethenes the carbon isotope ratios ($^{13}$C/$^{12}$C) can be 
+computed from the simulated concentrations of the light and heavy isotopes.
+The calculation is done analogous to the calculation of measured concentration values.
+
+The carbon isotope ratio is expressed as permil deviations from 
+the Vienna Pee Dee Belemnite (V-PDB) standard in the conventional notation.
+For the known, simulated ${{^{12}TCE}_{s}}$ and ${{^{13}TCE}_{s}}$ concentrations the carbon 
+isotope ratio $\delta ^{13}C_{TCE}$ can be calculated from: \\
+
+%\begin{equation}
+%{ \delta ^{13}TCE  = ((({^{13}TCE} / ^{12}TCE})_{s} - ({^{13}C} / ^{12}C})_{Std}) /  ({^{13}TCE} / ^{12}TCE})_{s}) \times 1000 } 
+%\label{eq:vpdb}
+%\end\{equation}
+
+\begin{equation}
+{ \delta ^{13}TCE  = {({^{13}TCE} / {^{12}TCE})_{s} -  ({^{13}C} / {^{12}C})_{Std}  \over  ({^{13}C} / {^{12}C})_{Std} } \times 1000 }
+%{ \delta ^{13}TCE  = ((({^{13}TCE} / {^{12}C})_{s} - ({^{13}TCE} / {^{12}TCE})_{s} /  ({^{13}TCE} / {^{12}TCE})_{s}) \times 1000 }
+\label{eq:vpdb}
+\end{equation}
+
+with 
+
+\begin{equation}
+{ ({^{13}C} / {^{12}C})_{Std} = 0.0112372 }
+\label{eq:vpdb_std}
+\end{equation}
+
+Using these equations, we can now determine the simulated $\delta ^{13}C$ values for
+all chlorinated ethenes. 
+
+\begin{itemize}
+
+\item Open the spreadsheet {\color{red} \textbf{pht3d\_exercise\_7.xls}} 
+
+\item In iPHT3D extract the select the various species to extract simulated concentrations at specific locations in the model.
+
+\item In iPHT3D Extract the simulated concentration values for Pce\_l and Pce\_h at a location within the Western contaminant source (x = 850 z = 6.5) and near the pumping well.
+
+\item Paste the values into the spreadsheet to calculate the $\delta ^{13}TCE$ for both locations 
+ 
+\item Extract the simulated concentration values for Tce\_l and Tce\_h at a location within the Eastern contaminant source 
+(x = 70 m, z = 10 m).
+
+\item Calculate the $\delta ^{13}TCE$ for both locations 
+
+\item What can be concluded from these values with respect to the most likely origin of the vinyl chloride (VC) ?
+Has it originated from the site of company W or the site of company E ?
+
+\end{itemize} 
+
+\begin{table}
+\caption{Compilation of selected model input parameter.}
+\begin{center}
+\begin{tabular}{lc} \hline
+Total simulation time $(days)$       & 3650  \\
+Time step length reactive transport $(days)$   & 36.5 \\
+Groundwater recharge rate $(m/day)$   & 0.001 \\ 
+\midrule 
+Prescribed heads: & \\
+Western boundary  $(m)$  &  13.7 \\
+Eastern boundary  $(m)$  &  14.5 \\ 
+River  $(m)$  &  10.8 \\
+\midrule 
+Pumping rate $(m^3/day)$ &      -7.5 \\
+Hydraulic conductivity coarse-grained material \    $(m/day)$         &  40            \\
+Hydraulic conductivity clayey material         \    $(m/day)$         &  0.1            \\  
+Longitudinal dispersivity\ $(m)         $         &  0.5                               \\ 
+Transversal  dispersivity\ $(m)         $         &  0.005   \\
+\midrule                           
+Source 1: & \\ 
+C$_{Pcenapl}$    $(mol/l)$                    &  1  \\ 
+\midrule 
+Source 2: & \\ 
+C$_{Tcenapl}$    $(mol/l)$                  &  1  \\
+C$_{Tolunapl}$   $(mol/l)$                  &  1  \\ 
+\midrule 
+Ambient, recharge and constant head inflow concentrations: & \\ 
+C$_{oxygen}$     $(mol/l)$                  &  4 $\times$ 10$^{-4}$  \\  
+pH &   7 \\
+pe &  13.5 \\
+C$_{Chlorinated\ Ethenes}$  $(mol/l)$  &    0 \\
+C$_{Toluene}$  $(mol/l)$  &    0 \\
+\hline
+
+\end{tabular}
+\label{ex_6_input}
+\end{center}
+\end{table}

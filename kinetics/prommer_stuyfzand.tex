@@ -1,0 +1,505 @@
+\newpage
+\section[PHT3D Exercise 5: Pyrite oxidation during deep well injection]{PHT3D Exercise 5: Pyrite oxidation during deep well injection}
+
+Managed aquifer recharge is increasingly used to enhance the sustainable development of water supplies. Common recharge techniques include aquifer storage and recovery (ASR), infiltration ponds, river bank filtration and deep-well injection. Following recharge the water quality of the injectant is typically altered by a multitude of geochemical processes during subsurface passage and storage. Relevant geochemical processes that affect the major ion chemistry include microbially mediated redox reactions, mineral dissolution/precipitation, sorption and ion-exchange. The hydrochemical conditions and changes that occur under these circumstances, in particular the temporal and spatial changes of pH and redox conditions, are in many cases the controlling factor for the fate of micropollutants such as herbicides and pharmaceuticals. Similarly, changes in mineralogical composition such as dissolution and precipitation of iron- or aluminiumoxides may affect the mobility of trace metals as well as the attachment and subsequent decay of pathogenic viruses. Laboratory and field-scale experimental studies are aimed at investigating such processes under controlled conditions and to eventually develop a better qualitative and quantitative understanding of their complex interactions, both site-specific and at a fundamental level. \
+\cite{prommer_stuyfzand_2005} carried out a reactive transport 
+modelling study to analyse the data collected during a deep well 
+injection experiment in an anaerobic, pyritic aquifer near Someren in Southern Netherlands. 
+
+This exercise replicates some of the key processes that were identified
+to influence water quality changes during subsurface passage. 
+Pyrite oxidation will be defined as a kinetic process in which the
+reaction rate depends on the water temperature. 
+For simplicity we include temperature as a seperate aqueous (mobile) component
+called {\color{red} \textbf{Tmp}}.
+The reaction rate expression expression has been programmed such 
+that the value of the component {\color{red} \textbf{Tmp}} is read
+and used during the computation of the reaction rate. 
+
+\subsection[Setting up the flow problem]{Setting up the flow problem}
+
+To simplify the original, fully three-dimensional model for this exercise, 
+the flow model is defined as a two-dimensional model for a single stratigraphic layer. Aerobic surface water is injected through an injection well and extracted 
+at an extraction well located 100 away from the injection well. 
+
+\begin{itemize}
+
+\item Use the data supplied in Table \ref{ex_model_grid} to set up the flow model. 
+Note that the geometry is defined for a half-model due to the symmetry of the problem.
+Neglect background groundwater flow and use for simplicity fixed head cells at the left 
+(x = 0 m) and the right (x = 200 m) model boundary to allow 
+exchange of water across these boundaries.
+
+\item Check your simulated heads in the injection well (24.22 m) and in the recovery well (15.78 m).
+
+\end{itemize}
+
+\begin{table}
+\caption{Flow and transport parameters used for the deep well injection problem.}
+\begin{center}
+\begin{tabular}{lc} \hline
+Flow simulation                     & steady state \\
+Total simulation time $(days)$       & 360  \\
+Time steps         & 180 \\
+Model \  length\ (column direction) \ $ (m)      $         &  200            \\
+Model \  width\  (row direction) \ $ (m)      $         &   80            \\
+Grid \ spacing\ $\Delta x $ (m)                &   10            \\
+Grid \ spacing\ $\Delta y $ (m)                &   10            \\
+Total Porosity\     $            $         &  0.35           \\
+Effective Porosity\     $            $         &  0.35           \\
+Horizontal hydraulic conductivity\ $(m)           $         &  10         \\  
+Piezometric head upstream (left) boundary\ $(m)          $         &  20           \\ 
+Piezometric head downstream (right) boundary\ $(m)        $         &  20           \\ 
+Depth target aquifer $(m \ below \ sealevel)   $         &  between -300 and -310          \\ 
+x-Position injection well $(m)   $         & 145          \\
+y-Position injection well $(m)   $         &   5         \\
+x-Position recovery well $(m)    $         &  55          \\
+y-Position recovery well $(m)    $         &   5         \\
+1/2 Flow rate injection well $(m^3/day)   $         &  500         \\
+1/2 Flow rate recovery well $(m^3/day)    $         &  500         \\
+Longitudinal dispersivity\ $(m)         $         &  1          \\ 
+Transversal  dispersivity\ $(m)         $         &  0.1          \\ \hline
+
+\end{tabular}
+\label{ex_model_grid}
+\end{center}
+\end{table}
+
+\subsection[Setting up the nonreactive transport problem]{Setting up the nonreactive transport problem}
+
+\begin{itemize}
+
+\item If the simulated heads agree, use MT3DMS to simulate a simple tracer experiment
+to estimate the travel times between the injection and the recovery well. 
+Set the tracer concentration in the backgroundwater to 0 and set the tracer concentration
+in the injection well to 1. Include some observation points on the axis between injection and recovery well to allow the visualisation
+of breakthrough curves.
+
+\item What is your simulated travel time to the mid-point between 
+injection and recovery well ? It should be approximately 20 days.
+If your result differs, try to debug the problem before proceeding.
+
+\item When does the recovery well receive 100\% of the injection concentration ? 
+
+\end{itemize} 
+
+\subsection[Setting up the reactive transport problem]{Setting up the reactive transport problem}
+
+Once the tests with the nonreactive model indicate that the model is working properly,
+proceed with the reactive transport model. 
+
+\begin{itemize}
+
+\item Add the reaction module (two files) supplied for this exercise to the reaction module library. See the previous exercise for the details. 
+
+\item Set appropriate boundary conditions for the fluxes/concentrations across the model boundary. 
+
+\item Copy the reaction database that was developed for this problem into the folder where the iPHT3D model is located. 
+
+\item Activate the relevant aqueous components that are needed to simulate the reactive transport of the chemicals listed in Table 1 of \cite{prommer_stuyfzand_2005}. Also include  {\color{red} \textbf{Tmp}} (Temperature). 
+For simplicity do not include  {\color{red} \textbf{DOC}} and ion exchange species. 
+From the minerals listed add only  {\color{red} \textbf{Pyrite (kinetic version)}} 
+and \\ {\color{red} \textbf{Fe(OH)3(a)}} to the reaction network.  
+
+\item Define the initial concentrations (background water composition and mineral concentrations)
+in the appropriate iPHT3D Tab. Use the 
+water composition listed in Table 1 of \cite{prommer_stuyfzand_2005}.
+For pyrite use an initial concentration of 0.05 mol/l bulk volume.
+Note that the oxidation rate of pyrite is, among other factors, depending on the 
+pyrite concentration. Where pyrite is present at higher concentrations the reaction
+will proceed faster. For the temperature {\color{red} \textbf{Tmp}} enter a value of 0.017, which
+corresponds to 1/1000 of the temperature in Celcius.
+
+\item Define the water composition of the injected water as $Solution 1$.
+Use the water composition measured at the 21 January 1997, as
+listed in Table 1 of \cite{prommer_stuyfzand_2005}. For the temperature add a
+value of 0.0019 (= 1.9 C). For pe, which is not given in Table 1, use a value of 13.5.
+ 
+\item Attriute this water composition to the injection well 
+under {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}PHT3D} $\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.4 Source \/ Sink} and define a zone 
+(a single point in this instance) at the well location. 
+
+\item Make sure that the reaction rate parameters 1 - 5 for the kinetically
+controlled pyrite oxidation are set to values of 16, .67, 0.5, -.11 and 115, respectively.
+
+\item Select the TVD scheme as advection package and define the dispersivities.
+
+\item Run the reactive transport model.
+
+\item Inspect the results: How far did oxygen penetrate into the aquifer at the end of the simulation time ?
+
+\end{itemize} 
+
+\subsection[Seasonally changing redox zonation]{Seasonally changing redox zonation}
+
+In the following part of the exercise we attempt to mimic the effects of a seasonally changing
+injection water temperature. This will result in a dynamically changing redox zonation.
+To simulate this effect proceed as follows:
+
+\begin{itemize}
+
+\item To effectively consider the transiently changing water compositions, iPHT3D allows to 
+upload ascii-files that contain multiple water compositions.
+For this exercise upload the pre-prepared file that contains the time-varying
+injectant water compositions. To link the uploaded water compositions to the
+injection well, modify the previous steady-state input that was made
+for the {\color{blue}Zone} that is attributed to the injection well.
+Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}PHT3D} $\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.4 Source \/ Sink}, select the 
+{\color{blue}Zone} and replace the single value with: \\
+0 1 \\
+30 2 \\
+60 3 \\
+90 4 \\
+120 5\\
+150 6 \\
+180 7 \\
+210 8 \\
+240 9 \\
+270 10 \\
+300 11 \\
+330 12 \\
+\\
+Note that the heat transport approximation in this exercise is not very accurate
+as it ignores the retardation that occurs as a result of heat transfer between
+the injectant and the sediment matrix. 
+While neglected here, it is possible to use MT3DMS/PHT3D to exactly approximate 
+the relevant heat transport equation. 
+% Ref to Rui and Peter Bayer's papers
+
+\end{itemize}
+
+
+\subsection[Mobilzation of arsenic]{Mobilzation of arsenic}
+
+In the last part or the exercise we are going to model the release of arsenic during oxidation of arsenopyrite
+and its subsequent sorption to ferrihydrite (HfO). In a first step we will model
+the dissolution of \emph{Arsenopyrite}. 
+The rate expression that is used for \emph{Arsenopyrite} will simply be linked
+to the rate of the computed pyrite oxidation:
+
+{\color{red}
+\begin{quote}
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\\
+Arsenopyrite \\
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\\
+-start \\
+  6 moles = parm(1) * get(1) \\
+200 save moles \\
+-end \\
+\end{quote}}
+
+The stoichiometric ratio at which arsenopyrite will be dissolved, compared to pyrite, is determined
+by {\color{red} \textbf{parm(1)}}. For example, if {\color{red} \textbf{parm(1)}} is set to
+\emph{0.001} the dissolution of 1 mmol pyrite will be accompanied by 
+the dissolution of 1 $\micro$mol \emph{Arsenopyrite}.   
+This is achieved by including {\color{red} \textbf{put(1)}}
+in the rate expression for pyrite:
+
+{\color{red}
+\begin{quote}
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# \\
+Pyrite \\
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# \\
+-start \\
+... \\
+... \\
+... \\
+90 moles = moles\_oxy + moles\_nitr + moles\_0 \\
+100 if (moles $\>$ m) then moles = m \\
+150 put(moles,1) \\
+200 save moles \\
+-end \\
+\end{quote}}
+
+We do now expand the last simulation and include additionally the two aqueous components As(5) and As(3) as well as the kinetic minerals \emph{Fe(OH)3(a)} and \emph{Arsenopyrite} in the reaction network. 
+
+\begin{itemize}
+
+\item Set the initial concentration for \emph{Arseonpyrite} to 0.01 mol/l$_{bulk}$.
+
+\item Set the reaction rate constants for \emph{Fe(OH)3(a)} to 2 $\times$ 10$^{-13}$
+and define that the ratio of \emph{Arsenopyrite} / \emph{Pyrite} dissolution 
+is 0.001 (i.e., parm(1) = 0.001 for \emph{Arsenopyrite}).
+
+\item Run the simulation and plot a breakthrough curve for As(5) and As(3) at the extraction well and at a location half-way between injection and the extraction well.
+Save the breakthrough curves from the observation wells to ASCII files.
+
+\item Now include surface complexation reactions by copying the file 
+{\color{red} \textbf{postfix.phrq}} 
+into the folder in which your model is located. This file will be read by PHT3D whenever it is present.
+In this way some instructions and definitions can be quickly and simply 
+supplied outside the \emph{Visual Modflow} environment.
+Get the file from the course CD or download it from \\
+\\
+{\color{red} \textbf{http://www.pht3d.org/course/ex5/postfix.phrq}} \\
+\\ 
+Open it with \emph{PHREEQC for Windows} to inspect the input instructions.  
+
+\item Run the model and inspect again the As(5) and As(3) breakthrough curves at the extraction well
+(Note, convergence is only achieved if the \emph{diffuse\_layer} option 
+is included under the KEYWORD \emph{SURFACE} in the file
+{\color{red} \textbf{postfix.phrq}}.
+As a result the model execution time will increase significantly).
+
+\item To compare the new results with the previous results (model run without surface complexation),
+load the previously saved breakthrough curves (ASCII files) as observations for \emph{As(5)} at the
+observation wells. 
+
+\end{itemize}
+
+\newpage
+
+\section[PHT3D Exercise 6: Degradation of chlorinated ethenes and isotopes]{PHT3D Exercise 6: Degradation of chlorinated ethenes and isotopes}
+
+\subsection[Modelling Scenario]{Modelling Scenario}
+
+In this exercise we investigate the sequential degradation of chlorinated ethenes and the use of 
+stable isotopes to provide forensic evidence for the origin of elevated vinyl chloride concentrations in a pumping well.   
+
+The principle modelling scenario consists of an aquifer that is contaminated by two different contaminant spillages, both positioned below sites of former metal processing companies (Company E and Company W). The modelling scenario is set up for a vertical cross section. The two different contamination sources consist of NAPL pools that are located on top of clay lenses. One of the NAPL sources is assumed to consist of PCE (tetrachlorethylene), while the other is assumed to consist of a mixture of TCE (trichlorethylene) and toluene. Groundwater is entering the model domain through the Eastern (fixed hydraulic head = 13.7 m.a.s.l) and Western boundary (fixed hydraulic head = 14.5 m.a.s.l). Under natural conditions the groundwater discharges to the river (prescribed hydraulic head = 10.8 m.a.s.l). However, there is also an active pumping well located between the PCE source and the river. The majority of the water that enters the model domain through the fixed head boundary discharges to the well during active pumping. However, some groundwater infiltrates to the river. On the other hand, some river water is also drawn towards the pumping well. The model setup is shown in Figure \ref{fig:ex6_setup}
+
+\begin{figure}[here]
+\centering
+\includegraphics[width=\textwidth]{ex6_setup}
+\caption[PHT3D Exercise 6: Model setup]{PHT3D Exercise 6: Model Setup}
+\label{fig:ex6_setup}
+\end{figure}
+
+\subsection[NAPL source zones]{NAPL source zones}
+
+The contamination sources are modelled by defining two discrete NAPL contaminated zones.
+On the Western side of the river a PCE source is defined by allocating an initial 
+concentration of 1 mol/l of Pcenapl to a discrete source zone situated on top of the clay lense.
+Similarly, the Eastern source is defined by allocating 1 mol/l of Tcenapl and 1 mol/l of Tolunapl 
+to a discrete zone.
+
+The rate expression that controls the kinetically controlled release of PCE is \\
+
+{\color{red}
+\begin{quote}   
+\#----------------------------------------------- \\
+Pcenapl		\\
+\#----------------------------------------------- \\
+  -start \\
+   10  mPcenapl = tot("Pcenapl") \\
+   15  if (mPcenapl $<=$ 1e-10) then goto 200 \\
+   20  solub\_Pce = 1.28 / 131.39 \# aqueous solubility of PCE \\
+   22  frac\_of\_solub = parm(2) \# Fraction of single species solubility\\
+   25  mPce = tot("Pce\_l") + tot("Pce\_h") \\
+   50  msolub\_Pce =  frac\_of\_solub * solub\_Pce \\
+   60  rate = parm(1) * (msolub\_Pce - mPce) \\
+   65  if (mPce $>$ msolub\_Pce) then rate = 0 \\
+   70  moles = rate * time \\
+   80  if (moles $>$ m) then moles = m \\
+   200 save moles \\
+  -end \\
+ \end{quote}
+ }
+ 
+ In the reaction database similar rate expressions are defined for TCE and toluene.
+ 
+\subsection[Formation of dissolved plumes]{Formation of dissolved plumes}
+
+When groundwater passes through these zones, dissolution (mass transfer to the aqueous phase) will
+occur, therefore creating a PCE plume on the Western side of the river. On the Eastern side of the 
+river the NAPL source creates a TCE as well as a toluene plume. 
+
+During the simulation period of 10 years these plumes grow initially but eventually become stable, given that we assume steady-state flow and constant source release conditions. This means that chemical concentrations at a particular location are not changing any further after a specific simulation time. 
+
+\subsection[Degradation reactions]{Degradation reactions}
+
+Besides the plumes of the primary contaminants there are also plumes of the transformation products developing. 
+These result from the degradation reactions that may proceed in suitable hydrochemical and microbial conditions.
+
+Under the oxic conditions found in this river valley aquifer the toluene plume released from the NAPL source
+undergoes aerobic degradation, thereby consuming oxygen. On the Eastern side of the model domain this 
+creates locally anaerobic conditions between the NAPL source and the groundwater discharge locations. 
+
+\begin{itemize}
+
+\item Visualise the contours of the toluene plume (Tolu\_l) after 10 years (3650 days) simulation time.
+
+\item Visualise the oxygen concentration contours after 10 years (3650 days) simulation time.
+ 
+\end{itemize}
+
+Where these anaerobic conditions prevail reductive dechlorination of TCE may take place.
+The transformation follows typically a sequential degradation pathway 
+(TCE $\rightarrow$ DCE $\rightarrow$ VC $\rightarrow$ Ethene).  
+In our model this reaction pathway is incorporated as a sequence of simple first oder reactions. 
+The corresponding reaction rate expression is, for exmaple for TCE:  \\
+
+{\color{red}
+\begin{quote}   
+\#----------------------------------------------- \\
+Tce\_l		\\
+\#----------------------------------------------- \\
+  -start \\
+2  if (tot("O(0)")) $>$ 1e-7 then goto 60 \\
+5  if (tot("Tce\_l")+tot("Tce\_h")) $<$ 1e-9 then goto 60 \\
+10 rate = parm(1)*(tot("Tce\_l")+tot("Tce\_h"))	 \\
+20 ratio = tot("Tce\_l")/(tot("Tce\_l")+tot("Tce\_h")) \\
+30 moles = ratio * rate * time \\
+40 put(rate, 3) \\
+50 put(ratio, 4) \\
+60 save moles \\
+-end \\
+ \end{quote}
+ }
+
+Note, that the incorporation of an "if" statement (line 2) inhibits the reaction in the presence of oxygen. 
+The DCE produced in this reaction is subsequently further degraded to VC, the most toxic 
+compound among the chlorinated ethenes. 
+While PCE could be transformed to TCE under reductive conditions, it does not degrade under the aerobic conditions that prevail on the Western side of the mode domain.
+
+\subsection[Chlorinated ethenes at the pumping well]{Chlorinated ethenes at the pumping well}
+
+As a result of the transport and chemical reactions we can find a complex mix of chlorinated ethenes in the pumping well.
+
+\begin{itemize}
+
+\item Open the model and inspect the simulation results at the pumping well.
+Use a particular grid cell that is representing the pumping well 
+(Column 13, Layer 20) for comparison of the results.
+
+\item What are the concentrations of Pce\_l, Tce\_l, Dce\_l, Vc\_l, and Eth\_l ? 
+
+\item From those concentration alone, is it possible to determine whether the contamination in the well 
+originated from Company E or from Company W ? 
+
+\item Check the oxygen concentrations at the pumping well (use again the grid cell defined by Column 13, Layer 20). 
+What would this suggest in terms of potential for reductive dechlorination ? 
+
+\end{itemize} 
+
+\subsection[Carbon isotopes] {Carbon isotopes}
+
+To analyse this modelling scenario further we make now use of the (simulated) carbon isotope ratios.
+In the model each chlorinated ethene species was divided into two separate species that represent 
+the light and heavy isotopes, respectively. 
+That means that each dissolved compound occurs twice in the reaction database to represent the 
+molecules containing either $^{12}$C or $^{13}$C. 
+Degradation of the light isotopes typically 
+proceeds faster than the reaction for the heavier isotopes.
+
+The difference between the reaction rates depends on the enrichment factor $\epsilon$.
+The enrichment factor for a specific reaction may be taken from the literature or, where possible,
+determined by site-specific experimental work. 
+
+The slight difference in reaction rates and the resulting $^{13}$C in the mother product is incorporated 
+into the reaction rate expression for the heavier isotope. For example in the case of Tce\_h the rate expression is: \\
+
+{\color{red}
+\begin{quote}   
+\#----------------------------------------------- \\
+Tce\_h		\\
+\#----------------------------------------------- \\
+  -start \\
+2  if (tot("O(0)")) $>$ 1e-7 then goto 40 \\
+5  if (tot("Tce\_l")+tot("Tce\_h")) $<$ 1e-9 then goto 40 \\
+10 rate = get(3)	\\
+20 ratio = 1-get(4) \\
+30 moles = ((parm(1)/1000)+1) * ratio * rate * time \\
+40 save moles \\
+-end \\
+ \end{quote}
+}
+
+For each of the chlorinated ethenes the carbon isotope ratios ($^{13}$C/$^{12}$C) can be 
+computed from the simulated concentrations of the light and heavy isotopes.
+The calculation is done analogous to the calculation of measured concentration values.
+
+The carbon isotope ratio is expressed as permil deviations from 
+the Vienna Pee Dee Belemnite (V-PDB) standard in the conventional notation.
+For the known, simulated ${{^{12}TCE}_{s}}$ and ${{^{13}TCE}_{s}}$ concentrations the carbon 
+isotope ratio $\delta ^{13}C_{TCE}$ can be calculated from: \\
+
+%\begin{equation}
+%{ \delta ^{13}TCE  = ((({^{13}TCE} / ^{12}TCE})_{s} - ({^{13}C} / ^{12}C})_{Std}) /  ({^{13}TCE} / ^{12}TCE})_{s}) \times 1000 } 
+%\label{eq:vpdb}
+%\end\{equation}
+
+\begin{equation}
+{ \delta ^{13}TCE  = {({^{13}TCE} / {^{12}TCE})_{s} -  ({^{13}C} / {^{12}C})_{Std}  \over  ({^{13}C} / {^{12}C})_{Std} } \times 1000 }
+%{ \delta ^{13}TCE  = ((({^{13}TCE} / {^{12}C})_{s} - ({^{13}TCE} / {^{12}TCE})_{s} /  ({^{13}TCE} / {^{12}TCE})_{s}) \times 1000 }
+\label{eq:vpdb}
+\end{equation}
+
+with 
+
+\begin{equation}
+{ ({^{13}C} / {^{12}C})_{Std} = 0.0112372 }
+\label{eq:vpdb_std}
+\end{equation}
+
+Using these equations, we can now determine the simulated $\delta ^{13}C$ values for
+all chlorinated ethenes. 
+
+\begin{itemize}
+
+\item Open the spreadsheet {\color{red} \textbf{pht3d\_exercise\_6.xls}} 
+
+\item In PMWIN go to Tools $\rightarrow$ 2D-Visualisation $\rightarrow$ PHT3D and select the various species to extract simulated concentrations at specific locations in the model.
+
+\item Extract the simulated concentration values for Pce\_l and Pce\_h at a location within the Western contaminant source (use grid cell defined by Column 43, Layer 28) and near the pumping well (use grid cell defined by Column 13, Layer 24).
+
+\item Paste the values into the spreadsheet to calculate the $\delta ^{13}TCE$ for both locations 
+ 
+\item Extract the simulated concentration values for Tce\_l and Tce\_h at a location within the Eastern contaminant source 
+(use grid cell defined by Column 4, Layer 20) and near the pumping well (use grid cell defined by Column 13, Layer 24).
+
+\item Paste the values into the spreadsheet to calculate the $\delta ^{13}TCE$ for both locations 
+
+\item What can be concluded from these values with respect to the most likely origin of the vinyl chloride (VC) ?
+Has it originated from the site of company W or the site of company E ?
+
+\end{itemize} 
+
+\begin{table}
+\caption{Compilation of selected model input parameter.}
+\begin{center}
+\begin{tabular}{lc} \hline
+Total simulation time $(days)$       & 3650  \\
+Time step length reactive transport $(days)$   & 36.5 \\
+Groundwater recharge rate $(m/day)$   & 0.001 \\ 
+\midrule 
+Prescribed heads: & \\
+Western boundary  $(m)$  &  13.7 \\
+Eastern boundary  $(m)$  &  14.5 \\ 
+River  $(m)$  &  10.8 \\
+\midrule 
+Pumping rate $(m^3/day)$ &      -7.5 \\
+Hydraulic conductivity coarse-grained material \    $(m/day)$         &  40            \\
+Hydraulic conductivity clayey material         \    $(m/day)$         &  0.1            \\  
+Longitudinal dispersivity\ $(m)         $         &  0.5                               \\ 
+Transversal  dispersivity\ $(m)         $         &  0.005   \\
+\midrule                           
+Source 1: & \\ 
+C$_{Pcenapl}$    $(mol/l)$                    &  1  \\ 
+\midrule 
+Source 2: & \\ 
+C$_{Tcenapl}$    $(mol/l)$                  &  1  \\
+C$_{Tolunapl}$   $(mol/l)$                  &  1  \\ 
+\midrule 
+Ambient, recharge and constant head inflow concentrations: & \\ 
+C$_{oxygen}$     $(mol/l)$                  &  4 $\times$ 10$^{-4}$  \\  
+pH &   7 \\
+pe &  13.5 \\
+C$_{Chlorinated\ Ethenes}$  $(mol/l)$  &    0 \\
+C$_{Toluene}$  $(mol/l)$  &    0 \\
+\hline
+
+\end{tabular}
+\label{ex_6_input}
+\end{center}
+\end{table}
+
+  
+
+
+
+
+
+
+
+

@@ -1,0 +1,143 @@
+\section[Groundwater flow and conservative transport]{Groundwater flow and conservative transport}
+
+\subsection[Spatial discretisation and flow problem]{Spatial discretisation and flow problem}
+
+The problem is set up as a simple two-dimensional flow and transport problem with dimensions and properties as defined in Table \ref{franken_flow}. To construct the MODFLOW model that underlies the transport problem proceed as follows:
+
+%\begin{figure}[b]
+%\centering
+%\includegraphics[width=80mm]{walter.eps}
+%\caption[Initial definition of the model grid for PHT3D Exercise 2]{Initial definition of the model grid for PHT3D %Exercise 2}
+%\label{fig:mesh_walter}
+%\end{figure}
+
+
+\begin{itemize}
+
+\item In ORTi, create a new model and save it in a new, separate directory.
+Remember to use only alphabets (either lower or UPPER case), numbers, 
+underscore (\_) and hyphen (\textemdash) in the path.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Model} button and specify the attributes of the new model. Select the values {\color{blue}Xsection} for {\color{blue}Dimension}, {\color{blue}unconfined} for {\color{blue}Type} 
+and {\color{blue}MODFLOW series} for {\color{blue}Group} 
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Grid} button and specify the details of the model domain and the spatial discretization in the dialog that opens up. Define a vertical transect that is 2000m long and 20m thick. The model domain
+may be discretized into grid cells of 40m length and 1m height. Note, that the model input in ORTi
+is grid-independent and that therefore the model discretization can be easily changed 
+at any time later. 
+
+\item Select {\color{blue}Parameters} and select the {\color{blue}Time} button.
+Set the {\color{blue}Total Simulation Time} to 18250 days and select a time {\color{blue}Step size}
+of 365 days. 
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.8} and set the {\color{blue}Backg.} value of horizontal hydraulic conductivity to 20 $m/day$. Then press {\color{blue}OK} to confirm the value.
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.9} and set the {\color{blue}Backg.} value of vertical hydraulic conductivity to 1 $m/day$. Then press {\color{blue}OK} to confirm the value.
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}BTN} $\rightarrow$ {\color{blue}btn.11} and set the {\color{blue}Backg.} value of effective porosity to be 0.25. Then press {\color{blue}OK} to confirm the value.
+
+
+\item Implement a hydraulic boundary condition that represents the river at the downstream end of this synthetic catchment by defining a specified head boundary at the downstream side of the model. First, define the type of boundary condition by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.3 Boundary Conditions} and setting the value to 1 (= active cell) for all cells. After that select {\color{blue}Zone} and use the {\color{blue}Zone Tools} to draw a short line near the effluent end. Choose an elevation of z = 8.5 m for the line and draw it from x = 1m to x = 20m. 
+The value for the line (=zone) needs to be set to -1. Use, for example,
+$river\_bc$ as {\color{blue}Zone Names}. You will see the selected name displayed near 
+the location of the line.
+  
+By setting the boundary condition type to -1 the hydraulic head at the grid cells 
+near the defined line will remain unchanged
+over the entire simulation period, i.e., it will remain at the value that corresponds to the elevation of
+the river water level. In the next step the initial heads need to be defined. 
+
+\item First the define the global initial hydraulic head for the entire domain (Background value) by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.6 Initial Heads} and set the
+ {\color{blue}Backg.} value to 20m. Then press {\color{blue}OK} to confirm the value.  
+
+\item Define the initial hydraulic head at the location of the river by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.6 Initial Heads}.
+Select {\color{blue}Zone} and use the {\color{blue}Zone Tools} to draw again a short line near the effluent end. Choose an elevation of z = 8.5 m for the line and draw it from x = 1m to x = 20m. 
+Note, that you can edit the coordinates manually after you have completed the drawing.
+The value for the line (=zone) needs to be set to 8.5. Use, for example,
+$river\_head$ as {\color{blue}Zone Names}. You will see the selected name and the selected value
+displayed near the location of the line.
+  
+
+To define the groundwater recharge for this model you will first need to activate the recharge package,
+as it is not automatically activated.
+This can be done by going to {\color{blue}Add-in} $\rightarrow$ {\color{blue}MODFLOW modules} 
+and ticking the box {\color{blue}RCH}. Then tick {\color{blue}OK}.
+You will see that you can now go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}RCH} $\rightarrow$ {\color{blue}rch.2 Recharge value} and set the {\color{blue}Backg.} value to 0.001m, corresponding to an annual groundwater recharge of 365mm per year.
+Then press {\color{blue}OK} to confirm the value. 
+
+\end{itemize}
+
+\begin{table}[t]
+\caption{Flow and transport parameters for the simulation.}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Flow simulation                     & steady state \\
+Total simulation period\ $ (days)      $         &  18250            \\
+Time step length\ $ (days)      $         &  182.5            \\
+Model \  length\ $ (m)      $         &  2000            \\
+Model \  thickness\ $(m)$                        &  20            \\
+Grid \ spacing\ $\Delta x $ $(m)$                &    40            \\
+Grid \ spacing\ $\Delta z $ $(m)$                &    1            \\
+Porosity\     $            $         &  0.25           \\
+Horizontal hydraulic conductivity\ $(m/day)$               &  20         \\ 
+Vertical   hydraulic conductivity\ $(m/day)$               &  1         \\ 
+Piezometric head downstream boundary (River)\ $(m)        $         &  8.5           \\ 
+Longitudinal dispersivity\ $(m)         $         &  2.5          \\ 
+Transverse  vertical dispersivity\ $(m)         $         &  0.025          \\ 
+\bottomrule
+\end{tabular}
+\label{franken_flow}
+\end{center}
+\end{table}
+
+\subsection[Running MODFLOW]{Running MODFLOW}
+
+You have now completed to set up the flow model and you are ready to run MODFLOW.
+
+\begin{itemize}
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}2.Flow} use the {\color{blue}Write Button} to write all the input files required to run MODFLOW
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}2.Flow} use the 
+{\color{blue}Red Arrow} button to start the MODFLOW simulation
+
+\item Check the simulated head contours and assess whether the results are plausible.
+
+\item Try, for example to set the head contours manually at 0.25m intervals, starting from 8.5m.
+
+% Olivier, maybe we can practise the use of some more iPHT3D output features 
+
+\end{itemize}
+
+% Here we had a non-reactive model step in the pmwin version of the tutorial
+
+\subsection{Conservative transport}
+
+For the simulation of the solute transport of the mobile components, 
+the model parameters that control advective and dispersive transport need to be entered. 
+You will proceed as follows:
+
+\begin{itemize}
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}3.Transport} and select the  {\color{blue}Parameters} button.
+\item In the dialog box that subsequently appears, select {\color{blue}ADV} $\rightarrow$ {\color{blue}adv.1- Major data} $\rightarrow$ {\color{blue}MIXELM: Method} $\rightarrow$  {\color{blue}MMOC} as the Solution Scheme. Leave the default parameters and click {\color{blue}Apply} and Close.
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}DSP}, enter {\color{blue}Backg. longitudinal dispersivity} value of 5 m and click {\color{blue}OK}.
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}DSP}, and enter {\color{blue}Backg. value} for {\color{blue}dsp.3 ratio between horizontal transverse dispersivity} and {\color{blue}longitudinal dispersivity} as 0.01. Click {\color{blue}OK}. This will define the actual value of {\color{blue} horizontal transverse dispersivity} to be 0.05 m (= 5 $\times$ 0.01 m).
+
+\item Add a tracer to the recharge water. This can be done by selecting {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}btn.23 Recharge}. Allocate an initial concentration of 10 mg/L to the recharge water. Click {\color{blue}OK}.
+
+\item Run the transport model by selecting {\color{blue}Parameters} $\rightarrow$ {\color{blue}3.Transport} $\rightarrow$ {\color{blue}Write}. This will write all required MT3DMS input files. Then press the {\color{blue}Red Arrow} button to begin the transport simulation.
+
+\item Visualise the concentration contours under {\color{blue}Results} $\rightarrow$ {\color{blue}3.Transport} $\rightarrow$ {\color{blue}Tracer}. You can change the {\color{blue}Time Step} (under Results) $\rightarrow$ {\color{blue}1.Model} $\rightarrow$ {\color{blue}Tstep} to visualise the results for other simulation times. Also, after selecting a time it is possible to use the mouse wheel to changes times. 
+
+\item Check the simulated tracer concentration contours and assess whether the results are plausible.
+
+\item Remember to save your ORTi file.
+
+\item End of Day 1.
+
+\end{itemize}
+
+

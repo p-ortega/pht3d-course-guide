@@ -1,0 +1,26 @@
+\chapter*{Appendix II}
+
+\addcontentsline{toc}{chapter}{Appendix II}
+
+\def\shorttitle{Appendix II}
+
+\section*{Common causes for model crashes}
+One of the most frustrating things in learning a new code is getting stuck because the model crashes for unclear reasons. Most of the time, the solution is very simple. So simple that overlooking it is easier than finding it. The following checklist may be useful in tracking down the cause of the model failure:
+
+\begin{itemize}
+
+\item Model names: Avoid using model names that contain blanks).
+
+\item Units: Are the values for aqueous concentrations and ion exchanger sites provided in mol/l and in mol/lb for minerals?
+
+\item Time stepping: Has the temporal discretization that determines the number of PHREEQC reaction steps been defined? The number of reaction steps should be selected such that solutes are not transported much further than one grid-cell.  
+
+\item Charge balance of water compositions: Are aqueous solutions that are defined as initial water composition(s) and at model boundaries (recharge, wells, constand head cells, \ldots) charge balanced?   
+
+\item Chemical equilibrium of water compositions: Are aqueous solutions that are provided as initial water composition(s) (pre-)equilibrated with the equilibrium minerals that are included in the simulation?   
+
+\item Chemical equilibrium of water compositions: Are aqueous solutions that are provided as initial water composition(s) (pre-)equilibrated with the ion exchanger sites and have the concentrations on the exchanger been entered?    
+ 
+\item Redox: Have all redox-states of redox-sensitive components been included in the definition of the reaction module? For example, for sulphur not only S(6) but both S(6) and S(-2), and/or both C(4) and C(-4), etc? 
+
+\end{itemize}

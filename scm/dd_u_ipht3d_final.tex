@@ -1,0 +1,605 @@
+\section[PHT3D Exercise 7 Transport of uranium in a fractured rock aquifer]{PHT3D Exercise 7 Transport of uranium in a fractured rock aquifer}
+
+In this exercise we will investigate the transport of solutes 
+in a fractured aquifer system. The exercise will illustrate 
+how the dual-domain mass transfer model (DDMT) can be used to mimic the
+characteristic physical transport behaviour of fractured rock
+and how the model mass transfer with the matrix may influence 
+the transport of uranium. The illustrative example
+is defined for a case in which the potential impact of 
+the release of mining wastes on a surface water body 
+is investigated. The main focus is on understanding the 
+coupled physical and chemical transport behavior of uranium.        
+
+\subsection{Groundwater flow}
+
+The model for the site consists of a cross section that follows 
+a principle flow path between the groundwater divide and 
+a discharge point to a creek that is located 2 km downstream of the 
+groundwater divide. Groundwater recharge from rainfall is the only 
+driver of groundwater flow in this situation and all recharged 
+water eventually discharges to the creek. 
+The aquifer is unconfined and the groundwater table 
+is controlled at the downstream boundary by the water level of the creek.
+This is implemented in the model through a specified head boundary. 
+The upstream end of the model, i.e., the groundwater divide is implemented
+through a no flow boundary. Similarly the base of the aquifer and the
+vertical boundary at the creek's position are implemented 
+as no flow boundaries. The completed groundwater flow model 
+will be provided to you and form the starting point of this exercise.
+
+Save the files supplied for this exercise 
+(ORTI file and database file) in a newly created 
+folder. Then open the file  {\color{red}\textbf{dd\_u.orti}}.
+Before running the model, inspect the model and check
+\begin{itemize}
+\item the position of the boundary condition under 
+{\color{blue}Spatial attributes} 
+$\rightarrow$ {\color{blue}\textbf{Modflow}} 
+$\rightarrow$ {\color{blue}\textbf{Bas.3}}
+\item the initial and specified heads 
+{\color{blue}\textbf{Spatial attributes}} 
+$\rightarrow$ {\color{blue}\textbf{Modflow}} 
+$\rightarrow$  {\color{blue}\textbf{Bas.5}}
+\item the implementation of groundwater recharge under 
+{\color{blue}\textbf{Spatial attributes}} 
+$\rightarrow$ {\color{blue}\textbf{Modflow}} 
+$\rightarrow$ {\color{blue}\textbf{Rch.1}}
+\item the length of the simulation under 
+{\color{blue}\textbf{Parameters}} 
+$\rightarrow$ {\color{blue}\textbf{Model}}
+$\rightarrow$ {\color{blue}\textbf{Time}}
+\end{itemize}
+
+In the next step write the MODFLOW input files and run MODFLOW.
+Verify that the {\color{blue}\textbf{Total Time}} shown in the  
+pop-up window is the same as your user-specified simulation time. 
+If it differs the model run was
+not successfully terminated and the model needs to be debugged. 
+Inspect the simulation results.
+
+\subsection{Conservative solute transport in a single domain}
+
+Before simulating the reactive transport of uranium we will 
+first investigate the transport behavior of a conservative tracer
+between a pit that is filled with tailings material and the point of
+groundwater discharge to the surface water.
+This will allow a first estimate of the travel-time and of the degree
+to which mixing and dispersion causes a concentration attenuation 
+for any solutes that are transported between the pit and the discharge zone.
+In a first step the simulation will be performed under the assumption that 
+the aquifer can be described as a media behaving equivalent to a porous media. 
+ For these first model simulation the tracer is added across the whole volume 
+of water representing the tailings fluids. \\
+To run this first conservative transport model follow these steps:
+
+\begin{itemize}
+\item check the duration of the simulation (parameters/model/time). 
+It should be 73000 days (approximately 200 years).
+\item	set the position of the pit for the initial concentration 
+of the tracer. We will suppose that the initial concentration 
+is homogeneous over the whole pit. 
+To do this go to 
+{\color{blue}\textbf{Spatial attributes}} 
+$\rightarrow$ {\color{blue}\textbf{Mt3dms}} 
+$\rightarrow$ {\color{blue}\textbf{Btn.13}}
+concentrations and create a zone, that extends from 501 to 799 m in x direction 
+and 60 to 89 m in z direction. Set a value of 10 for the tracer. 
+This can be any unit.
+\item Set the porosity to a low value (0.02) corresponding to the fractures, in 
+{\color{blue}\textbf{Spatial attributes}} 
+$\rightarrow$ {\color{blue}\textbf{Mt3dms}} 
+$\rightarrow$ {\color{blue}\textbf{Btn.11}}
+\item Set the longitudinal dispersivity to 1m 
+under 
+{\color{blue}\textbf{Parameters}} 
+$\rightarrow$ {\color{blue}\textbf{Transport}} 
+$\rightarrow$ {\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Dsp.2}}
+and leave the ratio of transverse to longitudinal at it default value.
+\item Then write the Mt3dms input files and run the model
+\end{itemize}
+
+After the model run, look at the temporal evolution of the concentrations 
+in the domain to assess the time it takes to deplete the tracer from the pit. 
+To view the potential tracer output to the creek, go to 
+{\color{blue}\textbf{Results}} 
+$\rightarrow$ {\color{blue}\textbf{Observations}}
+$\rightarrow$ {\color{blue}\textbf{Breakthrough}}
+$\rightarrow$ {\color{blue}\textbf{Creek$\_$obs}}
+and select {\color{blue}\textbf{Value}}. 
+This will plot the breakthrough curve of the tracer at the point of 
+discharge to the creek. Export the results to a text file 
+such that the data can later be used for a comparison of different cases.
+
+\subsection{Conservative solute transport in a dual-domain system}
+
+Up to now groundwater flow was considered to occur 
+more or less homogeneously in a porous medium. 
+However, in fractured rock the vast majority of the water flux occurs
+in the fractures while the water prevailing outside the 
+fractures can be considered as immobile.
+The exchange of solutes between the mobile fraction of the aquifer, 
+i.e., the fractures and the immobile domain (i.e., matrix) occurs slowly.
+In many cases mass exchange is limited to transport by molecular diffusion. 
+This can be modelled by invoking the {\color{blue}\textbf{RCT}} package in MT3DMS. 
+In the {\color{blue}\textbf{RCT}} package two major adjustments have to be made,
+i.e., the total (single) porosity has to be replaced by
+a combination of a mobile and an immobile porosity.
+Additionally the exchange coefficient between the mobile domain 
+and the immobile domain has to defined. 
+
+\begin{itemize}
+\item First add the {\color{blue}\textbf{RCT}} package to the suite of 
+modules that can be used in your simulation. To do this go to 
+{\color{blue}\textbf{Menu}} 
+$\rightarrow$ {\color{blue}\textbf{Addins}},
+select {\color{blue}\textbf{Mt3dms modules}} 
+and check the {\color{blue}\textbf{RCT}} package. 
+This will enable the {\color{blue}\textbf{Spc}} 
+and the {\color{blue}\textbf{Rct}} buttons
+to appear under 
+{\color{blue}\textbf{Parameters}} $\rightarrow$ {\color{blue}\textbf{Transport}}.
+\item Go to 
+{\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Transport}} 
+$\rightarrow$ {\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{RCT}}
+$\rightarrow$ {\color{blue}\textbf{Rct.1 Major Flags}}
+and set the {\color{blue}\textbf{ISOTHM}} 
+value to {\color{blue}\textbf{dual domain no sorption}}. 
+Furthermore, keep 
+{\color{blue}\textbf{no reaction}} and set the 
+{\color{blue}\textbf{initial conc}} to {\color{blue}\textbf{Given}}, 
+before clicking {\color{blue}\textbf{Apply}}.
+\item Then, in the same panel, go to 
+{\color{blue}\textbf{Rct.2b}} and set the {\color{blue}\textbf{immobile porosity}} 
+to 0.23, the value that represents the porosity of the immobile domain. 
+Click {\color{blue}\textbf{Apply}}
+\item Also in the same panel go to {\color{blue}\textbf{Rct.2c}} 
+and set the {\color{blue}\textbf{initial concentrations}} to 0 to define that
+the initial concentration of the tracer in the matrix is null.
+\item We have to specify which species will be submitted 
+to dual domain exchange. 
+To do this click on the 
+{\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Transport}} 
+$\rightarrow$ {\color{blue}\textbf{Spc}}
+button, and in the dialog select {\color{blue}\textbf{Mt3dms}} 
+and add {\color{blue}\textbf{Tracer}} as the species name.
+\item The exchange coefficient value is provided by using the 
+{\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Transport}} 
+$\rightarrow$ {\color{blue}\textbf{Rct}}
+button, which opens a grid dialog that only shows {\color{blue}\textbf{Tracer}} 
+in this incidence. The mass transfer coefficient which controls the
+rate at which mass is exchanged between the mobile and immobile
+domain can be entered in the {\color{blue}\textbf{SP2}} column. 
+Try a low value such as 
+$5.10 \times 10^{-06}$ $d^{-1}$. 
+The exchange coefficient employed here is set to a small value
+because the matrix porosity, i.e., the water-filled pore space 
+not occupied by the fractures is made of very small pores and fissures.
+However, over long transport timescales such as in the 
+present case the effect of matrix diffusion can still be significant.
+\item Finally write the MT3DMS input files and run MT3DMS. 
+\end{itemize}
+
+To compare your results to the previous single domain simulation 
+display the breakthrough curves again (i.e., {\color{blue}\textbf{Tracer}}
+for the same observation point {\color{blue}\textbf{creek$\_$obs}} as above), 
+export the concentration and compare the two breakthrough curves in excel. \\
+
+If you have time
+\begin{itemize}
+\item Think about what are the major differences between the simulated 
+breakthrough curves ?
+\item Rerun the model with with different mass transfer coefficients, 
+For example, run a variant with a 10-times higher mass transfer coefficient
+and another variant with a 10-times lower mass transfer coefficient. 
+\item Interpret the differences between the different types
+of breakthrough behavior that is generated by the different model variants.
+\end{itemize}
+
+\subsection{Multi-component transport in a dual-domain system}
+
+Following from the (conservative) tracer transport simulations
+the next step in this exercise is to expand the model to jointly simulate 
+the transport of all major groundwater constituents that may play a role
+for the evolution of the hydrochemical patterns in the aquifer.  
+Initially we will not consider any water rock interactions and the 
+first multi component simulation will only consider aqueous 
+complexation reactions. For simplicity we consider only two types 
+of water compositions. 
+
+First we consider the ambient groundwater composition, to which we refer 
+to as {\color{blue}\textbf{background solution}}. 
+Secondly, we consider the composition 
+of the tailings fluids, which we refer 
+to as {\color{blue}\textbf{Solution 1}}.
+For simplicity we assume that the tailings fluids have the same composition
+throughout the entire pit. 
+Both compositions are listed in Table \ref{ex_dd_u}.
+\\
+To establish the first multi-component simulation
+
+\begin{itemize}
+\item import the database file that is provided for this example by going to
+{\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Chemistry}} 
+$\rightarrow$ {\color{blue}\textbf{ImpDb - Import Database}}. 
+This database includes most of the important uranium species 
+that could be relevant for this type of problem. 
+\item go to the
+{\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Chemistry}} 
+$\rightarrow$ {\color{blue}\textbf{Chemistry}} 
+button to enter the two aqueous solutions compositions 
+listed in Table \ref{ex_dd_u}. The corresponding aqueous components 
+need to be activated. Note, that all components that have an
+initial concentration of zero will also need to be activated (i.e., ticked)
+as they can be produced by geochemical reactions during the simulation.
+\end{itemize}
+
+The next step will be to assign the two defined aqueous solutions, 
+i.e., {\color{blue}\textbf{background solution}} 
+and {\color{blue}\textbf{Solution 1}}
+as initial and boundary conditions. 
+By default the {\color{blue}\textbf{background solution}} is used to
+assign the initial concentrations throughout the entire model domain.
+However, {\color{blue}\textbf{Solution 1}} has to be assigned 
+to the specific zone in the model that represents 
+the location of the pit, which contains 
+the tailings fluids. 
+We will use the same zone for the pit as the one we used in 
+the conservative transport simulations. 
+\\
+In order to do this, 
+\begin{itemize}
+\item go to 
+{\color{blue}\textbf{Spatial attributes}} 
+$\rightarrow$ {\color{blue}\textbf{Mt3dms}}
+$\rightarrow$ {\color{blue}\textbf{btn.13}} 
+and select in the 
+{\color{blue}\textbf{Modify zone}} panel, 
+the zone that you created for the pit. 
+Click on the {\color{blue}\textbf{Value}} button, 
+and copy the coordinates 
+(using {\color{blue}\textbf{Ctrl+C}}). 
+\item Then go to 
+{\color{blue}\textbf{Spatial attributes}} 
+$\rightarrow$ {\color{blue}\textbf{Pht3d}}
+$\rightarrow$ {\color{blue}\textbf{Ph.3}}
+and select {\color{blue}\textbf{Initial chemistry}} 
+to create a new rectangular zone that represents
+the location of the pit. 
+Once the dialog for the zone characteristics opens, 
+go to the input zone for the zone coordinates 
+and paste the previously saved 
+coordinates (using {\color{blue}\textbf{Ctrl +V}}) 
+to this location. 
+Note, that pasting only works if the target cells are 
+selected and not the cell content. Before leaving this Tab 
+verify that your coordinates are copied correctly. 
+Should cut and paste not work properly you can simply manually
+modify the coordinates to those used in the tracer simulation. 
+For the {\color{blue}\textbf{zone value}}, 
+assign the value {\color{blue}\textbf{1000}}, 
+which means you assign the water composition
+{\color{blue}\textbf{Solution 1}} to this zone, together with
+the Phase/Mineral assemblage {\color{blue}\textbf{0}}, 
+Exchanger {\color{blue}\textbf{0}}
+and Surface {\color{blue}\textbf{0}}. 
+All of the latter contain any activated 
+entities and therefore no water-rock or water-sediment interactions 
+are activated.   
+The defined concentrations will be used as initial concentrations 
+at the start of the simulation.
+\end{itemize}
+
+Generally the physical transport parameters to be 
+used in the multi-component PHT3D 
+simulation (such as the longitudinal dispersivity) 
+will be automatically adopted from the previously 
+defined MT3DMS input. However, some modifications
+have to be made with respect to the settings that control
+the dual-domain transport behavior.
+First, we need to specifically list all aqueous components that
+will be affected by the dual-domain mass transfer process
+and secondly we need to define the mass transfer coefficient 
+for each of the aqueous components. 
+With rare exemptions all the aqueous components that are 
+included in the reaction network will be affected by the dual-domain
+mass transfer.
+\\
+In order to define the dual-domain mass transfer for the 
+multi-component simulation 
+\begin{itemize}
+\item First click on the 
+{\color{blue}\textbf{Parameters}} 
+$\rightarrow$ {\color{blue}\textbf{Transport}}
+$\rightarrow$ {\color{blue}\textbf{Spc}}
+button and specify {\color{blue}\textbf{Pht3d}} instead 
+of the previously used {\color{blue}\textbf{Mt3dms}}. 
+Then in the dialog box you will need to enter the names 
+of all components that are included in the reaction network
+Note, that the spelling has to be identical with
+the spelling used in the database. You can, for example,
+prepare the list in excel or notepad
+and then copy and paste it into the dialog box.
+\item Then click on the {\color{blue}\textbf{Rct}} 
+button that is located next to the
+{\color{blue}\textbf{Spc}} button. You shall see there all the 
+names of the components that you just entered. 
+Then in the {\color{blue}\textbf{SP2}} column specify 
+the exchange coefficient to a value of 
+$5.10 \times 10^{-06}$ $d^{-1}$
+for all listed components, 
+including {\color{blue}\textbf{pH}} and {\color{blue}\textbf{pe}}.
+\end{itemize}
+
+Once this input is completed the PHT3D input files can be 
+written and PHT3D can be executed. 
+You will notice that the PHT3D simulation will proceed 
+much more slowly than the MT3DMS simulation.
+The reason is that PHT3D has to compute the solute transport for 
+all included aqueous components and additionally 
+the geochemical reactions.
+So it is generally wise to carefully verify the model input 
+before running the model. If required, it is possible 
+to stop the simulation with {\color{blue}\textbf{Ctrl+C}}.
+If needed, the intermediate results that were computed up to the last 
+simulation time can then be visualised. This can be useful
+when a first quick check is required. 
+
+Once the model simulation is terminated 
+inspect the transport behaviour of uranium.
+To do this visualise the 2D plume contours and 
+plot the breakthrough curve.
+
+\begin{itemize}
+\item What is the maximum uranium concentration discharging to the creek ?
+\item Compare the arrival time of the uranium peak with the peak of 
+the previous MT3DMS {\color{blue}\textbf{Tracer}} simulation.        
+\end{itemize}
+
+
+\begin{table}[hb]
+\caption{Aqueous concentrations of the ambient groundwater (Background solution)
+and of the tailings fluid (Solution 1).}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+ Aqueous component       & $C_{Background}$         & $C_{Solution 1}$      \\
+                         & $(mol\ l^{-1}_w)$        & $(mol\ l^{-1}_w)$      \\ \hline
+ pH                      &   6.67                   &  4.70            \\
+ pe                      &   4                      &  4            \\
+ Na                      & 6.16 $\times$ $10^{-5}$  & 5.24 $\times$ $10^{-3}$ \\ 
+ Cl                      & 6.13 $\times$ $10^{-3}$  & 1.48 $\times$ $10^{-2}$ \\
+ K                       & 5.12 $\times$ $10^{-5}$  & 4.61 $\times$ $10^{-3}$ \\
+ Ca                      & 1.15 $\times$ $10^{-3}$  & 5.23 $\times$ $10^{-3}$ \\
+ Mg                      & 5.50 $\times$ $10^{-3}$  & 4.44 $\times$ $10^{-1}$ \\
+ Al                      & 1.00 $\times$ $10^{-4}$  & 5.23 $\times$ $10^{-3}$ \\
+ Amm                     & 0                        & 2.85 $\times$ $10^{-2}$ \\
+ C(4)                    & 1.88 $\times$ $10^{-3}$  & 1.40 $\times$ $10^{-5}$ \\
+ Mn(2)                   & 0                        & 2.86 $\times$ $10^{-2}$ \\
+ Mn(3)                   & 0                        & 0 \\
+ S(6)                    & 2.94 $\times$ $10^{-3}$  & 4.92 $\times$ $10^{-1}$ \\
+ S(-2)                   & 0                        & 0 \\
+ Si                      & 4.00 $\times$ $10^{-3}$  & 3.03 $\times$ $10^{-4}$ \\
+ Uranyl                  & 8.00 $\times$ $10^{-7}$  & 3.14 $\times$ $10^{-5}$ \\ \hline
+\end{tabular}
+\label{ex_dd_u}
+\end{center}
+\end{table}
+
+
+\subsection{Development of surface complexation model}
+
+\subsubsection{Experimental data}
+
+Cores were collected from a fractured rock aquifer adjacent to a 
+uranium mine. The cores were collected near a pit from the mine that had 
+been backfilled with wastewater water and waste-rock from processing 
+to extract the uranium. Processing the ore involved extraction 
+with sulfuric acid and ammonia. 
+
+The specific surface area of the material determined 
+by N$_2$ adsorption was 15 m$^2$/g and the sorbed U(VI) 
+concentration on the material determined by carbonate 
+extraction \citep{KohlerMatthias2004MfEA} was 80 nmol/g.
+
+The compositions of the groundwater from the fracture zone 
+and of water from the pit were determined and used to 
+prepare artificial solutions for conducted U(VI) sorption-desorption 
+experiments.  The pit-water and groundwater were considered to 
+represent end members of the solution compositions that would 
+result from pit-water entering the fracture zone.  
+Experiments were conducted in artificial pit-water, 
+artificial groundwater, and two other groundwater compositions 
+prepared, based on mixing calculations of the two end members.  
+The end-member artificial groundwater was designated AGW1, 
+the artificial pit-water APW, the two mixtures AGW3 and AGW4.  
+Compositions were presented in Table \ref{ex_u_scm}
+
+\begin{table}[hb]
+\caption{Synthetic solutions used in U(VI) sorption-desorption experiments.  
+All concentrations are in moles per liter except pH and P$_{CO_2}$.}
+\begin{center}
+\begin{tabular}{l c c c c}
+\hline
+ Aqueous       & $C_{AGW1}$              & $C_{APW}$               & $C_{AGW3}$              & $C_{AGW4}$ \\
+ component     & $(mol\ l^{-1}_w)$       & $(mol\ l^{-1}_w)$       &   $(mol\ l^{-1}_w)$     & $(mol\ l^{-1}_w)$ \\ \hline
+ pH            &   6.64                  &  4.70                   & 6.50                    & 6.76 \\
+ Alkalinity    & 4.05 $\times$ $10^{-3}$ & 0                       & 3.65 $\times$ $10^{-3}$ & 3.93 $\times$ $10^{-3}$ \\ 
+ Na            & 1.26 $\times$ $10^{-4}$ & 5.00 $\times$ $10^{-3}$ & 6.13 $\times$ $10^{-4}$ & 2.72 $\times$ $10^{-4}$ \\ 
+ K             & 5.10 $\times$ $10^{-5}$ & 4.40 $\times$ $10^{-3}$ & 4.86 $\times$ $10^{-4}$ & 1.82 $\times$ $10^{-4}$ \\ 
+ Mg            & 1.97 $\times$ $10^{-3}$ & 3.00 $\times$ $10^{-1}$ & 3.18 $\times$ $10^{-2}$ & 1.09 $\times$ $10^{-2}$ \\
+ Ca            & 1.15 $\times$ $10^{-4}$ & 5.00 $\times$ $10^{-3}$ & 6.04 $\times$ $10^{-4}$ & 2.62 $\times$ $10^{-4}$ \\
+ Amm           & 0                       & 3.50 $\times$ $10^{-2}$ & 3.50 $\times$ $10^{-3}$ & 1.05 $\times$ $10^{-3}$ \\
+ Mn(2)         & 0                       & 2.70 $\times$ $10^{-2}$ & 2.70 $\times$ $10^{-3}$ & 2.00 $\times$ $10^{-5}$ \\
+ Zn            & 0                       & 1.50 $\times$ $10^{-4}$ & 1.50 $\times$ $10^{-5}$ & 5.00 $\times$ $10^{-6}$ \\
+ Uranyl        & 8.00 $\times$ $10^{-7}$ & 3.08 $\times$ $10^{-5}$ & 3.80 $\times$ $10^{-6}$ & 1.80 $\times$ $10^{-6}$ \\
+ Cl            &  0                      & 1.00 $\times$ $10^{-2}$ & 1.00 $\times$ $10^{-3}$ & 3.00 $\times$ $10^{-4}$ \\
+ N(5)          &  0                      & 6.00 $\times$ $10^{-5}$ & 6.00 $\times$ $10^{-6}$ & 2.00 $\times$ $10^{-6}$ \\ 
+ S(6)          & 1.50 $\times$ $10^{-4}$ & 3.49 $\times$ $10^{-1}$ & 3.50 $\times$ $10^{-2}$ & 9.80 $\times$ $10^{-3}$ \\
+ P$_{CO_2}$    & 3.50 $\times$ $10^{-5}$ & 4.00 $\times$ $10^{-4}$ & 3.50 $\times$ $10^{-5}$ & 3.50 $\times$ $10^{-5}$ \\ \hline
+\end{tabular}
+\label{ex_u_scm}
+\end{center}
+\end{table}
+
+All experiments were conducted at a solid/liquid ratio of 10 g/L at 
+25 degrees C. Experiments with AGW1, AGW3, and AGW4 were conducted 
+so that equilibrium with a P$_{CO_2}$ of 0.035 atmospheres was maintained.  
+Experiments with APW were conducted in equilibrium with the 
+atmosphere (0.00040 atmosphere).  
+After steady concentrations of U(VI) were observed, 
+the suspensions were considered to be at equilibrium.
+
+The total U(VI) concentration in each experiment was calculated from the U(VI) 
+added in the aqueous phase and the sorbed U(VI) added with the solid phase.  
+Total U(VI) concentrations and the sorbed U(VI) concentrations 
+at equilibrium are presented in Table \ref{ex_u_scm2}.
+
+\begin{table}[h]
+\caption{Total U(VI) concentrations and sorbed U(VI) concentrations 
+at equilibrium in each of the solution used in the experiments.}
+\begin{center}
+\begin{tabular}{l c c c}
+\hline
+ Solution                & Total U(VI)              & Dissolved U(VI)         & Sorbed U(VI)        \\
+                         & $(mol\ l^{-1}_w)$        & $(mol\ l^{-1}_w)$       & $(mol\ l^{-1}_w)$   \\ \hline
+ AGW1                    & 8.00 $\times$ $10^{-7}$  & 1.90 $\times$ $10^{-7}$ & 6.10 $\times$ $10^{-7}$ \\
+ APW                     & 3.08 $\times$ $10^{-5}$  & 2.16 $\times$ $10^{-5}$ & 1.06 $\times$ $10^{-5}$ \\ 
+ AGW3                    & 3.80 $\times$ $10^{-6}$  & 1.40 $\times$ $10^{-6}$ & 2.40 $\times$ $10^{-6}$ \\
+ AGW4                    & 1.80 $\times$ $10^{-6}$  & 1.25 $\times$ $10^{-6}$ & 5.50 $\times$ $10^{-7}$ \\ \hline
+\end{tabular}
+\label{ex_u_scm2}
+\end{center}
+\end{table}
+
+\begin{table}[h]
+\caption{Possible surface complexation reactions to fit the experimental data.}
+\begin{center}
+\begin{tabular}{l c c c}
+\hline
+ Surface reaction           \\ \hline
+ $SOH$ + $UO_2^{2+}$ + $H_2O$ + $CO_2$ = $SOHUO_2HCO_3^+$ + $H^+$  \\
+ $SOH$ + $UO_2^{2+}$ + $H_2O$ + $CO_2$ = $SOUO_2H_2CO_3$ + $2H^+$ \\ \hline
+\end{tabular}
+\label{ex_u_scm3}
+\end{center}
+\end{table}
+
+\subsubsection{Site-specific surface complexation model}
+
+To describe the experimental data perform the following steps
+\begin{itemize}
+\item Choose one of the two surface complexation reactions 
+in Table \ref{ex_u_scm3}. 
+\item Fix the total site concentration at 5.76 $\times$ $10^{-4}$.  
+\item Use a non-electrostatic model. 
+\item Fit the sorbed U(VI) concentration in Table \ref{ex_u_scm2} 
+by adjusting the logK value.   
+\item Find the logK value that you think provides the closest 
+fit to the experimental data. 
+\item You may use the provided Phreeqc input and the provided Excel file
+\end{itemize}
+
+Note, that neither of the reactions in Table \ref{ex_u_scm3} 
+will provide a perfect fit to the experimental data
+
+\subsection{Impact of surface complexation reactions 
+in the field-scale model}
+
+In the next step we will investigate how sorption of uranium affects
+the overall uranium migration patterns. To do this we will activate the
+surface complexation model that was developed for this site. 
+
+\begin{itemize}
+\item Go to 
+{\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Chemistry}} 
+$\rightarrow$ {\color{blue}\textbf{Chemistry}}
+and select {\color{blue}\textbf{Surface}}.
+Now, activate the surface with the name {\color{blue}\textbf{Surf\_a}} 
+and enter 2.0 $\times$ $10^{-4}$ as the surface site
+concentration under {\color{blue}\textbf{Site\_back}}.
+As we define this concentration as background concentration
+it will be applied throughout the model domain.
+The initial occupancy of the surface sites will be automatically 
+determined at the start of the simulation, i.e., there will be 
+an equilibration step that makes sure that the aqueous composition(s)
+and the surface(s) are in equilibrium.
+The presence of the surface sites will cause the aqueous uranium 
+that migrates away from the pit to undergo surface complexation reactions,
+with the variable extent of the sorption being a function 
+of the spatially and temporally variable geochemical conditions.
+\item The present model is using the {\color{blue}\textbf{no\_edl}} 
+option, which means that the surface complexation reactions
+do not consider any electric double layer effects.
+If required, this can be changed under 
+{\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Chemistry}} 
+$\rightarrow$ {\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{PH}}
+$\rightarrow$ {\color{blue}\textbf{ph.6}}
+where a different option such  {\color{blue}\textbf{-ddl}} 
+could be entered. 
+\end{itemize}
+
+Now rerun PHT3D and investigate how much the sorption reactions have impacted 
+the uranium transport behavior. Note, that the correct up-scaling of the 
+laboratory results to the field-scale model is a non-trivial task 
+and still an area of active research. Up-scaling needs in particular to take into 
+account the changes in liquid to solid (i.e., number of surface site) 
+ratio between the samples investigated in the laboratory and the 
+field conditions. The number of sites used here (2.0 $\times$ $10^{-4}$)
+is at the lower (conservative) end of the range for this value.  
+You can study the strong impact of this parameter on the breakthrough 
+behaviour of uranium by rerunning the model with a 10-fold increased
+surface site concentration of 2.0 $\times$ $10^{-3}$.    
+
+\subsection{Impact of mineral buffering}
+
+So far we have excluded mineral reactions and therefore not considered 
+the potential impact of pH buffering reactions on 
+raising the pH of the aqueous solution that emerges from the 
+tailings pit zone. In the next step we add chlorite to the 
+background mineral assemblage. 
+\\
+To implement chlorite
+\begin{itemize}
+\item Go to 
+{\color{blue}\textbf{Parameters}}
+$\rightarrow$ {\color{blue}\textbf{Chemistry}} 
+$\rightarrow$ {\color{blue}\textbf{Chemistry}}
+and select {\color{blue}\textbf{Phase}}.
+Now, activate chlorite and enter a background concentration
+of 0.1 mol/L under {\color{blue}\textbf{Backgr. Moles}}, i.e., 
+in the second column.
+\item Then go to 
+{\color{blue}\textbf{Spatial attributes}} 
+$\rightarrow$ {\color{blue}\textbf{Pht3d}}
+$\rightarrow$ {\color{blue}\textbf{Ph.3}}
+and select {\color{blue}\textbf{Initial chemistry}} 
+to define that chlorite is not present in the pit zone.
+Change the previously entered value 
+{\color{blue}\textbf{1.0.0.0}} to {\color{blue}\textbf{1.1.0.0}}.
+This means that you now assign 
+the Phase/Mineral assemblage {\color{blue}\textbf{1}}
+to this zone. As the chlorite concentration for Mineral assemblage 1 is zero
+the initial chlorite concentration that will be used for the pit zone
+will also be zero.
+\end{itemize}.
+
+Now rerun the model and investigate the impact on the uranium transport behavior.
+
+
+ 
+  
+
+
+
+

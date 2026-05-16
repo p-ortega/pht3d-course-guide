@@ -1,0 +1,372 @@
+\chapter[Mineral dissolution and precipitation]{Mineral dissolution and precipitation}
+\def\shorttitle{Mineral dissolution and precipitation} 
+
+\section[PHT3D Exercise 1: Transport and mineral reactions]{PHT3D Exercise 1: Transport and mineral reactions}
+
+The present exercise is the first PHT3D application example. 
+Building on the users`s experience gained from the first PHREEQC examples, 
+it combines a simple one-dimensional flow/mass transport simulation with
+mineral precipitation/dissolution reactions.
+
+The case simulated in this exercise was originally presented by
+\cite{enges92} for a model verification of their MST1D code
+against the CHEMTRNS model by \cite{noor87}. It involves a
+one-dimensional model domain in which an aqueous water composition
+that is in equilibrium with two minerals, calcite and dolomite, is
+successively replaced, i.e., flushed by water of a different
+chemical composition, leading to multiple
+precipitation-dissolution fronts. Dolomite is not present
+initially but is formed temporally.
+
+\subsection[Spatial discretization and flow problem]{Spatial discretization and flow problem}
+
+In order to follow the discretization chosen by \cite{enges92}, 
+you need to set up a model domain
+of 0.5 $m$ length, which is divided into 50 grid cells of 0.01 $m$
+length, 1 $m$ width and 1 $m$ height (50 columns, 1 row and 1
+layer). The total simulation time is 0.24305 days. It is divided
+into 210 time steps. This means that 210 reaction steps will be performed. 
+
+A steady-state flow rate $Q_{well}$ of 0.259
+$m^3\ d^{-1}$ is required to achieve a pore-velocity of 0.81 $m\
+d^{-1}$ for the given porosity of 0.32. A summary of the
+parameters that define the flow field and non-reactive transport
+is given in Table \ref{ex2_flow}.
+
+\begin{table}[b]
+\caption{Flow and transport parameters used in PHT3D Exercise 1.}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+ Flow simulation                      &  steady state   \\
+ Total simulation time\  $(days)$     &  0.24305        \\
+ Stress period                        &  1              \\
+ Time steps                           &  210            \\
+ Grid \ spacing\ $(m)       $         &  0.01           \\
+ Model \  length\ $(m)      $         &  0.50           \\
+ Pore  \ velocity\ $(m/day) $         &  0.81           \\
+ Hydraulic conductivity $(m/day) $    &   1             \\
+ Effective Porosity\ $(-)$            &  0.32           \\
+ Total Porosity\  $(-)$               &  0.32           \\
+ Dispersivity\ $(m)         $         &  0.0067         \\ 
+ \bottomrule
+\end{tabular}
+\label{ex2_flow}
+\end{center}
+\end{table}
+
+Proceed as follows:
+
+\begin{itemize}
+
+\item In PMWIN, create a new model and save it in a new and separate directory.
+
+\item Select Grid $\rightarrow$ Mesh size... to specify the model domain as described in
+Table \ref{ex2_flow}.
+
+\item Select Grid $\rightarrow$ Layer property... and simply click OK. We can leave it as is but PMWIN requires that all menu entries for specifying model input are clicked.
+
+\item Set the boundary conditions for heads by selecting Select Grid $\rightarrow$ Cell Status $\rightarrow$ IBOUND (Modflow). Make sure that the value is or becomes 1 (= active cell) at all cells, except the rightmost cell, which represents the downstream boundary. Change the value of IBOUND of the rightmost cell to -1 (fixed head). This will define a fixed head boundary, i.e., the hydraulic head
+at this grid cell will remain at the value that will be defined as initial head. Leave the editor and save your changes.
+
+\item Set the boundary conditions for concentrations by selecting Select Grid $\rightarrow$ Cell Status $\rightarrow$ ICBUND (Transport Models). Just leave the editor without changing the values and click Yes to save your changes.
+
+\item Select Grid $\rightarrow$ Top of Layers (TOP) to set the top of the model to 1 m.
+
+\item Select Grid $\rightarrow$ Bottom of Layers (BOT) and leave the values at 0 m.
+
+\item Under Parameters in the main menu, change the simulation time (0.2431 days), initial and prescribed hydraulic heads (should all be 1 m) horizontal hydraulic conductivity (1 $m/day$) and the effective porosity (0.32).
+
+\item Select Models $\rightarrow$ MODFLOW $\rightarrow$ Flow Packages $\rightarrow$ Well to set the flow rate of the leftmost cell to 0.259
+$m^3/day$.
+
+\end{itemize}
+
+\subsection{Running MODFLOW}
+
+You have now completed to set up the flow model and you are ready to run MODFLOW.
+This step will provide PHT3D with the flow field that is used to compute advective-dispersive
+transport of mobile species/components:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ MODFLOW $\rightarrow$ Run...
+
+\item A window appears that lists all the files that will be generated. There are also a number of options, which you can leave as they are. Click OK to start the calculations. First, PMWIN will generate the necessary MODFLOW files and then it will call MODFLOW to run this model. 
+
+\item When the calculations have finished, hit any key to close the command window and return to PMWIN.
+
+\end{itemize}
+
+Besides the usual MODFLOW output files, a special file, {\color{red} \textbf{mt3d.flo}} has been created which contains the flow vectors of each cell for each time step in the simulation. PMWIN will not allow you to create any PHT3D input file as long as the file {\color{red} \textbf{mt3d.flo}} does not exist, which is why you always should run MODFLOW before creating PHT3D input files.
+
+\subsection[PHT3D reaction definition]{PHT3D reaction definition}
+
+We continue now with the setup of the reactive transport model. In some cases
+the next step would be to prepare a problem-specific reaction module.   
+However, for simpler problems, such as those that only include equilibrium
+reactions, this is not the case. All of the aqueous species, components and minerals needed to
+simulate this LEA-based reactive transport problem are already
+included in the original PHREEQC-2 database. This means that we don't have to define our own set of equilibrium reactions but we can simply use the PHREEQC-2 database, which comes 
+as one of the reaction modules that is readily available under PMWIN. 
+To specify the reaction definitions, proceed as follows:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Simulation Settings...
+
+\item In the Chemical reaction module window, simply click OK to select the standard PHREEQC-2 database.
+
+\item Now, select the components you want to model: C(4), Ca, Cl and Mg. 
+
+Note, that pH and pe are automatically included in all simulations. 
+
+\item Then click the Minerals (equilibrium) tab and select the minerals Calcite and Dolomite.
+
+\end{itemize}
+
+These steps are the only ones needed to define the chemical reactions. From
+this information PMWIN will create the interface file that controls the communication
+between the MT3DMS part and the PHREEQC-2 part of the PHT3D simulator. 
+This file, {\color{red} \textbf{pht3d\_ph.dat}} (to see how it looks see 
+section \ref{interface_file}), contains the records which define that the 
+reaction network contains 6 equilibrium aqueous components 
+(including pH and pe) and two equilibrium minerals. 
+The order in which the components are listed determines which species number will 
+be allocated to each entity included in the simulation. 
+For each of the first {\color{red} \textbf{MCOMP}}-2 (C(4)), Ca, Mg, Cl) 
+of the {\color{red} \textbf{NCOMP}} components advective-dispersive transport steps will 
+be simulated by the appropriate MT3DMS routines. 
+For component numbers {\color{red} \textbf{MCOMP}}-1 (pH) and 
+{\color{red} \textbf{MCOMP}} (pe) no transport step is carried out. 
+The entities {\color{red} \textbf{MCOMP}} + 1, ... ,{\color{red} \textbf{NCOMP}} (here Calcite
+and Dolomite) are immobile and no transport simulation will be carried out for them.
+Note, that PMWIN takes care of creating this file correctly. 
+
+\subsection[Initial concentrations]{Initial concentrations}
+
+The next step in setting up this problem is to specify the initial concentrations
+that define the hydrogeochemistry of the aquifer at the start of the simulation (Time = 0).
+For those who are somewhat familiar with the file structure used by MT3DMS -
+the information provided here will be incorporated into the 
+the basic transport package file, which is called  {\color{red} \textbf{pht3dbtn.dat}}
+in PHT3D. The initial concentrations that need to be entered into PMWIN,
+as defined in the paper by \cite{enges92}, are listed in
+Table \ref{ex2_caqu} (for aqueous components) and in Table \ref{ex2_cmin} (for minerals).
+\\
+\ \\
+\textbf{Note, that aqueous concentrations are always defined in units of $mol\ l^{-1}$.
+In contrast, the unit for the initial concentrations of minerals
+is NOT mass per volume of water, i.e., $mol\ l^{-1}$,
+but is defined as mass per bulk volume, i.e., $mol\ l^{-1}_{volume}$}. \\
+\ \\
+\cite{enges92} defined their mineral concentrations as mass per
+mass of soil, i.e., $mol\ kg_{soil}^{-1}$ and provided the bulk
+density (1800 $kg\ m^{-3}$) of the soil. Therefore, their initial
+concentrations for calcite of 2.176 $\times$ $10^{-5}$ $mol\
+kg_{soil}^{-1}$ translates to 3.906 $\times$ $10^{-5}$ $mol\
+l^{-1}_{volume}$, which needs to be used in PHT3D.
+\par If a simulation problem, like the one we are 
+simulating here, is a pure equilibrium problem, it should
+be warranted that the initial water composition is in chemical equilibrium
+and the aqueous solution is charge-balanced. 
+If the aqueous solution is not in equilibrium, equilibrium conditions
+will be adjusted within the first reaction step at the end of the
+first time step. This can cause an undesired change, for example,
+of the solution pH or the dissolution/precipitation of minerals. 
+To avoid this it is recommended to study and
+charge-balance the aquoeus solution with PHREEQC before entering
+the data into PMWIN/PHT3D.
+
+\begin{table}[hb]
+\caption{Aqueous concentrations used in PHT3D Exercise 1.}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+ Aqueous component       & $C_{init}$ & $C_{inflow}$      \\
+                & $(mol\ l^{-1}_w)$   & $(mol\ l^{-1}_w)$      \\ \hline
+ pH             &   9.91    &  7.0            \\
+ pe             &   4.0     &  4.0            \\
+ C(4)           &  1.23 $\times$ $10^{-4}$ &   $  0.0  $              \\
+ Ca             &  1.23 $\times$ $10^{-4}$ &   $  0.0  $               \\
+ Mg             &     0.0                  & 1.0 $\times$ $10^{-3}$   \\
+ Cl             &     0.0                  & 2.0 $\times$ $10^{-3}$   \\ \hline
+\end{tabular}
+\label{ex2_caqu}
+\end{center}
+\end{table}
+
+\begin{table}[hb]
+\caption{Mineral concentrations used in PHT3D Exercise 1.}
+\begin{center}
+\begin{tabular}{ l c }
+\hline
+ Mineral        & $C_{init}$  \\
+                  & $(mol\ l^{-1}_{v})$  \\ \hline
+ Calcite \   $(CaCO_3)  $  & 3.906 $\times$ $10^{-5}$  \\
+ Dolomite  \ $(CaMg(CO_3)_2) $  &   0.0             \\ \hline
+\end{tabular}
+\label{ex2_cmin}
+\end{center}
+\end{table}
+
+To enter the initial concentrations in PMWIN, proceed as follows:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Initial concentration...
+
+\item Select the component whose concentration you want to enter and click OK.
+
+\item Use the editor to specify the concentrations as listed in Tables \ref{ex2_caqu} and \ref{ex2_cmin}. 
+
+\item Leave the editor and save your changes.
+
+\item Repeat these steps for all the components in the list.
+
+\item When done, click Close.
+
+\end{itemize}
+
+\subsection[Data input for solute transport]{Data input for solute transport}
+
+For the simulation of solute transport of the mobile components you need to specify the model parameters that control advective and dispersive transport. It is assumed that the parameters that define the physical transport of the chemicals are the same for every species/component:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Advection...
+
+\item In the window that appears, select 3rd-order TVD Scheme (ULTIMATE) as the Solution Scheme and click OK.
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Dispersion...
+
+\item Leave the values for the dispersivity ratios and diffusion coefficients as they are and click OK.
+
+\item You now enter the editor in which you can specify the longitudinal dispersivity of the cells. Use a constant value for all cells of 0.0067 m.
+
+\item Leave the editor and save your changes.
+
+\end{itemize}
+
+\subsection[Inflow concentrations]{Inflow concentrations}
+
+There are various ways and types of boundary conditions to define the hydrochemical
+composition of water that is entering the model domain during a simulation.
+In the present case the inlet (inflow) water composition is defined by providing the 
+aqueous component concentrations for the injection well located at the first cell. The inlet water contains 0.001 $mol\ l^{-1}$ of Mg and 0.002 $mol\ l^{-1}$ of Cl. In contrast to the initial water composition, no C(4) and no Ca is contained
+in the inflow water. You can enter these values (see also Table \ref{ex2_caqu}) as follows:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Sink/Source concentration $\rightarrow$ Well...
+
+\item Select the component whose concentration you want to enter and click OK.
+
+\item Use the editor to specify the appropriate concentrations for the leftmost cell (in which the well is located).
+
+\item Leave the editor and save your changes.
+
+\item Repeat these steps for all the components in the list.
+
+\item When done, click Close.
+
+\end{itemize}
+
+\subsection[Running PHT3D]{Running PHT3D}
+
+To run PHT3D, proceed as earlier on when starting MODFLOW:
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ PHT3D $\rightarrow$ Run...
+
+\item Once again a window appears that lists all the files that will be generated. Leave the options as they are and click OK to start the calculations. PMWIN generates the necessary input files and calls PHT3D to run the model. 
+
+\item When the calculations have finished, hit any key to close the command window and return to PMWIN.
+
+\end{itemize}
+
+You can use a text editor to inspect the input file {\color{red} \textbf{pht3d\_ph.dat}} 
+that was specifically created for PHT3D. 
+If nothing went wrong during model setup it will look approximately like this:
+
+{\color{blue} \footnotesize  \textbf{
+\\
+\indent 2 1  0 15 0 1E-10 .001 4000 \\
+\indent 0  \\
+\indent 6  \\
+\indent 2  \\
+\indent 0 0 0 0 0 0 0 0 0 0\\
+\indent 0  \\
+\indent 0             0             0             0  \\
+\indent 0             0  \\
+\indent C(4) \\
+\indent Ca \\
+\indent Mg \\
+\indent Cl \\
+\indent pH \\
+\indent pe \\
+\indent Calcite 0\\
+\indent Dolomite 0\\
+}}
+\\
+\label{interface_file}
+Full details on the syntax of this and other PHT3D input files are provided 
+in the PHT3D manual \citep[]{pht3d}.
+
+\subsection[Visualization of simulation results]{Visualization of simulation results}
+
+There are no options to directly visualize the results of a 1D-simulation within PMWIN, so we need to extract the results from the PHT3D output files and import these in Excel (or any other spreadsheet) to inspect them. The procedure is easy but requires a few steps:
+
+\begin{itemize}
+
+\item Select Tools $\rightarrow$ Results extractor...
+
+\item On the PHT3D tab, select Ca as the species whose concentrations will be written to an text file, which we will import into Excel later.
+
+\item Click Read and observe the concentrations being inserted into the matrix.
+
+\item Click Save..., give the file a descriptive name (e.g. {\color{red} \textbf{ca.prn}}) and under Save as type select Surfer files, which causes the coordinates of the cell centers to be saved along with the concentrations and makes it easier to visualize the results.
+
+\item Repeat these steps for the concentrations of Cl, Mg, pH, calcite and dolomite.
+
+\item When you have extracted and saved all the concentrations, start Excel and open the file {\color{red} \textbf{engesgaard\_kipp.xls}}. It already contains templates for the charts you will to create. You then need to import the concentrations.
+
+\item Click File $\rightarrow$ Open... to start opening the files we have just saved in PMWIN.
+
+\item In the window that appears, set Files of type to Text Files to display only files that are recognized as text files. 
+
+\item Select one of the files you just saved (e.g. {\color{red} \textbf{ca.prn}}).
+
+\item In the wizard that appears, it suffices to click Finish to open the file. There is no need to go through all the steps.
+
+\item The file will now be open and you can see that there are 3 columns: two with the x- and y-coordinates, respectively, of the cell centers and a third with the concentration.
+
+\item Select all the numbers in the third column (just the third column!) and copy the values to the clipboard.
+
+\item Switch to the file {\color{red} \textbf{engesgaard\_kipp.xls}} and paste the copied values in the appropriate column (e.g. Ca under concentrations [mol/l] for the numbers from the file {\color{red} \textbf{ca.prn)}}.
+
+\item Repeat these steps for the concentrations of Cl, Mg, pH, calcite and dolomite and finally switch to the charts tab in {\color{red} \textbf{engesgaard\_kipp.xls}} to observe the charts that visualize the output of the reactive transport simulation.
+
+\end{itemize}
+
+\subsection[Comparison of simulation results]{Comparison of simulation results}
+
+As can be seen in Figure \ref{pht3d_mst1d}, the numerical solution
+obtained by PHT3D, the concentration profiles after 21000 $s$
+(0.2403 $days$), of most aqueous components and minerals agrees
+closely with the one computed by \cite{enges92}. In particular, the
+positions of the mineral fronts agree very well, whereas the
+PHT3D-simulated pH near the inflow end of the model domain lies
+slightly above the pH simulated by MST1D.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=80mm,angle=90]{ex2.eps}
+\caption[Simulation results for PHT3D and MST1D: Aqueous and
+mineral concentrations after 21000 s.] {Simulation results for
+PHT3D and MST1D: Aqueous and mineral concentrations after 21000 s.}
+\label{pht3d_mst1d}
+\end{figure}
+
+

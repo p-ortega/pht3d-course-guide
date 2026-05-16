@@ -1,0 +1,356 @@
+\section[PHT3D Exercise 1: Transport and mineral reactions]{PHT3D Exercise 1: Transport and mineral reactions}
+
+The present exercise is the first PHT3D application example. 
+Building on the experience gained from the first PHREEQC examples, 
+it combines a simple one-dimensional flow/mass transport simulation with
+mineral precipitation/dissolution reactions.
+
+The case simulated in this exercise was originally presented by
+\cite{enges92} for a model verification of their MST1D code
+against the CHEMTRNS model by \cite{noor87}. It involves a
+one-dimensional model domain in which an aqueous water composition
+that is in equilibrium with two minerals, calcite and dolomite, is
+successively replaced, i.e., flushed by water of a different
+chemical composition, leading to multiple
+precipitation - dissolution fronts. Dolomite is not present
+initially but is formed temporally.
+
+\subsection[Spatial discretisation and flow problem]{Spatial discretisation and flow problem}
+
+In order to exactly reproduce the discretisation chosen by \cite{enges92}, 
+the total length of the model domain must be set to 0.5 $m$ and subdivided 
+into 50 grid cells of 0.01 $m$ length. Each of these cells has a width of 1 $m$ and 
+also a height of 1 $m$ height. With this discretisation the model
+has 50 columns, 1 row and 1 layer. 
+The total simulation time is 0.24 days. 
+The temporal discretisation (time step length) is set to 0.01 day.
+
+With the selected model dimensions a steady-state flow rate $Q_{well}$ 
+of 0.259 $m^3\ d^{-1}$ is required to achieve the pore-velocity of 0.81 $m\
+d^{-1}$ (as defined by \cite{enges92}) for a porosity of 0.32. A summary of the
+parameters that define the flow field and the non-reactive transport
+simulation is given in Table \ref{ex2_flow}.
+
+\begin{table}[b]
+\caption{Flow and transport parameters used in PHT3D Exercise 1.}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+ Flow simulation                      &  steady state   \\
+ Total simulation time\  $(days)$     &  0.24        \\
+ Time step \  $(days)$                         &  0.01           \\
+ Grid \ spacing\ $(m)       $         &  0.01           \\
+ Model \  length\ $(m)      $         &  0.50           \\
+ Pore  \ velocity\ $(m/day) $         &  0.81           \\
+ Hydraulic conductivity $(m/day) $    &   1             \\
+ Effective Porosity\ $(-)$            &  0.32           \\
+ Total Porosity\  $(-)$               &  0.32           \\
+ Dispersivity\ $(m)         $         &  0.0067         \\ 
+ \bottomrule
+\end{tabular}
+\label{ex2_flow}
+\end{center}
+\end{table}
+
+To implement this model setup into ORTI proceed as follows:
+
+\begin{itemize} 
+
+\item In ORTI, create a new model and save it in a new and separate directory
+to avoid any mixup of different models and model results.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Grid} button and specify the model domain in the dialog that opens up. Use the values as discussed above 
+and listed in Table \ref{ex2_flow}.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ select the {\color{blue}Time} button to define the simulation time of 0.24 days under {\color{blue}Total Simulation Time} and the {\color{blue}Step Size} 
+to a value of 0.01 day
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}DIS} $\rightarrow$ {\color{blue}dis.6 Top of Layers (TOP)} and set the top of the model to 1 m. Don't forget to validate the input by clicking the {\color{blue}OK} button.
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}DIS} $\rightarrow$ {\color{blue}dis.7 Bottom of Layers (BOT)} and set the value to 0 m (the default value).
+
+\item Set the boundary conditions for heads by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.3 Boundary Conditions} and setting the value to 1 (= active cell) for all cells. After that select {\color{blue}Zone} and use the {\color{blue}Zone Tools} to add a line at the last cell, which represents the downstream boundary. The value of the zone needs to be set to -1 (fixed head). This will define a fixed head boundary, i.e., the hydraulic head at this grid cell will remain at the value that will be defined as initial head. 
+
+\item Set initial hydraulic heads by going to {\color{blue}Spatial Attributes} 
+$\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} 
+$\rightarrow$ {\color{blue}bas.5 Initial Heads} and set {\color{blue}one\_value} to 1. 
+The initial heads will be used by MODFLOW as initial estimates for solving the flow equations. 
+During the solution procedure the correct heads will be computed. 
+At locations for which a fixed head boundary condition was defined the heads 
+will remain unchanged, as discussed above. 
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.8} to specify the hydraulic conductivity to 1 $m/day$
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}WEL} and add a zone {\color{blue}Well} and set the flow rate of the first cell, i.e., the cell representing the inflow end of the model, to 0.259 $m^3/day$.
+
+
+
+\end{itemize}
+
+\subsection{Running MODFLOW}
+
+You have now completed to set up the flow model and you are ready to run MODFLOW.
+This step will provide PHT3D with the flow field that is used to compute advective - dispersive
+transport of mobile species/components:
+
+\begin{itemize}
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow} use the {\color{blue}Write Button} to write all the input files required to run MODFLOW
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow} use the 
+{\color{blue}Red Arrow} button to start the MODFLOW simulation
+
+\end{itemize}
+
+During the execution of MODFLOW a number of output files are created, including the specific file {\color{red} \textbf{mt3d.flo}}, which contains the flow vectors of each cell for each time step in the simulation. This file is required for the subsequent PHT3D simulation(s) and PHT3D will not run
+until the file {\color{red} \textbf{mt3d.flo}} exists. If changes are made to the MODFLOW 
+input parameters MODFLOW needs to be rerun such that the file {\color{red} \textbf{mt3d.flo}} is updated.
+
+\subsection[Data input for solute transport]{Data input for solute transport}
+
+For the simulation of solute transport of the mobile components you need to specify the model parameters that control advective and dispersive transport. It is assumed that the parameters that define the physical transport of the chemicals are the same for every species/component:
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Transport} and select the {\color{blue}Parameter} button
+
+\item In the dialog box that subsequently appears, select {\color{blue}ADV} and the 
+{\color{blue}3rd-order TVD Scheme (ULTIMATE)} as the Solution Scheme and click {\color{blue}OK}.
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}DSP}, enter a longitudinal dispersivity value of 0.0067 m. and click {\color{blue}ok}
+
+\item Leave the values for the dispersivity ratios and diffusion coefficients as they are and click {\color{blue}OK}.
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ 
+{\color{blue}MT3DMS} $\rightarrow$ {\color{blue}BTN} $\rightarrow$ (\color{blue}btn.11)
+and specify the effective porosity to be 0.32.
+
+\end{itemize}
+
+
+
+\subsection[PHT3D reaction definition]{PHT3D reaction definition}
+
+We continue now with the setup of the reactive transport model. In some cases
+the next step would be to prepare a problem-specific reaction module.   
+However, for simpler problems such as the one in this exercise and many others
+that only include equilibrium reactions, this is not the case. 
+All of the aqueous species, components and minerals needed to
+simulate this LEA-based reactive transport problem are already
+included in the original PHREEQC-2 database. 
+This means that we don't have to define our own set of equilibrium reactions 
+but we can simply use a PHT3D database file that is equivalent to
+the original PHREEQC-2 database. 
+To specify this and to incorporate the correct reaction database, 
+proceed as follows:
+
+\begin{itemize}
+
+\item Copy the database file that is going to be used for the PHT3D simulation
+into the folder that contains all files for this exercise and name the file {\color{red} \textbf{pht3d\_datab.dat}}.
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} and select the
+{\color{blue}Import database} button. ORTI will then read and interpret 
+the PHT3D database file.
+
+\item Then click on the {\color{blue}Chemical Reaction} button. This will open up a new dialog box
+
+\item Within the new dialog box go to the {\color{blue}Solution} Tab and 
+select the aqueous components that you want to 
+include in the model. 
+In this exercise the simulation needs to include C(4), Ca, Cl, Mg, pe and pH.
+
+\item Then click the {\color{blue}Phases} Tab and select (i.e., activate) the two 
+minerals Calcite and Dolomite.
+
+\end{itemize}
+
+These steps are the only steps needed to define the set of chemical reactions 
+that will be considered in the PHT3D simulation. 
+From this information ORTI will create the interface file that controls the communication
+between the MT3DMS part and the PHREEQC-2 part of the PHT3D simulator. 
+This file, {\color{red} \textbf{pht3d\_ph.dat}}, contains the records which define that the 
+reaction network contains 6 equilibrium aqueous components 
+(including pH and pe) and two equilibrium minerals. 
+The order in which the components are listed determines which species number will 
+be allocated to each entity included in the simulation. 
+For each of the first {\color{red} \textbf{MCOMP}}-2 (C(4)), Ca, Mg, Cl) 
+of the {\color{red} \textbf{NCOMP}} components advective-dispersive transport steps will 
+be simulated by the appropriate MT3DMS routines. 
+For component numbers {\color{red} \textbf{MCOMP}}-1 (pH) and 
+{\color{red} \textbf{MCOMP}} (pe) no transport step is carried out. 
+The entities {\color{red} \textbf{MCOMP}} + 1, ... ,{\color{red} \textbf{NCOMP}} (here Calcite
+and Dolomite) are immobile and no transport simulation will be carried out for them.
+
+\subsection[Initial and inflow concentrations]{Initial and inflow concentrations}
+
+The next step in setting up this problem is to specify the initial concentrations
+that define the hydrogeochemistry of the aquifer at the start of the simulation (Time = 0).
+The information provided here will be translated by ORTI into the 
+the basic transport package file, which is called  {\color{red} \textbf{pht3dbtn.dat}}
+in PHT3D. The initial concentrations that need to be entered into ORTI,
+as defined in the paper by \cite{enges92}, are listed in
+Table \ref{ex2_caqu} (for aqueous components) and in Table \ref{ex2_cmin} (for minerals).
+\\
+\ \\
+\textbf{Note, that aqueous concentrations are always defined in units of $mol\ l^{-1}$.
+In contrast, the unit for the initial concentrations of minerals
+is NOT mass per volume of water, i.e., $mol\ l^{-1}$,
+but is defined as mass per bulk volume, i.e., $mol\ l^{-1}_{volume}$}. \\
+\ \\
+\cite{enges92} defined their mineral concentrations as mass per
+mass of soil, i.e., $mol\ kg_{soil}^{-1}$ and provided the bulk
+density (1800 $kg\ m^{-3}$) of the soil. Therefore, their initial
+concentrations for calcite of 2.176 $\times$ $10^{-5}$ $mol\
+kg_{soil}^{-1}$ translates to 3.906 $\times$ $10^{-5}$ $mol\
+l^{-1}_{volume}$, which needs to be used in PHT3D.
+\par If a simulation problem, like the one we are 
+simulating here, is a pure equilibrium problem, it should
+be warranted that the initial water composition is in chemical equilibrium
+and the aqueous solution is charge-balanced. 
+If the aqueous solution is not in equilibrium, equilibrium conditions
+will be adjusted within the first reaction step at the end of the
+first time step. This can cause an undesired change, for example,
+of the solution pH or the dissolution/precipitation of minerals. 
+To avoid this it is recommended to study and
+charge-balance the aqueous solution with PHREEQC before entering
+the data into ORTI.
+
+\begin{table}[hb]
+\caption{Aqueous concentrations used in PHT3D Exercise 1.}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+ Aqueous component       & $C_{init}$ & $C_{inflow}$      \\
+                & $(mol\ l^{-1}_w)$   & $(mol\ l^{-1}_w)$      \\ \hline
+ pH             &   9.91    &  7.0            \\
+ pe             &   4.0     &  4.0            \\
+ C(4)           &  1.23 $\times$ $10^{-4}$ &   $  0.0  $              \\
+ Ca             &  1.23 $\times$ $10^{-4}$ &   $  0.0  $               \\
+ Mg             &     0.0                  & 1.0 $\times$ $10^{-3}$   \\
+ Cl             &     0.0                  & 2.0 $\times$ $10^{-3}$   \\ \hline
+\end{tabular}
+\label{ex2_caqu}
+\end{center}
+\end{table}
+
+\begin{table}[hb]
+\caption{Mineral concentrations used in PHT3D Exercise 1.}
+\begin{center}
+\begin{tabular}{ l c }
+\hline
+ Mineral        & $C_{init}$  \\
+                  & $(mol\ l^{-1}_{v})$  \\ \hline
+ Calcite \   $(CaCO_3)  $  & 3.906 $\times$ $10^{-5}$  \\
+ Dolomite  \ $(CaMg(CO_3)_2) $  &   0.0             \\ \hline
+\end{tabular}
+\label{ex2_cmin}
+\end{center}
+\end{table}
+
+
+There are various ways and types of boundary conditions to define the hydrochemical
+composition of water that is entering the model domain during a simulation.
+In the present case the inlet (inflow) water composition is defined by providing the 
+aqueous component concentrations for the injection well located at the first cell. The inlet water contains 0.001 $mol\ l^{-1}$ of Mg and 0.002 $mol\ l^{-1}$ of Cl. In contrast to the initial water composition, no C(4) and no Ca is contained in the inflow water. 
+You can enter these values (see also Table \ref{ex2_caqu}) into ORTI as follows: \\
+
+To define both the initial and inflow concentrations 
+you will enter the chemical composition of the respective aqueous solutions. 
+In this exercise the background contains water that is in chemical equilibrium 
+with the mineral $Calcite$. 
+The composition of the initial water needs to be entered under the 
+{\color{blue}Solutions} Tab in the {\color{blue}Background} column.
+On the other hand the initial mineral composition must be entered 
+under the {\color{blue}Phase} Tab that contains the input values 
+for the saturation index (SI) and the initial concentration (Backgr\_SI and Backgr\_Mol, respectively).
+Leave the SI at the default value of 0, as would be the case for most typical model applications.
+The inflow water composition will be defined 
+in the {\color{blue}Solution 1} column under the {\color{blue}Solutions} Tab.
+
+
+To additionally define that the inflow composition is used at the correct location
+(i.e., the inflow boundary) we need to select {\color{blue}Spatial Attributes} $\rightarrow$ 
+{\color{blue}PHT3D} $\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.4 Source \/ Sink}
+and define a zone (point) in the same zone as the well at the inflow boundary 
+and allocate a {\color{blue}Zone Value} 
+of 1. This induces that the previously defined concentrations 
+for Solution 1 (as defined in the {\color{blue}Solutions} Tab) will be used to specify
+the concentrations in the water that enters the column. 
+
+
+
+\subsection[Running PHT3D]{Running PHT3D}
+
+To run PHT3D, proceed as earlier in the exercise when executing MODFLOW:
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue} Chemistry} and use 
+the {\color{blue}Write Button} to write all the input files required to run PHT3D
+
+\item Then go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} and use the {\color{blue}Plume Button} to start PHT3D.
+
+\end{itemize}
+
+
+\subsection[Visualization of simulation results]{Visualization of simulation results}
+
+To visualise the simulation results and to compare them with the results 
+we need to extract the simulated concentrations in the form of concentration profiles 
+for the end of the simulation time. This can be achieved by creating a so-called observation zone. 
+This option can be used to display the results graphically but also to export the results and save them in newly created data files.  
+
+\begin{itemize}
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}Observation} $\rightarrow$ {\color{blue}OBS} $\rightarrow$ {\color{blue}obs.1} $\rightarrow$ {\color{blue}Zone}
+and create a zone as a horizontal line that maybe named $line1$. 
+No additional input is needed here.
+
+\item In the {\color{blue}Results Panel} select the final time step of the simulation
+by going to {\color{blue}Results} $\rightarrow$ {\color{blue}Aquifer} 
+$\rightarrow$ {\color{blue}Tstep} and selecting {\color{blue}0.24} days
+
+\item In the {\color{blue}Results} sub-panel select one of the specific species that you want to visualise
+by going to {\color{blue}Results} $\rightarrow$ {\color{blue}Chemistry} 
+$\rightarrow$ {\color{blue}Species} and selecting, for example, {\color{blue}Ca}. 
+
+\item Then go to {\color{blue}Results} $\rightarrow$ {\color{blue}Observation} and select the 
+visualisation type {\color{blue}Profile}. Then select the {\color{blue}Profile} option
+
+\item in the following dialog you can either select a single or multiple species. 
+For pure visualisation the selection of multiple species makes only sense for all those 
+species which prevail within the same concentration range. 
+However, in this exercise we want to export the data for multiple species and 
+therefore we select all of the simulated species 
+
+\item Once the species are selected a new dialog will open. This new dialogue allows to make a selection among several types of concentration averaging techniques. 
+In the present case simply select the default option, i.e., {\color{blue}Value}
+
+\item Now a plot should appear that shows the simulated concentrations of all selected species 
+along the previously defined $line1$, i.e., concentration profiles along the column should show up
+
+\item You can now use the {\color{blue}Export} button to export the simulated values into a text file.
+If you export $Ca$, $Mg$, $Cl$, $Calcite$ and $Dolomite$ you can copy/paste the results into the pre-prepared excel file and compare your model results with those obtained by \cite{enges92}
+
+\end{itemize}
+
+\subsection[Comparison of simulation results]{Comparison of simulation results}
+
+If all steps of the model definition were performed correctly
+the results should agree closely with those otained by \cite{enges92},  
+as illustrated in Figure \ref{pht3d_mst1d}.
+Generally the simulated concentrations, including the positions of the mineral 
+fronts agree very well. However, the PHT3D-simulated pH near the inflow end of 
+the model domain lies slightly above the pH simulated by MST1D.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=80mm,angle=90]{ex2.eps}
+\caption[Simulation results for PHT3D and MST1D: Aqueous and
+mineral concentrations after 21000 s.] {Simulation results for
+PHT3D and MST1D: Aqueous and mineral concentrations after 21000 s.}
+\label{pht3d_mst1d}
+\end{figure}
+
+

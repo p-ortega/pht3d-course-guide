@@ -1,0 +1,528 @@
+\chapter[Mineral dissolution and precipitation]{Mineral dissolution and precipitation}
+\def\shorttitle{Mineral dissolution and precipitation} 
+
+\section[Simulating mineral- and gas-phase equilibria in PHREEQC]{Simulating mineral- and gas-phase equilibria in PHREEQC}
+
+In aqueous speciation simulations in PHREEQC using, e.g., the {\color{red} \textbf{SOLUTION}} 
+keyword, mineral saturation indices and gas-phase 
+saturation indices (the log of the partial pressure of the gas phase) 
+are reported to the output file.  
+Now we will allow mass transfer of solutes from or to the aqueous phase to or from solid phases 
+if their formation or dissolution is thermodynamically favorable. 
+Also, mass transfer of solutes from/to solution to/from the gas phase 
+will be allowed if thermodynamically favorable.
+
+Thermodynamic data for phases are entered using the keyword {\color{red} \textbf{PHASES}}.  
+The minimum information provided under the {\color{red} \textbf{PHASES}} keyword is:
+
+\begin{quote}
+{\color{red}PHASES \\
+Phase-name \\
+Reaction formula \\
+logK (25 $^\circ$C) }\\
+\end{quote} 
+
+The phase-name is, of course, the name of the phase. Important examples for often used phases include: \\
+$Goethite$, $Fe(OH)3(a)$, and $O2(g)$, corresponding to $\alpha$-FeOOH, amorphous hydrous ferric oxide, 
+and oxygen in the gas phase, respectively.  
+The reaction formula must be written with the phase on the left-hand side of the equation 
+and the aqueous species on the right-hand side of the equation.  
+The equilibrium constant at 25 $^\circ$C must also be provided.  
+Additional data can be provided, such as the effect of temperature on the 
+equilibrium constant and the molar volume (in PHREEQC version 3.x) 
+as a function of temperature. For a complete description, 
+consult the PHREEQC manual (or on-line users guide) under 
+'Description of Input for the PHASES keyword'.  
+For the three examples above, entries might look like:
+
+
+\begin{quote}
+{\color{red}PHASES \\
+Goethite \\
+FeOOH  +  3H+  =  Fe+3  +  2H2O \\
+-log\_k	-1.0 \\
+\\
+Fe(OH)3(am) \\
+Fe(OH)3  +  3H+  =  Fe+3  +  3H2O \\
+-log\_k	4.891 \\
+\\
+O2(g) \\
+O2  =  O2 \\
+-log\_k	-2.8983 }\\
+\end{quote} 
+
+Note that in the reaction for $O2(g)$, the O2 on the left-hand side of the reaction 
+refers to O2 in the gas phase and the O2 on the right-hand side of 
+the reaction refers to O2 in the aqueous phase.
+
+The keyword that allows mass transfer into or out of the aqueous phase into gas 
+and solid phases is {\color{red} \textbf{EQUILIBRIUM\_PHASES n}}. 
+Like with the {\color{red} \textbf{SOLUTION}} keyword we can define multiple 
+{\color{red} \textbf{EQUILIBRIUM\_PHASE}} assemblages using an index, represented by n.  
+Following the description in the PHREEQC manual, the syntax is:
+
+\begin{quote}
+{\color{red}EQUILIBRIUM\_PHASES n \\
+Phase-name	SI	Chemical-formula	Initial-mass} \\
+\end{quote}
+
+The {\color{red} \textbf{Phase-name}} is the name of the phase, exactly as it appears under the 
+{\color{red} \textbf{PHASES}} keyword in the database or input file.  
+The {\color{red} \textbf{SI}} is the saturation index at which PHREEQC will cause mass transfer to occur.  
+For solid phases we typically use 0, allowing mass transfer 
+to occur until complete equilibrium with respect to that mineral is achieved, i.e., SI = 0.  
+
+\par For gas-phase constituents, using the log of the partial pressure of the constituent 
+in the atmosphere will allow mass transfer to occur once the aqueous-phase composition 
+is in equilibrium with the atmosphere. 
+The {\color{red} \textbf{chemical-formula}} provides the chemical formula used to effect mass transfer.  
+Typically we use the chemical formula of the mineral or the gas-phase constituent, 
+in which case no entry is required since that is the default.  
+However, we might need to use a different formula.  
+For example, if there is carbonate in the aqueous solution we might want Ca for calcite formation 
+to come from dissolution of plagioclase feldspar or gypsum.  
+The {\color{red} \textbf{initial-mass}} is the initial mass of the phase in the system.  
+The initial mass must be in moles, i.e., {\color{red} \textbf{it is not given as mass per volume of water !}}.  
+If the phase is not present initially but we want it to form 
+if it becomes supersaturated, we would enter 0 for the initial mass.
+
+
+\begin{table}[h]
+\topcaption{PHREEQC keywords used for allowing mass transfer of solutes to/from the aqueous phase.}
+\centering
+\footnotesize
+\begin{tabular}{llll}
+\toprule
+Constituents	& Database	                & Input	     & Selected\_Output   \\ \hline
+Aqueous       &	SOLUTION\_MASTER\_SPECIES & SOLUTION n & Totals (e.g., Ca)   \\
+              & SOLUTION\_SPECIES	        & MIX n      & Molalities (e.g., $Ca^{+2}$) \\
+              &                           &            & Activities (e.g., $Ca^{+2}$) \\
+              &                           &            & Saturation\_index  \\
+              &                           &            & USER\_PUNCH       \\
+              &                           &            &        SC         \\
+              &                           &            &     Rho           \\
+              &                           &            &   Soln\_Vol        \\ \hline
+Gas phase	    & Phases	   & EQUILIBRIUM\_PHASES n   & EQUILIBRIUM\_PHASES \\
+              &            &                         & USER\_PUNCH   \\
+              &            &                         & EQUI(...)     \\ \hline
+Solid phase	  & Phases     & EQUILIBRIUM\_PHASES n   & See Gas Phase \\ \hline
+Surface       & SURFACE\_MASTER\_SPECIES & SURFACE n & See aqueous   \\
+complexation  & SURFACE\_SPECIES         &           &       \\ \hline
+Other         &                          &           &       \\ \hline
+SAVE, USE	    & Solution n,              &           &       \\
+              & EQUILIBRIUM\_PHASES n    &           &       \\ 
+							& SURFACE n                &           &       \\ 
+\bottomrule
+\label{tab:keywords_mass_transfer}
+\end{tabular}
+\end{table}	
+
+
+\section[PHREEQC Exercise 3: Phase Equilibria]{PHREEQC Exercise 3: Phase Equilibria}
+\subsection[Simulating mineral equilibria]{Simulating mineral equilibria}
+
+Here are a few very simple examples that illustrate how we can use the 
+{\color{red} \textbf{EQUILIBRIUM\_PHASES}} n keyword.
+
+\begin{itemize}
+\item Dissolve 0.001 moles of calcite in 1 liter of 0.01 mol/L NaCl.
+
+\item Using the {\color{red} \textbf{SOLUTION}} n keyword, make a solution of 0.01 mol/L NaCl at 21 $^\circ$C. Using the {\color{red} \textbf{EQUILIBRIUM\_PHASES n}} keyword, equilibrate that solution with 0.0001 moles (10 mg) of calcite. What happens?
+
+\end{itemize}
+
+\begin{quote}
+{\color{red}SOLUTION 1 \\ 
+Temp	21 \\
+pH	7 charge \\
+units  mol/L \\
+Na  0.01 \\
+Cl  0.01 \\
+\# \\
+EQUILIBRIUM\_PHASES 1 \
+Calcite  0.  0.0001 \\
+\# Phase-name.  Must agree with the name in the database \\
+\# Saturation index \\
+\# moles of calcite initially present. \\
+END }\\
+\end{quote}
+
+\begin{itemize}
+\item Does all the calcite dissolve? 
+\item Increase the amount of calcite until there is enough to saturate the solution. How much calcite does it take to saturate a solution with 0.01 M NaCl ?
+
+\item Now add 0.0001 moles of calcite and 0.01 moles of gypsum to a 0.01 M NaCl solution 
+using the {\color{red} \textbf{EQUILIBRIUM\_PHASES}} keyword. Now how much calcite dissolves ?
+
+\item Equilibrate 0.01 M NaCl at 21 C with 0.01 moles of aragonite then allow calcite to precipitate until equilibrium is achieved.
+There are two approaches. First, set up the simulation with a single {\color{red} \textbf{EQUILIBRIUM\_PHASES n}} data block that has an excess of aragonite and initially no calcite.
+
+\end{itemize}
+
+\begin{quote}
+{\color{red}SOLUTION 1 \\
+... \\
+EQUILIBRIUM\_PHASES 1 \\
+Aragonite  0 0.01 \\
+Calcite  0  0 \\
+\# Note that the phase names need to match those in the database. \\
+\# Initially 0.01 moles of aragonite is present. \\
+\# No calcite is present initially. \\
+END}
+\end{quote}
+
+\begin{itemize}
+\item Second, run the simulation in two steps. In the first step, 0.01 M NaCl is equilibrated with 0.01 moles of aragonite. The resulting solution composition is saved using the {\color{red} \textbf{SAVE}} keyword.  After the end of the first simulation (marked by {\color{red} \textbf{END}}), the {\color{red} \textbf{USE}} keyword recalls from memory the solution composition.
+\end{itemize}
+
+\begin{quote}
+{\color{red}SOLUTION 1\\
+...\\
+EQUILIBRIUM\_PHASES 1 \\
+Aragonite 0  0.01 \\
+SAVE Solution 2 \\
+END \\
+USE Solution 2 \\
+EQUILIBRIUM\_PHASES 2 \\
+Calcite 0.  0 \\
+END }\\
+\end{quote}
+
+\begin{itemize}
+\item How do the results of these two simulations differ?
+\end{itemize}
+
+
+In a next step we study some reactions between acidic recharge water and aquifer sediments.
+
+\begin{itemize}
+\item First we will equilibrate groundwater with sediments that contain aluminum hydroxide 
+from weathering of soil minerals and quartz. The groundwater composition that will be used 
+is shown in Table \ref{phc_ex_acid_rain}. Create a PHREEQC file with that solution composition 
+(using the {\color{red} \textbf{SOLUTION n)}} keyword.  
+\end{itemize}
+
+\begin{table}[b]
+\caption{Groundwater composition for the PHREEQC acid rain exercise}
+\begin{center}
+\begin{tabular}{l c c }
+\hline
+Constituent	& Concentration	& Units     \\
+Temperature	& 18	          & $^\circ$C \\
+pH	        & 7.00          & 	-       \\
+Na	        & 1.00	        &   mmol/L  \\
+Cl	        & 0.9345	      &   mmol/L  \\
+Sulfate	    & 0.001	        &   mmol/L  \\
+TCO2	      & 6.041 $\times$ $10^{-2}$    &   mmol/L  \\ \hline
+\end{tabular}
+\label{phc_ex_acid_rain}
+\end{center}
+\end{table}
+
+\begin{itemize}
+\item Define the properties of amorphous aluminum hydroxide using the {\color{red} \textbf{PHASES}} 
+keyword in the first section of your PHREEQC input file, i.e., before 
+the section where you have defined the groundwater composition
+
+\end{itemize}
+
+\begin{quote}
+{\color{red}PHASES \\
+AlOOH \\
+Al(OH)3  +  3H+  =  Al+3  +  +3H2O \\
+Log\_k	10.8 \\
+Delta\_h	-26.500 kcal }\\
+\end{quote}
+
+\begin{itemize}
+\item Using the {\color{red}\textbf{EQUILIBRIUM\_PHASES}} keyword, 
+allow the groundwater to equilibrate with sediments that have enough quartz 
+and amorphous aluminum hydroxide to saturate the solution.
+\end{itemize}
+
+Now we will simulate mass-transfer to and from aqueous solution and a gas phase.
+
+\begin{itemize}
+\item Examine the results. Note that the pe after the first simulation 
+(executed at the end of the {\color{red}\textbf{SOLUTION n}} data block) is the default value of 4.5.
+\item What is the pH after equilibrating with amorphous aluminum hydroxide and quartz ?  
+\item How much (in mol/L) amorphous aluminum hydroxide was dissolve?
+\item How much quartz was dissolved?
+
+\end{itemize}
+
+Now let's learn how we can can control the pH while reactions proceed that have an influence on pH. 
+In this example we will make sure the pH of the groundwater after equilibration with quartz and 
+amorphous aluminum hydroxide remains at 7.00.
+We can do that by using a fictitious {\color{red}\textbf{PHASE}} \textbf{Fix\_H}.  
+
+\begin{itemize}
+\item Under the {\color{red}\textbf{PHASES}} keyword, 
+add the required information for the fictitious phase 
+\textbf{Fix\_H} after the entry for AlOOH.
+\end{itemize}
+
+\begin{quote}
+{\color{red}Fix\_H \\        
+\# Name of phase \\
+H+  =  H+      \\
+\# Dissolution reaction for fictitious phase.  \\ 
+\# Note H+ on the lhs is the phase. \\
+Log\_k 0.0 }\\
+\end{quote}
+
+
+\begin{itemize}
+\item Add a line under {\color{red}\textbf{EQUILIBRIUM\_PHASES n}} data-block to 
+use \textbf{Fix\_H} to force the pH after equilibration with the solid phases to remain at 7.00.
+\end{itemize}
+
+
+
+\begin{quote}
+{\color{red}EQUILIBRIUM\_PHASES \\
+. . .		\\
+\# lines with quartz and AlOOH \\
+Fix\_H  -7.00 NaOH 10	\\
+\# SI for Fix\_H to bring the pH to 7.00 \\
+\# Use NaOH to adjust the pH. \\
+\# NaOH will be added or removed \\
+\# to adjust the pH. \\
+\# 10 moles of NaOH insures enough \\
+\# to get the pH adjusted.  \\
+\# If NaOH must be removed there \\
+\# must be enough Na to effect the pH change. }\\
+\end{quote}
+
+\begin{itemize}
+
+\item Was the mass of amorphous aluminum hydroxide greater or less than when the pH was not fixed at 7.00? 
+
+\item Was the mass of quartz greater or less than when the pH was not fixed at 7.00 ?
+
+\item Now add the line:
+
+\begin{quote}
+{\color{red}SAVE SOLUTION 20 } \\
+\end{quote}
+
+before the {\color{red}\textbf{END}} statement so that the composition of the 
+groundwater equilibrated with amorphous silica and quartz can be used in the next step.
+\end{itemize}
+
+Finally we react some acidic rain water with sediments that contain quartz and amorphous aluminum hydroxide.
+Repeat the previous simulation with acidic rainwater that has the composition in Table \ref{phc_ex_acid_rain_2}.
+
+\begin{table}
+\caption{Acid rain water composition before equilibration with seiments}
+\begin{center}
+\begin{tabular}{l c c }
+\hline
+Constituent	& Concentration	& Units     \\
+Temperature	& 18	          & $^\circ$C \\
+pH	        & 7.00          & 	-       \\
+Na	        & 28.3	        &   $\mu$mol/L  \\
+Cl	        & 73.4	        &   $\mu$mol/L  \\
+Sulfate	    & 10.7	        &   $\mu$mol/L  \\
+TCO2	      & 57.4          &   $\mu$mol/L  \\ \hline
+\end{tabular}
+\label{phc_ex_acid_rain_2}
+\end{center}
+\end{table}
+
+
+%ok up to here
+
+\begin{itemize}
+
+\item Equilibrate this composition with quartz and amorphous aluminum hydroxide, 
+using \textbf{Fix\_H} to fix the final pH to 4.18 using the {\color{red}\textbf{EQUILIBRIUM\_PHASES n}}
+keyword. In this simulation, allow the pH to adjust itself during the reaction.
+
+\item {\color{red}\textbf{SAVE} SOLUTION 30} to save the composition after equilibration 
+with the sediments for the next simulation.
+
+\item What is the final pH ?
+
+\item What was the difference in the amount of amorphous aluminum hydroxide dissolved ?
+
+\item What was the difference in the amount of quartz dissolved ?
+\end{itemize}
+
+In this final part of this PHREEQC exercise we mix (i) the groundwater that was before equilibrated 
+with the sediments with (ii) the acid rain that was equilibrated with sediments. 
+During the mixing we will allow amorphous aluminum hydroxide and quartz 
+to precipitate if the mixture is saturated with respected to these phases.
+
+\begin {itemize}
+\item The {\color{red}\textbf{USE}} keyword recalls from memory the composition 
+of a solution created in a previous simulation.  
+Recall the compositions of the groundwater and acid rain after equilibrating with sediments.
+\end{itemize}
+
+%ok up to here
+
+\begin{quote}
+{\color{red}USE	Solution 20  \\
+\# groundwater equilibrated with sediments. \\
+USE	Solution 30  \\
+\# acid rain equilibrated with sediments. }\\
+\end{quote}
+
+\begin {itemize}
+\item Consult the manual or on-line users guide to find out about the keyword {\color{red}\textbf{MIX}}.
+Mix the two solutions using 0.1 as the mixing fraction for the acid rain equilibrated with sediments (1 part acid rain) and 0.9 for the groundwater equilibrated with sediments (9 parts groundwater).
+
+\item Use the {\color{red}\textbf{EQUILIBRIUM\_PHASES}} keyword to allow quartz and 
+amorphous aluminum hydroxide to precipitate if they become saturated.
+
+\item What is the final pH ?
+
+\item Does a significant mass of quartz form ?
+
+\item Does a significant mass of amorphous aluminum hydroxide form ?
+
+\item Are any other minerals known to PHREEQC supersaturated in the mixture ?
+\end{itemize}
+
+
+\subsection[Simulating gas-phase equilibria]{Simulating gas-phase equilibria}
+
+In this exercise we will simulate the impact on water composition of mass transfer of $CO_2$ 
+between aqueous solution and gas phases with different $CO_2$ partial pressures.
+\par This exercise is based on the composition of uranium(VI) contaminated groundwater 
+from the 300 Area at the Hanford site near Richland, Washington, in the United States.  
+Wastewater from plutonium recovery from fuel rods was dumped in unlined pits.  
+Wastewater included hyperalkaline fluids, from dissolution of aluminum cladding on the fuel rods, 
+and concentrated nitric acid, from dissolution of the material in the fuel rods.  
+The site is adjacent to the Columbia River.  
+The stage of the river, which is controlled by dams, changes hourly such that the groundwater 
+flow direction can shift several times per day from discharging into the river 
+to river water migrating into the aquifer.  
+Uranium contamination is primarily in the 'smear zone' 
+(region affected by upward and downward shifts in the water table) 
+of the Hanford formation, which was deposited in a catastrophic flood resulting 
+from failure of a glacial dam holding back the water in Pleistocene Lake Missoula. 
+Sediments are comprised of poorly sorted grains that range in size from clays to boulders.  
+Groundwater flow velocities can be approximately 10 meters per day.  
+The sediments have low concentrations of calcite and other carbonate minerals 
+but the quantity is sufficient to impart elevated pH and alkalinity values to the groundwater.  
+Columbia River water has lower alkalinity and pH values.  
+The composition of the native groundwater favors partitioning of U(VI) into the aqueous phase.  
+The composition of Columbia River water favors partitioning of U(VI) onto the sediments.  
+Thus, the contrast in chemistry between these two endmembers profoundly 
+affects U(VI) mobility in the aquifer (Figure \ref{fig:stoliker}).
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth, angle = 0]{stoliker}
+\caption[Experimentally determined partitioning of U(VI) between 
+U-contaminated sediments and artificial groundwater varying in composition 
+between that of the Hanford aquifer (high alkalinity) and 
+the Columbia River (low alkalinity).  
+Partitioning is expressed as the ratio of the U(VI) concentration 
+on the sediments (mol/kg sediments) divided by the U(VI) 
+concentration in the aqueous phase (mol/L). ]{Experimentally determined partitioning of U(VI) between 
+U-contaminated sediments and artificial groundwater varying in composition 
+between that of the Hanford aquifer (high alkalinity) and 
+the Columbia River (low alkalinity).  
+Partitioning is expressed as the ratio of the U(VI) concentration 
+on the sediments (mol/kg sediments) divided by the U(VI) 
+concentration in the aqueous phase (mol/L). }
+% From Stoliker et al. (2011).
+\label{fig:stoliker}
+\end{figure}
+
+The composition in Table \ref{tab:stoliker}
+represents of the composition of U-contaminated groundwater from the Hanford aquifer.  
+
+\begin{itemize}
+\item Create a PHREEQC input file that has thermodynamic data for the Ca- and Mg-U(VI)-carbonate complexes.
+\end{itemize}
+
+\begin{quote}
+{\color{red}SOLUTION\_SPECIES \\
+Ca+2 +  UO2+2  +  3CO3-2  =  CaUO2(CO3)3-2 \\
+log\_k	27.18 \\
+2Ca+2 +  UO2+2  +  3CO3-2  =  Ca2UO2(CO3)3-2 \\
+log\_k	30.7 \\
+Mg+2 +  UO2+2  +  3CO3-2  =  MgUO2(CO3)3-2 \\
+log\_k	26.11 }\\
+\end{quote}
+
+\begin{itemize}
+\item Enter the groundwater composition in Table \ref{tab:stoliker}. Use the chloride concentration to charge-balance the composition.
+\end{itemize}
+
+\begin{table}
+\caption{Representative composition of groundwater from Hanford 300 area. Adjust the chloride concentration to charge-balance the solution.}
+\begin{center}
+\begin{tabular}{l c c }
+\hline
+Constituent	& Concentration	& Units     \\ \hline
+Temperature	& 21	          & $^\circ$C \\
+pH	        &     8.11	    &  -        \\
+Na	        & 6.8	          & mmol/L    \\
+K	          & 0.2	          & mmol/L    \\
+Mg	        & 0.4	          & mmol/L    \\
+Ca	        & 0.5	          & mmol/L    \\
+U(6)	      & 0.001	        & mmol/L    \\
+Alkalinity	& 5.00	        & mmol/L    \\
+Cl*	        & 1             & mmol/L    \\	
+Sulfate	    & 1.4	          & mmol/L    \\ \hline
+\end{tabular}
+\label{tab:stoliker}
+\end{center}
+\end{table}
+\begin{itemize}
+\item Using the Wateq4f database, run a simulation of the groundwater chemistry in Table \ref{tab:stoliker}.
+\begin{enumerate}
+\item What is the $PCO_2$ ? Recall that the SI for $CO_2(g)$ is the log of the $PCO_2$.
+\item What $U(VI)$ aqueous species comprise 99\% of the total dissolved $U(VI)$ ?
+\end{enumerate}
+
+\item Next you will simulate changes in chemical composition resulting from transferring the sample into an anaerobic glove chamber that has a $PCO_2$ of 0.05 (5\%). Using the keyword $EQUILIBRIUM\_PHASES n$, allow the sample to equilibrate with the partial pressure of $CO_2$ of 0.05 in the anaerobic chamber. Assume there is an excess of $CO_2$ in the chamber, so that mass transfer of $CO_2$ into or out of the sample does not affect the $PCO_2$ in the chamber.
+
+\begin{quote}
+{\color{red}EQUILIBRIUM\_PHASES 5\\ 
+CO2(g)  -1.30   1 \\
+\# Name of the phase under the PHASES keyword \\
+\# in the database or input file. \\
+\# -1.30  is the saturation index of the \\ 
+\# gas-phase constituent = log of the $PCO_2$ \\
+\# 1 is the number of moles of CO2 available \\
+\# for transfer into the aqueous solution. \\}
+\end{quote}
+
+\item Run the simulation using the Wateq4f database.
+\begin{enumerate}
+\item Verify that the PCO2 is 0.05.
+\item Did $CO_2$ transfer into the aqueous solution or out of the aqueous solution ?
+\item item How many moles of $CO_2$ were transferred?
+\item How did the $alkalinity$ change?
+\item How did the $pH$ and $TCO_2$ change?
+\item Was there a significant change in distribution of U(VI) aqueous species?
+\item Did the saturation index for calcite change?
+\end{enumerate}
+\item Now equilibrate the groundwater sample with the atmosphere. Assume that the $PCO_2$ in the atmosphere has a partial pressure of 4.0E-4 atmospheres (logPCO2 = -3.40). Run the simulation using the Wateq4f database.
+\begin{enumerate}
+\item Verify that the $PCO_2$ is -3.40.
+\item Did $CO_2$ transfer into the aqueous solution or out of the aqueous solution ?
+\item How many moles of $CO_2$ were transferred ?
+\item How did the $alkalinity$ change ?
+\item How did the $pH$ and $TCO_2$ change ?
+\item Was there a significant change in distribution of $U(VI)$ aqueous species?
+\item	Did the saturation index for calcite change ?
+\end{enumerate}
+\item Re-run the simulation allowing calcite to precipitate if it becomes supersaturated after equilibration with atmosphere.
+\begin{enumerate}
+\item Verify that the $PCO_2$ is -3.40.
+\item Did $CO_2$ transfer into the aqueous solution or out of the aqueous solution?
+\item How many moles of $CO_2$ were transferred?
+\item How did the $alkalinity$ change ?
+\item How did the pH and $TCO_2$ change ?
+\item Was there a significant change in distribution of $U(VI)$ aqueous species ?
+\item Did the saturation index for calcite change?
+\end{enumerate}
+\end{itemize}

@@ -1,0 +1,44 @@
+\section{Surface complexation}
+Oxides, hydroxides and organic matter carry a surface charge which enables them to sorb ions from solution. The sorption behaviour depends on the type of mineral and crystal morphology as well as the composition and pH of the solution. A potential develops due to the surface charge and therefore, the equation for the Gibbs free energy ($\Delta G$) contains, besides a chemical term, a Coulombic term to account for the work needed to move ions to or from the surface.
+
+It can be shown that for a dissociation reaction (Appelo and Postma, 2005):
+\begin{equation}
+\log K_{\text{a}} = \log K_{\text{int}} + \frac{zF\psi_0}{RT \ln 10}
+\end{equation}
+in which $K_{\text{a}}$ is the apparent dissociation constant, $K_{\text{int}}$ is the intrinsic dissociation constant, $z$ is the charge of the ion, $F$ the Faraday constant (96,485 C/mol), $\psi_0$ the potential at the surface, $R$ the gas constant (8.314 J/K/mol) and $T$ the absolute temperature.
+
+The intrinsic dissociation constant, $K_{\text{int}}$, applies to the chemical binding of the ion and the surface. The PRHEEQC database contains a compilation by Dzombak and Morel (1990) of laboratory-determined values of intrinsic dissociation constants for hydrous ferric oxide.
+
+The apparent dissociation `constant' ($K_{\text{a}}$), however, varies with the potential and thus the charge at the surface. In order to calculate the $K_{\text{a}}$, the $\psi_0$ needs to be known. PHREEQC uses a double-layer model to relate the charge density on the surface ($\sigma_s$) with ionic strength ($I$, equation \ref{eq:ionic_strength}) and $\psi_0$ \citep{phreeqc2}.
+
+\subsection{PHREEQC Exercise 4: calculation of a charged surface composition}
+This exercise demonstrates the use of the \textbf{SURFACE} keyword, which is used in PHREEQC for surface complexation calculations. The input file has already been prepared and is called {\color{red}kd\_surf.phrq}. The definition of the surface is as follows:
+
+\begin{quote}
+	SURFACE 1 \\
+	Hfo\_w	2e-4	600	0.088 \\
+	Hfo\_s	5e-6 \\
+	-equilibrate 1 
+\end{quote}
+
+The names {\color{red}Hfo\_w} and {\color{red}Hfo\_s} correspond to the names of the master species in the PRHEEQC database that refer to the weak- and the strong surface sites, respectively. The number that follows is the number of surface sites in moles. For the weak sites, the surface area (600 m$^2$/g) and mass of ferrihydrite (88 mg) are also specified. Unless these values are explicitly typed for Hfo\_s as well, they apply to both the weak and the strong sites.
+
+The input file contains BASIC statements that control the output to a text file in spreadsheet format. The distribution coefficient of Zn is calculated for both the weak and the strong sites, as well as an overall distribution coefficient. The file is called {\color{red}kd\_surf.prn} and can be opened in the Grid tab of PRHEEQC for Windows after the calculation has finished.
+
+What is the value of the overall distribution coefficient for Zn? 
+
+Answer: $K_d$ = \ldots\ldots.
+
+Test the effect on the $K_d$ of:
+
+\begin{itemize}
+
+\item doubling the Zn concentration? Answer: $K_d$ = \ldots\ldots.
+
+\item doubling the Mg concentration? Answer: $K_d$ = \ldots\ldots.
+
+\item doubling the amount of ferrihydrite? Answer: $K_d$ = \ldots\ldots.
+
+\item changing pH from 7 to 5? Answer: $K_d$ = \ldots\ldots.
+
+\end{itemize}

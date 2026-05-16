@@ -1,0 +1,27 @@
+\chapter{The ORTi3D Graphical User Interface}
+\def\shorttitle{ORTi3D} %
+
+\section{Before you start modelling}
+
+ORTi is an open source graphical user interface that provides a modelling environment for multiple reactive transport models, including the MODFLOW/MT3DMS-based model PHT3D.  
+ORTi can be used in two different interface modes. The first mode is a windows/python based mode, termed ‘classical’ mode, which has been developed and used over the last few years. The second and just recently introduced mode is the QGIS mode. 
+In order to allow constructed models to remain interchangeable between both modes the libraries that are required 
+by the two modes need to be stored in a single QGIS plugin folder. This will allow any ORTi model to be saved for subsequent processing in either QQIS or classical interface mode.
+
+To start working in the classical interface mode (after installing the QGIS version), just double click on:
+C:\Users\”yourusername”\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\qORTi3d\startOrti3d.bat
+
+\section{Installing the plugin}
+Go to \\
+https://www.orti3d.org/documents/ORTi3D_qgis_plugin_version.zip \\
+
+to download the QGIS plugin. You have to unzip it at a specific location: 
+
+C:\Users\”your username”\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\qORTi3d \\
+
+You need to create the folder qORTi3d in the plugin folder. 
+Once the file is unzipped verify that the ilibq folder is just below the qOrti3d folder.
+Once QGIS is opened, go to the Plugins menu and select manage plugins, 
+find the qORTi3d plugin and select it. You should now see it at the bottom of the Plugins menu.
+To install the lastest version, open the plugin, go in the file > Help and click on download last. 
+You need to restart QGIS (later you can install a plugin that is called plugin reloader that allows you to reload a plugin that has been modified without restarting QGIS, this is very useful for developers)

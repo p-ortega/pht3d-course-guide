@@ -1,0 +1,178 @@
+\section[Multi-species Conservative Transport and Mineral Dissolution]{Multi-species Conservative Transport and Mineral Dissolution}
+
+\subsection[Data input for reactive transport]{Data input for reactive transport}
+
+In the following step we will now activate the geochemical reaction network and define the various water and mineral compositions that will play a role in this simulation problem. The initial and the groundwater recharge water composition that will be employed in this example are shown in Table \ref{franken_caqu}. 
+
+\begin{table}
+\caption{Aqueous concentrations used in acid groundwater recharge exercise}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+Aqueous  component        & $C_{init}$      & $C_{recharge}$      \\
+                & $(mol\ l^{-1}_w)$         & $(mol\ l^{-1}_w)$      \\ \hline
+pH              &   7.00                    &  4.18           \\
+pe              &   -3.00                   &  14.00           \\
+Al              &  1.538 $\times$ $10^{-5}$ & 0.0             \\
+C(4)            &  6.041 $\times$ $10^{-5}$ & 5.736 $\times$ $10^{-5}$   \\
+C(-4)           &  0.0                      &     0.0                     \\
+Ca              &  9.000 $\times$ $10^{-4}$ & 2.430 $\times$ $10^{-4}$   \\
+Cl              &  3.000 $\times$ $10^{-3}$ & 7.000 $\times$ $10^{-4}$   \\
+Fe(2)           &  1.900 $\times$ $10^{-5}$ & 0.0                        \\
+Fe(3)           &  0.0                      & 0.0                        \\
+K               &  5.000 $\times$ $10^{-5}$ & 2.769 $\times$ $10^{-5}$   \\
+Mg              &  1.600 $\times$ $10^{-4}$ & 8.670 $\times$ $10^{-5}$   \\
+Na              &  1.000 $\times$ $10^{-3}$ & 2.827 $\times$ $10^{-5}$   \\
+O(0)            &  0.0                      & 5.000 $\times$ $10^{-4}$   \\
+P               &  1.000 $\times$ $10^{-5}$ &     0.0                    \\
+S(6)            &  0.0                      & 1.072 $\times$ $10^{-5}$   \\
+S(-2)           &  1.000 $\times$ $10^{-5}$ &     0.0                    \\
+Si              &  1.107 $\times$ $10^{-4}$ &     0.0                    \\ 
+Zn              &  4.000 $\times$ $10^{-7}$ &     0.0                    \\
+\hline
+\end{tabular}
+\label{franken_caqu}
+\end{center}
+\end{table}
+
+
+
+\begin{itemize}
+
+\item Open your ORTi model from Day 1. 
+
+\item Add a database file that is going to be used for the PHT3D simulation into the folder that contains all files for this exercise and name the file {\color{blue}pht3d\_datab.dat}. Note that the database has to have this name in order for PHT3D to recognize it. You can use the standard PHREEQC database (phreeqc.dat) that will be provided for this exercise. 
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}4.Chemistry} and select the
+{\color{blue}Import database} button. ORTI will then read and interpret 
+the PHT3D database file.
+
+\item The initial and the groundwater recharge water composition that will be employed in this example are shown in Table \ref{franken_caqu} below. Note, that you should always check the charge balance in PHREEQC before using the concentrations in the reactive transport simulations. In the present example you will indeed need to charge balance the solutions in PHREEQC and reduce the charge balance error to 0 \%. Use chloride to charge balance your solutions.
+In addition we assume that the ambient groundwater was in equilibrium 
+with two selected minerals at the time of the start of the simulation.
+To achieve this, equilibrate the background solution with $Quartz$ and with $Al(OH)_3$.
+
+\item  To define initial concentrations of all aqueous components and also the concentrations of the acidic groundwater recharge, click on {\color{blue}(Ad\_Chemistry)} and go to the {\color{blue}Solutions} Tab. 
+The composition of the ambient water (initial water composition at the start of the simulation) needs to be entered in the {\color{blue}Background} column. Activate all relevant species by ticking the appropriate boxes for Al, C(4), C(-4), Ca, Cl, Fe(2), Fe(3), K, Mg, Na, O(0), P, S(-2), S(6), Si, Zn, and, as always, pH and pe. 
+Enter the concentrations (after you have charge balanced the solutions). 
+Similarly, define the acid recharge water composition in the {\color{blue}Solution 1} column.
+
+\item The Background water composition will automatically be used to define the initial concentrations.
+
+\item The allocation of {\color{blue}Solution 1} groundwater water recharge composition 
+can be done by selecting 
+{\color{blue}Spatial Attributes} 
+$\rightarrow$ {\color{blue}PHT3D} 
+$\rightarrow$  {\color{blue}ph.5 Recharge} 
+and set {\color{blue}Backg.} to 1. 
+
+\item Click OK.
+
+\item Remember to save your ORTi file.
+
+\end{itemize}
+
+\subsection[Running PHT3D]{Running PHT3D}
+
+In this first step we will now run PHT3D without invoking any mineral reactions. This means that all temporal and spatial concentration changes of the aqueous components that occur over the simulation period are solely a function of advective-dispersive transport. This provides the basis for subsequently studying the impact of mineral reactions.    
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}4.Chemistry} and use 
+the {\color{blue}Write Button} to write all the input files required to run PHT3D
+
+\item Then go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}4.Chemistry} and use the {\color{blue}Red Arrow} button to start PHT3D.
+
+\end{itemize}
+
+\subsection[Visualization of results]{Visualization of results}
+
+After the end of the simulation visualize the results in various ways.
+
+\begin{itemize}
+
+\item Obtain a contour plot by navigating in the {\color{blue} Results} panel of ORTI.
+Select a specific timestep and a species for which you want to see your results.
+For example to see the pH contours after 10 years select {\color{blue}Results} $\rightarrow$ {\color{blue}1.Model} 
+$\rightarrow$ {\color{blue}Tstep} and select {\color{blue}3650} and then go to   
+{\color{blue}Results} $\rightarrow$ {\color{blue}4.Chemistry} 
+$\rightarrow$ {\color{blue}Species} and select {\color{blue}pH}.  
+You can easily move forward and backward in time by clicking {\color{blue}Tstep} once more and then
+using your keyboard arrows to move forward or backward.
+
+\item Plot breakthrough curves at the river discharge point to illustrate how the quality of the
+water discharging from the groundwater to the river changes over time.
+First, define the location for which you want to plot breakthrough curves by
+going to 
+{\color{blue}Spatial Attributes} 
+$\rightarrow$ {\color{blue}Observation} 
+$\rightarrow$ {\color{blue}OBS} 
+$\rightarrow$ {\color{blue}obs.1} 
+$\rightarrow$ {\color{blue}Add Zones} 
+$\rightarrow$ {\color{blue}Add Point(+)}
+and use your mouse to position the cursor and clicking at the location
+where you wan to create an observation point. 
+In the dialog that comes up name the zone $BTC1$. 
+No specific input is required for the {\color{blue}Zone Value} field.
+The coordinates of the location selected by the mouse click can be modified, if required.
+
+\item Then, in the panel {\color{blue}Results} $\rightarrow$ {\color{blue}5.Observation}, select {\color{blue}Time-series Graphs and Chemistry}. In the dialog select By Zone, tick on $BTC1$ in the {\color{blue}Zones} Tab, then tick on any layer ({\color{blue}Layers} Tab), then the chemical species of interest ({\color{blue}Species} Tab), and finally, click twice on {\color{blue}Apply}.
+
+\item Alternatively you can visualize results with PHT3DPlot. 
+
+\item What changes occur to the chloride concentrations and what does this mean?
+
+\item How much does pH decrease over the duration of the simulation? 
+
+\item Save the simulated breakthrough curves for pH, Si and Al so you can later directly 
+plot and compare these results together with the results from your next model variants.  
+ 
+\end{itemize}
+
+
+\subsection[Role of mineral reactions]{Role of mineral reactions}
+
+\begin{itemize}
+
+\item Let's first study the effect of including $Quartz$ in this simulation. 
+This can be done under 
+{\color{blue}Parameters} $\rightarrow$ 
+{\color{blue}4.Chemistry} $\rightarrow$ 
+{\color{blue}Ad\_Chemistry} $\rightarrow$ 
+{\color{blue}Phase} Tab. 
+The input allows to activate mineral phases, define their initial concentration 
+and to define a value for the saturation index (SI) to which the mineral 
+should be equilibrated (typically 0).
+For $Quartz$ leave the {\color{blue}Backgr\_SI} at the default value of 0 and define a background 
+concentration {\color{blue}Backgr\_Mol} of 1 mol/L\_bulk. 
+
+\item Now rerun PHT3D and inspect again the breakthrough curves for pH, Si and Al.
+
+\item How can you interpret these results?  
+
+\end{itemize}
+
+Now we will inspect the impact of $Al(OH)_3$ (an amorphous aluminum hydroxide) 
+on the composition of the discharging groundwater.
+
+\begin{itemize}
+
+\item Add initially a relatively small initial concentration such as 1 $\times$ $10^{-5}$ mol/L\_bulk 
+of $Al(OH)_3$, rerun the model and save again the breakthrough concentrations that you obtained for the observation point at the river.
+
+\item Increase the initial concentration to a value 
+such as 1 $\times$ $10^{-2}$ mol/L\_bulk 
+of $Al(OH)_3$, rerun the model and save again the breakthrough 
+concentrations that you obtained for the observation point at the river.
+
+\item Make comparative plots for pH and Al for your different model variants. 
+
+\item How can you interpret these results?
+
+\item Remember to save your ORTi file.
+
+\item End of Day 2.
+
+
+\end{itemize}
+

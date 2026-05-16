@@ -1,0 +1,44 @@
+\chapter*{Introduction}
+
+\addcontentsline{toc}{chapter}{Introduction}
+
+\def\shorttitle{Introduction}
+
+Knowledge of the chemistry of groundwater is a requirement for a number of practical purposes. As groundwater is an important source for drinking water, one has to ascertain that its quality is sufficient for consumption. Quality requirements are equally important for other types of utilization such as irrigation or industrial purposes, as well as for the protection of vulnerable ecosystems. More recently, pollution and clean up of aquifers has become a major topic in aqueous geochemistry. Furthermore, understanding of geochemical processes is needed for safety assessment studies, e.g. for the storage of nuclear waste.
+
+Clearly, there are numerous practical applications for aqueous geochemistry. Moreover, geochemistry is an essential tool for understanding the hydrogeological systems that we study. It provides information on the provenance of groundwater, on flow directions and on groundwater ages.
+
+Water quality patterns in aquifers can be complex. The input of different sources of water is the first of factors that adds to this complexity. Sources include precipitation, rivers, lakes (possibly polluted or saline due to strong evaporation), seawater, ascending deep groundwater and anthropogenic sources such as wastewater or irrigation return flow. Geochemical processes add to the complexity since they alter the water’s composition as it travels through the subsurface. Mineral dissolution and precipitation, ion exchange (transfer of solutes between solution and solid) and redox processes (reactions that involve electrons) are the 3 main categories of chemical processes that determine water quality. Mixing of different water types, which is more a physical than a chemical process, further exerts great influence on the composition of groundwater.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\textwidth]{custodio}
+\caption[Schematic representation of chemical processes that influence the concentration of major ions in coastal areas]{Schematic representation of chemical processes that influence the concentration of major ions in coastal areas \citep{custodio1987}.}
+\label{fig:custodio}
+\end{figure}
+
+Figure \ref{fig:custodio} illustrates the chemical processes that influence the concentration of the major ions of groundwater as it flows from the recharge area towards the sea. Sulfate (\su) derives from mineral sources such as pyrite and gypsum as well as from seawater and may be lost by conversion to \hs, e.g. by oxidation of organic matter. Bicarbonate (\bi) is formed in the recharge area when \co\ is produced by aerobic respiration and decay of organic matter in the soil zone. Its concentration is further influenced by mineral equilibria (e.g. calcite, dolomite, siderite) and redox reactions that involve sources of organic carbon in the aquifer itself. Sodium (\na) is contained in some silicate minerals that may dissolve but mainly originates from seawater. Cation exchange is the most important chemical process that affects its concentration. Calcite (\cc) is abundant in many geological settings and constitutes the most important source for calcium (\ca) in groundwater. \ca\ also derives from other minerals such as dolomite, gypsum and feldspars and also takes part in cation exchange reactions. Magnesium (\mg) finally, has a high concentration in seawater and is contained in some minerals, the most important being dolomite. Similar to \na\ and \ca\ it can be adsorbed to the exchange complex.
+
+Considering the numerous sources and processes that influence solute concentrations, investigators that try and study the chemistry of aquifers are faced with an overwhelming complexity. Traditional methods that are applied to make sense of the vast pile of numbers that follow from the chemical analyses of water samples involve plotting \citep{fetter2001} and classification of samples into groups \citep[e.g.][]{stuyfzand1993} in order to be able to discern regional trends and to identify chemical processes. No matter how useful these methods are in deriving an idea of the reaction scheme that has given the water sample its composition, they are incapable of determining whether this scheme is feasible from a chemical point of view. In order to check whether a concept obeys basic chemical theory one needs a geochemical model that is based on the firm laws of thermodynamics. Or, as \citet{lichtner96} put it: `Quantitative models force the investigator to validate or invalidate ideas by putting real numbers into an often vague hypothesis and thereby starting the thought process along a path that may result in acceptance, rejection, or modification of the original hypothesis'.
+
+Geochemical models were originally developed in the 1960`s to calculate the speciation dissolved ions. The original models were soon improved and extended to include chemical reactions that alter the water composition such as mineral equilibria and cation exchange \citep{plummer92}. By virtue of the increase in computer computational power it became possible to couple geochemical models with hydrological models to calculate how the water composition changes as it travels through the subsurface \citep{lichtner96}. Today's models have reached a level of sophistication that allows us to simulate real-world processes to understand and explain field observations \citep{lee_windt2001}. 
+
+Elaborate treatment of the basic concepts and applications of aqueous geochemical modeling can be found in for example \citet{bethke1996} and \citet{lichtner96}. This course manual provides a treatment of the basic principles of the models as well as exercises for MT3DMS \citep{zheng99}, PHREEQC-2 \citep{phreeqc2} and PHT3D \citep{prommer_gw}. Extensive use is made of the following packages:
+
+\begin{itemize}
+
+\item PHREEQC for Windows, a graphical user interface for PHREEQC which has the advantage that it's not necessary to switch between programs to create input, perform calculations or view output. The program can be installed on any computer that has Windows95 or higher. It can be obtained for free from:
+
+http://pfw.antipodes.nl/download.html
+
+\item PMWIN (8.15), a graphical user interface for MODFLOW, MT3DMS, SEAWAT and PHT3D.
+For information on how to order a fully functional copy of the software contact the 
+author of the program, Wen-Hsing Chiang (wchiang@pmwin.net) or see http://www.simcore.com
+
+\end{itemize}
+
+\section*{Course outline}
+Many students and researchers that are introduced to reactive transport modelling for the first time are overwhelmed by the apparent complexity of it. Mastering the subject requires not only understanding of the underlying theory of groundwater flow, solute transport and hydrochemistry, but also of the many options that the modelling software packages offer. It often takes quite some time before students are confident enough to build and apply their own models. Although reactive transport modelling can indeed be complex, one should not be scared away from it as mastering this subject provides powerful applications. Even the simplest calculations of equilibrium speciation and saturation states already add to the knowledge of and insight in the chemical system that is being studied. Each student in hydrochemistry should therefore have at least basic knowledge of aqueous geochemical models.
+
+This course guide is a step by step introduction of the topic of reactive transport modelling. It is assumed that the reader has some knowledge of hydrochemistry, which is indispensible for successful application of the models. The first chapter introduces the basic theory of geochemical models and familiarizes the reader with PHREEQC by using simple example exercises. Each successive chapter discusses additional theory and the exercises increase in complexity. After having worked through the entire course guide, the student has enough theoretical background and practical experience to build his or her own models and apply these to real-world problems.
+

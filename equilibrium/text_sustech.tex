@@ -1,0 +1,342 @@
+\chapter{Calculation of a sample's equilibrium composition: Speciation and saturation indices}
+\def\shorttitle{Speciation and saturation indices} % Abbreviated chapter title for right top header
+
+This chapter will be dedicated to equilibrium chemistry. The kinetics of geochemical processes, i.e., the description of how and at what rate a system approaches equilibrium, will be discussed later. The reader is also referred to the standard textbooks on aqueous geochemistry for an elaborate treatment of this subject as well as for a more detailed treatment of equilibrium chemistry \citep[e.g.][]{ap2005, stumorg}.
+
+Essential to the description of the equilibrium composition of a geochemical system is the law of mass action. According to this law, the distribution of the species in the reaction:
+\begin{equation}
+a\text{A} + b\text{B} \leftrightarrow c\text{C} + d\text{D}
+\end{equation}
+is given at equilibrium by:
+\begin{equation}
+K = \frac{[\text{C}]^c[\text{D}]^d}{[\text{A}]^a[\text{B}]^b}
+\label{eq:massaction}
+\end{equation}
+where capital characters denote the species, lowercase symbols indicate the stoichiometric coefficients and $K$ is the \textit{equilibrium constant}. The quantities between the brackets denote the \textit{activity} of a species. Consider for example the dissolution of gypsum:
+
+\begin{equation}
+\gy \leftrightarrow \ca + \su + 2\wa
+\end{equation}
+
+The equilibrium constant for this reaction is given by:
+\begin{equation}
+K_\text{gyps} = \frac{[\ca][\su][\wa]^2}{[\gy]} = 10^{-4.60}
+\end{equation}
+which can be simplified to:
+\begin{equation}
+K_\text{gyps} = [\ca][\su] = 10^{-4.60}
+\label{eq:k_gyps}
+\end{equation}
+since at low ionic strength (see below) the activity of water [\wa] approaches unity and the activity of a pure solid, [\gy] in this example, equals one by definition. This expression is referred to the ''\textit{Solubility Product}'' for gypsum. Note that the equilibrium constant is temperature dependent:
+$K_\text{gyps}$ = $10^{-4.60}$
+is valid at \unit{25}{\celsius}.
+
+The equilibrium constant is formally dimensionless because the concentration of each species in the expression is divided by 1 in the same concentration units.  The entity 1 in the same concentration units is known as the ''\textit{Standard State}''.  The most common standard state used for aqueous species is either 1 mole of the species per litre of solution (1 molar, often abbreviated using an upper case ''M'' or 1 mole of the species per kilogram water (1 molal, often abbreviated using a lower case ''m''.  The standard state for each aqueous species is incorporated into the equilibrium constant. Thus, although formally dimensionless, the numerical value for the equilibrium is different for different standard states.  For example, the numerical value of the equilibrium constant in equation \ref{eq:k_gyps} where concentrations of \ca and \su are expressed in molar units is different from the value where they are expressed in molal units. In dilute solutions these differences are small compared to analytical errors but at high dissolved salt concentrations differences become significant. In PHREEQC, equilibrium constants in the default database are based on a standard state for aqueous species of 1 mole/kg water. Thus, if we need to solve problems involving concentrated salt solutions where concentrations are expressed in moles/L we will need to consider whether it is appropriate to use the default database. The Standard State situation is more complicated for sorbed species, which will be discussed below.
+
+Application of the law of mass action requires that the activities of the species are to be known. Generally, however, we are only provided with \textit{concentrations} (because those are analyzed in the laboratory), which do not equal activities because of (1) electrostatic shielding and (2) the formation of aqueous complexes. Geochemical models can take these effects into account, which will be explained below.
+
+\section{Electrostatic shielding}
+Activities reflect the tendency of ions to react and form a precipitate \citep{ap2005}. An ion in solution is surrounded by water molecules and other dissolved ions that act as a shield and reduce the reactivity of the ion. This effect can be corrected for by using a so-called activity coefficient that relates the activity of an ion to its concentration, for example \ca:
+\begin{equation}
+[\ca]=\gamma_{\ca} \cdot \frac{\slt{\ca}}{\slt[0]{\ca}} = \gamma_\ca \cdot \slt{\ca}
+\end{equation}
+
+where $\gamma$ is the activity coefficient, which is multiplied with the concentration of the ion, $\slt{\ca}$ in this example, divided by the standard state 
+for which we will use 1 mole/kg \wa. 
+According to the Debije-H\"uckel theory, activity coefficients are a function of the \textit{ionic strength} $I$ of the solution:
+\begin{equation}
+I=1/2 \sum \slt{i} \cdot z_i^2
+\label{eq:ionic_strength}
+\end{equation}
+
+Several empirical relationships exist to calculate the activity coefficients from the ionic strength, e.g. the Davies equation at \unit{25}{\celsius}:
+\begin{equation}
+\log \gamma_i = -0.5085 \cdot z_i^2 \left( \frac{\sqrt{I}}{1 + \sqrt{I}} - 0.3I \right)
+\end{equation}
+where $z_i$ is the charge of ion $i$ (e.g. 2 for \ca).
+
+Although these calculations can be awkward, they are straightforward and can still be done by hand, so the effect of electrostatic shielding is quite easily corrected for.
+
+\section{Formation of aqueous complexes}
+The second reason why the activity of an ion is lower than its concentration is that it forms aqueous complexes with other ions. Laboratory analyses typically report the total concentration of an ion, which may be present in many different complexes, e.g. \ca:
+\begin{equation}
+\sum \ca = \slt{\ca} + \slt{\caoh} + \slt{\caco} + \slt{\caso} + \slt{\capo} + \slt{\caf} + \ldots
+\label{eq:massbalance}
+\end{equation}
+
+Note that these are dissolved species, they are not to be confused with minerals. Because \ca is tied up in these complexes, the activity of the free calcium ion is reduced. The calculation of the concentrations of all possible species is a complex task because (1) for each ion in solution a mass balance similar to \ref{eq:massbalance} has to be solved and (2) at the same time the activities of all of the species have to obey the equilibrium relationships that follow from the law of mass action (equation \ref{eq:massaction}).
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.4\textwidth]{flowchart}
+\caption[Flow chart for speciation calculations]{Flow chart for speciation calculations \citep[modified from][]{appelo}} 
+\label{fig:flowchart}
+\end{figure}
+
+This requires an iterative procedure (figure \ref{fig:flowchart}). As a first estimate it is assumed that the total concentrations of the ions equal the concentrations of the free, uncomplexed ions. It is then possible to calculate the ionic strength (step 1) and use that to find the activity coefficients and correct for electrostatic effects. From this follow the activities of the ions (step 2) that are inserted into the mass action equations to obtain the activities of the aqueous complexes (step 3). These are converted to concentrations using the already calculated activity coefficients (step 4) and finally the concentrations of the uncomplexed ions are updated from the mass balance equations (step 5). The newly found values are used to obtain a more reliable value for the ionic strength and iteration continues until the result no longer changes significantly.
+
+\newpage
+
+\subsection{Your first PHREEQC input file}
+To do calculations, you need to tell the program what it has to do. This is done via input files that
+contain a list of instructions. So-called \textit{keywords} are used that have an intuitive meaning. The keyword
+SOLUTION for example is used to define the (measured) composition of our water sample. Within
+the keyword data blocks, \textit{identifiers} are used to set various options. For example, the identifier \textbf{-units}
+can be set to mg/l if the reported concentrations are in mg/l.
+Let's look at an example to make things more clear. Say that we have some pure water in which we
+have dissolved $10^{-4}$ moles of the mineral fluorite (so the only dissolved ions are \ca\ and \f) and we want to know
+the distribution of species in the water sample. This is then what your input file looks like:
+
+\begin{quote}
+SOLUTION 1 \\
+-units mmol/kgw \# these are the default units \\
+Ca 0.1 \\
+F 0.2 \\
+END \\
+\end{quote}
+
+In setting up this example problem we have used ''\textit{millimoles}'' to express the mass of Ca and F rather than ''\textit{milligrams}''. Historically, weight-based units of concentration like mg/L were used by geochemists and these are still the concentration units preferred by the regulatory community.  So why use ''\textit{millimoles}'' rather than ''\textit{milligrams}'' ?  One advantage of using millimoles can be illustrated by considering the drinking water limits for arsenic and uranium established by the United States Environmental Protection Agency. The drinking water limit for arsenic is 10 micrograms per liter ($\micro$g/L) and that for uranium is 30 $\micro$g/L. These units make it appear as if it takes more uranium than arsenic to contaminate a drinking-water supply.  However, if we convert the drinking water limits to moles, we see that the drinking water limit for arsenic and uranium is the same: 0.13 micromoles/L (umoles/L). Thus, it takes the same number of arsenic or uranium atoms to contaminate a source of drinking water so that it exceeds the drinking water limit.  In chemistry, we are generally concerned with how many atoms or ions there are rather than how much they weigh. 
+This is particularly important when considering reaction stoichiometry. 
+Note that we will need to consider mass when treating isotopic fractionation, 
+which will be discussed later.
+This input file tells PHREEQC that we have a solution, which is given the number 1 (the significance of these numbers will become clear later). The units of the concentrations are specified in mmol/kgw. The concentrations are simply entered after the element names. The input datablock is terminated by the keyword END, which tells PHREEQC to stop reading the input file and perform the calculations for this input datablock. The \# sign indicates a comment: All text that follows on the same line is ignored when the input file is read.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\textwidth]{screenshot_progress}
+\caption[Screenshot of the input editor and the progress window after the calculations have finished]{Screenshot of the input editor and the progress window after the calculations have finished. The panel to the right of the input editor shows the keywords and identifiers that can be used in PHREEQC.}
+\label{fig:screenshot_progress}
+\end{figure}
+
+To start the calculations, click Calculations $\rightarrow$ Start in the main menu or press the green arrow button on the toolbar. The program will now show a window with information on the progress of the calculations. When the calculations are finished, the caption of the button on the bottom end of this window changes from 'Cancel' to 'Done' (figure \ref{fig:screenshot_progress}). Press it to go to the output editor where you will find the results of your calculations.
+
+The output file contains a lot of data and it is easy to get lost in all the numbers. The results of the speciation calculations are reported under the heading `Beginning of initial solution calculations'. Under `Solution composition', the molality and the number of moles of each element are reported. These should be equal to the concentrations that were entered under the SOLUTION keyword, although small deviations may occur when the mass balance (equation \ref{eq:massbalance}) could not be solved exactly. The next group of data is `Description of solution', which lists some characteristics of the solution, for example pH and ionic strength. The molalities and activities of all the aqueous species are reported under `Distribution of species'. Here for each element the molality is given (it is the same number as under `Solution composition') and the molalities of each of the aqueous species of that element sum up to
+this molality (mass balance!). In our example it can be observed that 99.84 \% of all Ca is present as uncomplexed \ca. The remainder is present as the complexes \caf\ and \caoh. The last block of data consists of the 'Saturation indices' calculated by the program.
+
+\subsection{PHREEQC Exercise 1: S. Pellegrino mineral water}
+
+Since being acquired by the Swiss company Nestle, S. Pellegrino mineral water has become available many places around the world.  The S. is presumably an abbreviation for San, since it comes from the San Pellegrino district of Italy. It comes from springs in the Dolomite Mountains of northern Italy. According to the company’s website, hydrogeologic studies have shown that the water originates as snow melt and acquires its composition from interactions with volcanic and carbonate rocks during a 30-year journey underground from recharge to discharge.  Carbon dioxide is added during bottling
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=1.0\textwidth]{pellegrino_bottle}
+\caption[San Pellegrino mineral water.]{San Pellegrino mineral water.}
+\label{fig:karoo}
+\end{figure}
+
+The PHREEQC input file is given below. Only the pH (= 6.8) has not been entered yet. Look up the identifier to specify pH and enter it in the input file.
+
+A PHREEQC input file based on the composition of S. Pellegrino water obtained from their 
+website (accessed July 2018) is given below.  
+The reported pH value is 5.7; we will assume it was measured at 25 C.  
+You will need to enter the pH before you can run the simulation.
+
+\begin{quote}
+SOLUTION 1  S Pellegrino water composition \\
+-units mg/L \\
+Temperature	25 \\
+\# Enter the pH on this line \\
+Na	32 \\
+K	0 \\
+Mg	5.1 \\
+Ca	170 \\
+Cl	45 \\
+Br	0.31 \\
+S(6)	390 \\
+N(5)	0.71 as N	 \\
+F	0.48 \\
+B	0.14 \\
+Alkalinity	170  as CaCO3 \\
+END \\
+\end{quote}
+
+
+The concentrations here are entered as mg/l. Because PHREEQC recalculates all concentrations to moles it is important to specify what molecular weights must be used for recalulating mass-based units (such as mg/l). In this case, alkalinity was reported as \cc\ and the statement `as CaCO3' after the concentration ensures that the recaculation is done using the molecular weight of \cc. 
+
+Redox sensitive species can have different valence states. Sulfur
+in sulfate ($SO_4^{-2}$) is in the +6 oxidation state and therefore, the name
+S(6) indicates the sulfate ion. The concentration of nitrate is reported.  
+We designate nitrate, $NO_3^{-}$, as N(5) because nitrogen is in the +5 oxidation state.  
+
+
+Another special case is \bi, which can not be entered directly but is specified here as Alkalinity (note that element names are case sensitive). In natural waters were the alkalinity comes from carbonate species, this is a valid assumption. The different options for specifying TIC, alkalinity and pH are listed in appendix I.
+
+\begin{itemize}
+
+\item What is the percent error of the electrical balance of this chemical analysis? Answer: \ldots\ldots. Because its absolute value is less than 5 \% we may conclude that the analysis is acceptable.
+Is the analysis acceptable on this basis?
+
+\item The composition on the website does not report a concentration for silica, Si. How would the calculation of the electrical balance change if we include this element?
+
+\item The label lists no concentration for silica, Si. How would the calculation of the electrical balance change if we include this element?
+
+\item How much is the ionic strength (equation \ref{eq:ionic_strength}) that PHREEQC has calculated? Answer: $I =$ \ldots\ldots.
+
+\item What are the 2 most dominant \ca\ species and their concentrations? Answer: 
+
+\begin{enumerate}
+\item \ldots\ldots, concentration = \ldots\ldots, 
+
+\item \ldots\ldots, concentration = \ldots\ldots.
+\end{enumerate}
+
+
+\item The website reports a specific conductance of 1200 \micro S/cm.  
+PHREEQC v.3 will calculate the specific conductance 
+if the Phreeqc.dat (or Amm.dat or Pitzer.dat) database is used.  
+The calculated specific conductance is ???.
+Is this within 10 \% of the reported specific conductance?
+
+\end{itemize}
+
+
+\newpage
+
+\section{Saturation state}
+
+The saturation index is an important parameter in aqueous geochemistry as it provides information on the minerals the groundwater has been in contact with and on which minerals are likely to precipitate or dissolve.
+
+An expression analogue to equation \ref{eq:k_gyps} can be written that uses the actual activities of the species in the groundwater instead of the activities at equilibrium, which is referred to as the \textit{ion activity product} ($IAP$):
+\begin{equation}
+IAP_\text{gyps} = [\ca][\su]
+\end{equation}
+
+A comparison of $IAP$ and $K$ provides information on the saturation state of the groundwater for a mineral. This is commonly done by calculating the \textit{saturation index} ($SI$), for example for gypsum:
+\begin{equation}
+SI_\text{gyps} = \log \left(\frac{IAP_\text{gyps}}{K_\text{gyps}} \right)
+\label{eq:si_gyps}
+\end{equation}
+
+At equilibrium $IAP_\text{gyps}$ equals $K_\text{gyps}$, so $SI_\text{gyps} = 0$. Gypsum potentially dissolves in groundwater that is subsaturated (i.e. $SI_\text{gyps} < 0$) or precipitates from groundwater that is supersaturated (i.e. $SI_\text{gyps} > 0$).
+
+\subsection{Calcite saturation state of seawater}
+The basic principles of calculating a water's composition at equilibrium were presented in a landmark paper by \citet{garrels_thompson1963} and the theoretical framework presented therein continues to be applied in present-day geochemical models. Using a combination of equilibrium equations from the law of mass action and mass balance relations (as explained in the previous section), they calculated the distribution of dissolved species (speciation) in seawater at \unit{25}{\celsius} and $1.013 \cdot 10^5$ Pa (1 atm) pressure. Their results have been summarized in Figure \ref{fig:garrels}, which shows the effects of both (1) the formation of aqueous complexes and (2) electrostatic shielding. Sodium (\na), for example, hardly forms any aqueous complex but due to electrostatic effects its activity amounts to only 75 \% of its total concentration. More than 90 \% of the carbonate ion (\cb) is tied up in a complex and it can be seen that its activity amounts to a mere 2 \% of its total concentration when the effect of electrostatic shielding is taken into account as well.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.8\textwidth]{garrels_and_thompson}
+\caption[Effect of complexation and electrostatic shielding expressed as percentage of total concentration]{Effect of complexation and electrostatic shielding expressed as percentage of total concentration. Based on calculations by \citet{garrels_thompson1963}.}
+\label{fig:garrels}
+\end{figure}
+
+Clearly, neglecting the difference between total concentration and activity in the calculation of the saturation indices of seawater for minerals would result in overprediction of the values. The following PHREEQC input file repeats the calculations by \citet{garrels_thompson1963} to calculate the saturation index for calcite in seawater, using the seawater composition which is taken from example 1 in the user's manual of PHREEQC \citep{phreeqc2}: 
+
+\begin{quote}
+SOLUTION 1 Seawater \\
+        units   ppm \\
+        pH      8.22 \\
+        temp    25.0 \\
+        Ca              412.3 \\
+        Mg              1291.8 \\
+        Na              10768.0 \\
+        K               399.1 \\
+        Cl              19353.0 \\
+        Alkalinity      141.682 as HCO3 \\
+        S(6)            2712.0 \\
+END
+\end{quote}
+
+You can run this input file and verify that the free concentrations of \ca\ and \cb\ amount to $\slt{\ca} = 9.504 \cdot 10^{-3}$ and $\slt{\cb} = 3.826 \cdot 10^{-5}$ mol/kgw, respectively. The corresponding activities are $[\ca] = 2.380 \cdot 10^{-3}$ and $[\cb] = 7.969 \cdot 10^{-6}$ mol/kgw, respectively. Inserting the activities in the expression for the saturation index (equation \ref{eq:si_gyps}) yields:
+\begin{equation}
+SI_\text{calcite} = \log \left(\frac{IAP_\text{calcite}}{K_\text{calcite}} \right) = \log \left(\frac{[2.380 \cdot 10^{-3}][7.969 \cdot 10^{-6}]}{10^{-8.48}} \right) = 0.76
+\end{equation}
+which is the value that is reported by PHREEQC for calcite in under the heading `Saturation indices'. Note that if the concentrations of the species had been used instead of the activities, the calculated saturation index would be $SI_{calcite} = 2.04$, which is much too high.
+
+\begin{table}[b]
+\topcaption{Examples of fluoride-rich waters. Concentrations are in mmol/l, except pH.}
+
+\centering
+\footnotesize
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llll}
+\toprule
+    & A: Maarum, Denmark & B: Rajasthan, India  & C: Lake Abiata, Kenya \\
+\midrule
+pH  & 7.8   & 7.3   & 9.62  \\
+\na & 19.1  & 47.9  & 194   \\
+\ka & 0.36  & 0.15  & 4.91  \\
+\mg & 1.19  & 0.79  & 0.02  \\
+\ca & 1.05  & 0.68  & 0.042 \\
+\cl & 5.67  & 17.4  & 53.9  \\
+\bi & 17.8  & 14.8  & 138   \\
+\su & 0.0   & 5.2   & 0.15  \\
+\no & 0.03  & 7.8   & -     \\
+\f  & 0.089 & 0.356 & 6.28  \\
+
+\bottomrule
+\end{tabular*}
+\label{tab:fluor}
+\end{table}
+
+\subsection{PHREEQC Exercise 2: Fluoride-rich waters}
+Fluorite is a common mineral in volcanic rocks and an important source of fluoride in groundwater. High fluoride concentration in drinking water are known to cause fluorosis, a painful crippling disease. That is why the WHO drinking water standard is 1.5 mg/l, although this may even be too high for arid areas where people consume a lot of water.
+
+\begin{itemize}
+
+\item Calculate the saturation index (SI) of the water samples in table \ref{tab:fluor} for fluorite ($\fl \leftrightarrow \ca + 2\f $, $K_{fluorite} = 10^{-10.6}$), without making corrections for the ionic strength and complexes.
+
+Results:
+
+$SI_{fluorite, A} =$ \ldots\ldots, $SI_{fluorite, B} =$ \ldots\ldots, $SI_{fluorite, C} =$ \ldots\ldots
+
+\item Calculate $SI_{fluorite}$ with PHREEQC. The input file is available as \textit{fluorite1.phrq}. The concentrations of the elements are entered under SOLUTION. Remember that \no\ is entered as N(5) and \su\ as S(6).
+
+Browse through the output file to find the saturation indices of each of the water samples:
+
+$SI_{fluorite, A} =$ \ldots\ldots, $SI_{fluorite, B} =$ \ldots\ldots, $SI_{fluorite, C} =$ \ldots\ldots
+
+\item Why is there a difference between hand- and computer calculations?
+
+\item Use figure \ref{fig:fluoride} to make a plot of the concentration of \ca\ against the concentration of \f.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\textwidth]{fluoride}
+\caption[Plot of Calcium vs. Fluoride concentrations]{Plot of Calcium vs. Fluoride concentrations.}
+\label{fig:fluoride}
+\end{figure}
+
+\item Calculate the \ca\ concentration of water in equilibrium with fluorite at a \f\ concentration of:
+
+\begin{table}[h]
+\centering
+\footnotesize
+%\begin{tabular*}{0.4\textwidth}{@{\extracolsep{\fill}}lll}
+\begin{tabular}{lll}
+\toprule
+Sample	& \f & \ca (mol/l) \\
+\midrule
+1 & $5.264 \cdot 10^{-5}$ mol/l (= 1.0 mg/l) & \ldots\ldots \\
+2	& $7.895 \cdot 10^{-5}$ mol/l (= 1.5 mg/l) & \ldots\ldots \\
+3	& $1.579 \cdot 10^{-4}$ mol/l (= 3.0 mg/l) & \ldots\ldots \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\item Use the values from the table above to plot the equilibrium-line for fluorite in the graph. 
+
+Samples that plot on the solubility curve are in equilibrium with fluorite. Samples that plot above or below the curve are super- and subsaturated, respectively.
+
+\item Will a 1:1 mixture of samples 1 and 3 be in equilibrium, super- or subsaturated with respect to fluorite?
+
+\item In the hand calculations the difference between concentration and activity is not taken into account. A more accurate calculation is done with PHREEQC. The basic set-up of the input file is given in \textit{fluorite2.phrq}. Open it in the editor, fill in the missing numbers and run it.
+
+\begin{table}[h]
+\centering
+\footnotesize
+%\begin{tabular*}{0.4\textwidth}{@{\extracolsep{\fill}}lll}
+\begin{tabular}{llll}
+\toprule
+Sample	& \f & \ca (mol/l) & ratio hand/computer \\
+\midrule
+1 & $5.264 \cdot 10^{-5}$ mol/l (= 1.0 mg/l) & \ldots\ldots & \ldots\ldots \\
+2	& $7.895 \cdot 10^{-5}$ mol/l (= 1.5 mg/l) & \ldots\ldots & \ldots\ldots \\
+3	& $1.579 \cdot 10^{-4}$ mol/l (= 3.0 mg/l) & \ldots\ldots & \ldots\ldots \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\item Why does the ratio between hand and computer calculated concentrations change?
+
+\item How much fluorite precipitates/dissolves in the 1:1 mixture of samples 1 and 3?
+
+\end{itemize}

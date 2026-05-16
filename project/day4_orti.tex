@@ -1,0 +1,137 @@
+\section[Kinetically Controlled Redox Reactions]{Kinetically Controlled Redox Reactions}
+
+\subsection[Pyrite oxidation]{Pyrite oxidation}
+
+Due to the presence of dissolved oxygen in the rainwater, redox reactions 
+such as pyrite oxidation will occur in the reducing aquifer. 
+Pyrite oxidation will be defined as a kinetic process in which the 
+reaction rate depends on the amount of dissolved oxygen in the recharge water. 
+In a first step, we will include the rate expression of 
+pyrite oxidative dissolution in the database, under the RATES block. 
+The default phreeqc.dat has already had a rate expression for pyrite oxidation. 
+Here, we will update the rate expression to the one below, to illustrate 
+how to change/compile a rate expression in the database. 
+This rate expression was originally 
+proposed by \cite{williamson94}, further updated by 
+\cite{appelo98} and 
+\cite{prommer_stuyfzand_2005}, 
+and used in many more recent studies, including that of 
+\cite{seibert2016}, \cite{ISI:000435539901626} and 
+\cite{prommer2018}.
+
+{\color{red}
+\begin{quote}
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# \\
+Pyrite \\
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# \\
+-start \\
+10 if (m <= 1e-12) then goto 200 \\
+20 if (si("Pyrite") >= 0) then goto 200 \\
+30 rate\_oxy = (mol("O2"))\^\hspace parm(1) \\
+40 surf\_over\_vol = log10(m * parm(2)) \\
+50 f1=(mol("H+"))\^\hspace{}parm(3)*10\^\hspace{}(-10.19+surf\_over\_vol)*(m/m0)\^\hspace{}parm(4)\\
+60 moles = rate\_oxy * f1 * time \\
+70 if (moles > m) then moles = m \\
+100 put(moles,13) \\
+200 save moles \\
+-end \\
+\end{quote}}
+
+
+To include pyrite oxidation reaction in the model, you will proceed as follows:
+
+
+\begin{itemize}
+
+\item Open your ORTi model from yesterday. 
+
+\item Now we add pyrite into our reaction network. Before you do this, check 
+again your background solution in PHREEQC and if it is in equilibrium with pyrite.
+If it is over- or undersaturated equilibrate the solution and check what has changed.
+Update the water composition that defines the background water composition.  
+To activate pyrite go to the
+{\color{blue}Parameters} $\rightarrow$ {\color{blue}4.Chemistry} $\rightarrow$ {\color{blue}Ad\_Chemistry} 
+$\rightarrow$ {\color{blue}Phases} Tab. From the various listed minerals, select and activate pyrite. 
+Use an initial concentration of 5.0 $\times$ $10^{-3}$ mol/L\_bulk volume.
+
+\item Define the reaction rate parameters for pyrite oxidation under 
+{\color{blue}Parameters} 
+$\rightarrow$ {\color{blue}4.Chemistry} 
+$\rightarrow$ {\color{blue}Ad\_Chemistry}
+$\rightarrow$ {\color{blue}Kinetic\_Minerals} Tab. 
+First, activate the pyrite kinetics by ticking the first {\color{blue}(C)} box. 
+Add values of 0.5, 115, -0.11, and 0.67 for parm(1), parm(2), parm(3) and parm(4), respectively, 
+corresponding to the 4 parameters that have been defined in the rate expression in the database.
+
+\item Rerun PHT3D and investigate how much the pyrite oxidation reaction has impacted the reactive transport behaviour of species of interest (e.g., Fe related species).
+
+\item Because the ferric Fe produced from pyrite oxidation is commonly assumed to rapidly precipitate as ferrihydrite (simplified as Fe(OH)3(a)), 
+now also activate {\color{blue}Fe(OH)3(a)} (equilibrium version) under {\color{blue}Parameters} 
+$\rightarrow$ {\color{blue}4.Chemistry} 
+$\rightarrow$ {\color{blue}Ad\_Chemistry} 
+$\rightarrow$ {\color{blue}Phases} Tab. 
+Leave the initial concentration of Fe(OH)3(a) to be zero.
+
+\item Rerun PHT3D and investigate how much the ferrihydrite precipitation has impacted the reactive transport behaviour of species of interest (e.g., Fe related species).  
+
+\item Note that the oxidation rate of pyrite is, among other factors, depending on the pyrite concentration. Where pyrite is present at higher concentrations the reaction will proceed faster. You can study the impact of pyrite initial concentration on the reactive transport behaviour by rerunning the model with a different pyrite initial concentration.
+
+\item Please also note that due to the neoformed ferrihydrite which has very high surface area, the sediment surface sites are probably no longer solely provided by Al(OH)3(a). You may have noticed that the more processes you add, the longer the model run takes. You can add the ferrihydrite sites to see the effects in your own time if you want. For the sake of time, we do not include ferrihydrite sites here to simplify the exercise for illustration purpose. 
+
+\item Remember to save your ORTi file.
+
+\end{itemize}
+
+\subsection[Heavy metal release associated with pyrite oxidation]{Heavy metal release associated with pyrite oxidation}
+
+Trace metals including zinc, cadmium and arsenic are often incorporated 
+in the structure of pyrite and have been shown to co-dissolve stoichiometrically 
+during pyrite oxidation. Here, we will model zinc co-dissolution 
+to illustrate how the process works. 
+In a first step, we will include the rate expression of 
+dissolution of sphalerite (ZnS) in the database, 
+again under the {\color{blue}RATES} block. 
+The rate expression that is used for sphalerite will simply be linked 
+to the rate of the computed pyrite oxidation. The stoichiometric ratio 
+at which sphalerite will be dissolved, compared to pyrite, 
+is determined by a constant. For example, if the constant is set to 0.001, 
+the dissolution of 1 mmol pyrite will be accompanied by the dissolution 
+of 1 $\mu$mol sphalerite. Please define the rate expression for sphalerite 
+dissolution yourself. 
+We will then send out our database such that you can compare and see if 
+your rate expression is correctly defined.
+We do now expand the last simulation and include additionally 
+the kinetic mineral sphalerite in the reaction network.
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}4.Chemistry} and click on {\color{blue}Import database} button. ORTi will then read and interpret the new PHT3D database file.
+
+\item Activate the mineral sphalerite under {\color{blue}Parameters} 
+$\rightarrow$ {\color{blue}4.Chemistry} 
+$\rightarrow$ {\color{blue}Ad\_Chemistry} 
+$\rightarrow$ {\color{blue}Phases} Tab and set the initial concentration 
+for sphalerite to 5.0 $\times$ $10^{-3}$ mol/L\_bulk.
+
+\item Define the ratio of sphalerite / pyrite dissolution to be 0.1 (i.e., set parm(1) to 0.1 
+for sphalerite) under the {\color{blue}Parameters} 
+$\rightarrow$ {\color{blue}4.Chemistry} 
+$\rightarrow$ {\color{blue}Ad\_Chemistry} 
+$\rightarrow$ {\color{blue}Kinetic\_Minerals} Tab. 
+This number conceptually represents that within pyrite there is a 10\% substitution by Zn. 
+
+\item Now rerun PHT3D and investigate how much the sphalerite co-dissolution reaction has impacted the reactive transport behaviour of species of interest (e.g., Zn).
+
+\item Remember to save your ORTi file.
+
+\end{itemize}
+
+Finally, if there is still time, please define the co-dissolution of another metal 
+sulfide mineral in the model and explore the metal release yourself. 
+For example, you can try arsenic or cadmium. 
+Please note that the default phreeqc.dat may not contain all the reactions 
+you need depending on which element you decide to explore. 
+However, you may find the relevant reactions in other PHREEQC databases 
+(e.g., wateq4f.dat and minteq.v4.dat) and/or in the literature. 
+
+

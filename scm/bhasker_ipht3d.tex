@@ -1,0 +1,153 @@
+\section[PHREEQC Exercise 5: Site-specific surface complexation model for As]{PHREEQC Exercise 5: Site-specific surface complexation model for As}
+
+In this exercise, we will use PHREEQC to develop a model that can quantitatively describe
+the site-specific sorption characteristics of natural sediment material collected from a 
+Pleistocene aquifer near Hanoi, Vietnam. This can be done by formulating a set of surface reactions and by adjusting 
+the log\_ks of those reactions until they match the experimental data that were
+collected from anaerobic laboratory batch experiments. Even though this example is 
+focused on arsenic, the procedure itself is more generally applicable to a wide range of metals amd metalloids.
+Both the sorption experiments and the SCM development for the Pleistocene sands are described 
+in more detail by \cite{rathi2017a}. 
+The measured data suggest that $As(III)$ sorption on the sediments increased non-linearly and phosphate ions competed strongly with $As(III)$ for adsorption. 
+The SCM employed to describe these data is a generalized composite model, as proposed by \cite{Davis19982820}. 
+In this approach a generic surface site ({\color{blue}Site\_sOH}) is thought to be responsible for adsorption 
+of both $As(III)$ and $PO_4-P$. Note, that these modelled sites are not associated with a particular mineral phase of the Pleistocene sediments but represent the overall sorption behaviour of the entire mineral assemblage. 
+
+\begin{table}[h]
+\caption{Adjustable parameters, including surface complexation reaction constants 
+for $As$ and sorption site density.}
+\begin{center}
+\begin{tabular}{l c}
+\hline
+ Reaction / Parameter & Best value          \\ \hline
+$Site\_sOH$ + $As\_threeO_3^{3-}$ + 3$H^+$ = $Site\_sH_2As\_threeO_3$   + $H_2O$  & 43.665 \\
+$Site\_sOH$ + $As\_threeO_3^{3-}$ + 2$H^+$ = $Site\_sHAs\_threeO_3^{-}$ + $H_2O$	&  ? \\
+$Site\_sOH$ + $PO_4^{3-}$ + 3$H^+$         = $Site\_sH_2PO_4$           + $H_2O$	&   31.281 \\
+$Site\_sOH$ + $PO_4^{3-}$ + 2$H^+$         = $Site\_sHPO_4^-$           + $H_2O$	&  29.065 \\
+$Site\_sOH$ + $PO_4^{3-}$ + $H^+$          = $Site\_sPO_4^{2-}$         + $H_2O$	&  15.393   \\
+$Site\ density$	& ? \\ \hline
+\end{tabular}
+\label{ex_as_scm}
+\end{center}
+\end{table}
+
+The PHREEQC input file {\color{red}as\_scm\_wrr2017.phrq} that controls the model simulations 
+and the two files containing experimental data ({\color{red}as\_iso.tsv for $As(III)$} 
+and {\color{red}as\_po4.tsv} for $PO_4$)
+have been prepared for you. \\
+
+\begin{quote}
+{\color{blue}\textbf{SURFACE 1}} \\
+{\color{blue}\textbf{Site\_sOH .... \#enter value\#}}\\ 
+{\color{blue}\textbf{-no\_edl}}\\
+{\color{blue}\textbf{END}}\
+\end{quote}
+
+As can be seen, the model uses the {\color{blue}\textbf{no\_edl}} 
+option, which means that the surface complexation reactions
+do not consider any electric double layer effects.
+
+%Since, the charge density on the surface (σs) of the sediments is difficult to measure, 
+% we cannot estimate the intrinsic dissociation constant in reaction 5.1. 
+%The model uses the nothe SURFACE keyword in PHREEQC was defined with no_edl term: 
+
+Using the {\color{blue}\textbf{no\_edl}} mode, no input is required for surface area and sorbent mass. 
+It is important to note, that the unit of surface site density is moles of sites per litre of solution.
+Each individual laboratory batch sorption experiment is simulated in PHREEQC 
+as a batch reaction between the {\color{blue}\textbf{SURFACE}} and an aqueous 
+{\color{blue}\textbf{SOLUTION}} for which the composition is changed
+from experiment to experiment. $As(III)$ and $PO_4$ were added 
+using the {\color{blue}\textbf{REACTION}} keyword while the naturally 
+adsorbed concentrations of $As(III)$ and $PO_4$ were included in the initial 
+solution using the {\color{blue}\textbf{SOLUTION}} and 
+{\color{blue}\textbf{SOLUTION\_SPREAD}} keywords. 
+The experimentally observed pH was fixed in the model 
+using the {\color{blue}\textbf{EQUILIBRIUM\_PHASES}} keyword:\\
+
+\begin{quote}
+{\color{blue}\textbf{EQUILIBRIUM\_PHASES 1}} \\
+{\color{blue}\textbf{Fix\_pH -6.30 HCl 10.0 }}\\
+\end{quote}
+
+where, {\color{blue}\textbf{Fix\_pH}} is defined in the {\color{blue}\textbf{DATABASE}} 
+section of the model file as follows:\\
+
+\begin{quote}
+{\color{blue}\textbf{PHASES}}\\
+{\color{blue}\textbf{Fix\_pH}} \\
+{\color{blue}\textbf{H+ = H+}}\\ 	
+{\color{blue}\textbf{log\_k	0 }}\\
+\end{quote}
+
+Finally, the {\color{blue}\textbf{USER\_GRAPH}} keyword is used to control 
+the simultaneous plotting of the observation data and of 
+simulation results. You can now play with this model and systematically
+vary the values of two selected adjustable model parameters, i.e.,
+\begin{itemize}
+\item one of the three logKs for $As(III)$ (Hint: try logKs between 40 and 45)
+\item surface site density for $Site\_sOH$ (Hint: try densities 
+between 1 $\times$ $10^{-5}$ and 3 $\times$ $10^{-5}$)
+\end{itemize}
+
+Fill the values that achieve the best match with the observed data into Table \ref{ex_as_scm} .
+
+
+
+\section[PHT3D Exercise 7: Incorporation of the site-specific SCM into a reactive transport model]{PHT3D Exercise 7: Incorporation of the site-specific SCM into a reactive transport model}
+
+At the study site for which the above SCM was developed, Van Phuc, groundwater extraction near Hanoi and the resulting changes in hydraulic conditions have caused surface water from the Red River to infiltrate into the  adjacent Holocene aquifer and further into the laterally neighbouring Pleistocene aquifer. 
+Associated with the changes in hydrologial conditions arsenic mobilisation at the interface 
+between the Red River and the aquifer has caused an extensive arsenic plume at the site. 
+However, while the mobility of $As$ in the Holocene aquifer is considered to be relatively high, 
+$As$ transport within the Pleistocene section of the aquifer has been significantly retarded \citep{vangeen2013}. In this PHT3D exercise we use a simple 1-D reactive transport model to illustrate the effect of variable geochemical conditions on the extent of $As$ sorption, most importantly how competition between $PO_4$ and $As$ affects arsenic mobility. We will compare how the effective retardation factors that are obtained with these SCM-based models compared coefficients compare with the earlier suggested retardation factors of 16 to 20 \citep{vangeen2013}. 
+
+For this exercise the model file {\color{blue}\textbf{as\_1d.orti}} and the corresponding database file {\color{blue}\textbf{pht3d\_datab.dat}} are provided as a base version. The model simulates groundwater flow over a 50-year period over a distance of 2,500 m. The conservative transport behaviour of the model can be seen from visualising the concentration of the species {\color{blue}\textbf{Tracer}} in the Transport Results section. This can be done by 
+
+\begin{itemize}
+\item  going to {\color{blue}Parameters} $\rightarrow$  {\color{blue}3. Transport} $\rightarrow$ {\color{blue}Spc}, specifying {\color{blue}Type} $\rightarrow$ {\color{blue}Mt3dms} and entering the word \textbf{Tracer} under {\color{blue}Species}. 
+
+\item Then under {\color{blue}Parameters} $\rightarrow$ {\color{blue}3. Transport} $\rightarrow$ {\color{blue}P}, select {\color{blue}RCT} $\rightarrow$ {\color{blue}rct.1 – major flags} 
+and enter {\color{blue}ISOTHM sorption} $\rightarrow$ no sorption. 
+
+\item Now that we have defined a conservative tracer species, we will provide its concentration in {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}Mt3dms} $\rightarrow$ {\color{blue}BTN} $\rightarrow$ {\color{blue}btn.13 Concentrations}. 
+
+\item Use the point zone tool to add a tracer concentration of 1 in the 1st grid cell (x = 1.2m, y = 0.5m). Set the background boundary condition type to 1 in all grid cells. To do this 
+go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}Mt3dms} $\rightarrow$ {\color{blue}BTN} 
+$\rightarrow$ {\color{blue}btn.12}. Boundary conditions $\rightarrow$ {\color{blue}Backg.}. 
+
+\item Now write the model input files and run MT3DMS. 
+
+\item You can now visualise the concentration profile of the tracer 
+for the final time step (18250 days) under {\color{blue}Results} $\rightarrow$ {\color{blue}3. Tracer}.
+\end{itemize}
+
+In a first step we will reproduce the results of \cite{vangeen2013} by 
+employing a linear sorption model for $As$ such that the proposed retardation factor of 16 is achieved. 
+
+\begin{itemize}
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue} 3. Transport} $\rightarrow$ {\color{blue} Spc}, specify {\color{blue} Type} $\rightarrow$ {\color{blue} PHT3D} and enter {\color{blue}Species} $\rightarrow$ \textbf{$As\_three$}. 
+
+\item Then under {\color{blue} Parameters} $\rightarrow$ {\color{blue} 3. Transport} $\rightarrow$ {\color{blue} P}, select {\color{blue} RCT} $\rightarrow$ {\color{blue} rct.1 – major flags} 
+and enter {\color{blue} ISOTHM: sorption} $\rightarrow$ {\color{blue} linear}. 
+
+\item Now, in {\color{blue} Parameters} $\rightarrow$ {\color{blue} 3. Transport} $\rightarrow$ {\color{blue} Rct}, enter a value of 1.7 for {\color{blue} SP1}, which represents the distribution coefficient Kd. 
+
+\item Then, under {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue} Mt3dms} $\rightarrow$ 
+{\color{blue} RCT} $\rightarrow$ {\color{blue} rct.2a bulk density} provide a {\color{blue}Background} 
+value of 1.988 kg/l for all cells.
+
+\item Now go to {\color{blue}Parameters} $\rightarrow$ {\color{blue} 4. Chemistry} and {\color{blue} import database}and the enter into Chemistry tab. 
+\item You can see that different solution compositions have already been entered for you. 
+Under {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}Pht3d} $\rightarrow$ {\color{blue}ph.3 Initial chemistry} specify the {\color{blue}background} solution 0 and under {\color{blue}ph.4 Source/sink} use {\color{blue}add zone} to specify a source concentration for solution 1 in the 1st grid cell. 
+\item Write the model input files and run PHT3D. 
+\item Once the model execution is finished you can visualise the profile of $As\_three$ 
+at time 18250 days under {\color{blue}Results} $\rightarrow$ {\color{blue} 5. Observations}. 
+Similarly, you can reproduce a retardation factor of 20 by changing the {\color{blue}SP1} value to 2.1 l/kg.
+
+\item Finally, to incorporate surface complexation model in the 1-D simulation, de-activate the {\color{blue}RCT} module of MT3DMS and specify the surface site density values for {\color{blue}Site\_s} under {\color{blue}Parameters} $\rightarrow$ {\color{blue}4. Chemistry} $\rightarrow$ {\color{blue}Surface} $\rightarrow$ {\color{blue}Site\_back}. 
+Now write the model input files and run PHT3D. Then compare the $As\_three$ concentration profile with the profile obtained with the linear isotherm simulations. \\
+\end{itemize}
+
+What is the resulting retardation factor for $As$ in the SCM-based model ?
+
+

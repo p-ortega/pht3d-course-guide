@@ -1,0 +1,140 @@
+\chapter*{Appendix III}
+
+\addcontentsline{toc}{chapter}{Appendix III}
+
+\def\shorttitle{Appendix III}
+
+\section*{Sequence of modelling tasks]{Sequence of modelling tasks}
+
+Modelling the fate of naturally attenuating contaminats in
+groundwater consists of a series of sequential steps. Of course,
+each site has its own characteristics with respect to the:
+\begin{itemize}
+    \item contaminant composition/mixture
+    \item contamination history and available details of this history
+    \item availability of hard and soft data
+    \item hydrogeology
+    \item hydrochemistry and mineralogy
+\end{itemize}
+and thus the modelling methodology will need to be adapted to
+individual, site-specific requirements. However, the steps listed
+in Table \ref{checklist} might serve as a general
+guideline/checklist that provides a basis for a site-specific
+schedule of a modelling study.
+
+  \begin{table}
+  \centering
+%  \begin{tabular}{cr@{--}l} \hline
+  \begin{tabular}{cp{5in}} \hline
+    Step & Activity  \\ \hline
+    1 & Initial assessment of the
+    existing data/situation to be
+modelled - initial identification of potential physical and
+chemical interactions including initial `hand' calculations of
+flow rates and initial `electron balance', where possible \\
+    2 & Compilation of a first conceptual model for the
+contaminated site. In particular, detailed depth profile data
+(from multi-level sampling devices) can help for-mulate the
+conceptual model for a site. Care is needed as to the source
+conditions for the plume source - NAPL concentrations, source
+dimensions. They will strongly influence plume characteristics and
+the longevity of the contamination source \\
+    3 & Formulation of a modelling strategy (dimensionality,
+spatial and temporal resolution, proc-ess-detail of modelled
+physical and chemical processes) and formulation of the questions
+that the model(s) will need to answer. When deciding upon the
+process detail of the chemical processes, i.e., the reaction
+model, remember that: · Components of petrol products, including
+benzene, toluene, ethylbenzene, naphthalene, etc do not degrade at
+similar rates or under similar geochemical conditions - for
+exam-ple, often toluene will degrade more readily than benzene;
+and · Zero-, first-order or any non-specific third-party reaction
+rate should only be used where groundwater and aquifer mineral
+geochemical signatures are similar.  \\
+    4 & Selection of appropriate modelling tools,
+depending on available data, questions to be an-swered and
+available time. \\
+    5 & Setup of a flow model, including spatial
+discretisation of the model domain into grid cells, definition of
+boundary conditions, temporal discretisation of the simulation
+period, e.g., to account for seasonal recharge dynamics, time
+stepping, data input. \\
+    6 & Data preparation of observation data to allow for comparison
+with simulation results during flow model calibration.  \\
+    7 & Calibration of steady state or transient flow model using existing
+observations of hydraulic heads. Model calibration might be
+carried out by hand (trial-and-error) or using parameter
+estimation tools.  \\
+    8 & Testing of the plausibility of simulated
+flow velocities, flow path and water budgets.  \\
+    9 & Ideally (though in
+most cases not feasible) application/testing of the model for data
+that have not been used during model calibration.  \\
+   10 & Identification of data gaps which hamper the reliability of the
+calibrated model. Preparation of plans for acquisition of
+additional data, where feasible.  \\
+   11 & Setup of a transport model for
+advective/dispersive non-reactive transport of a single species.
+Note, that the model domain of the transport model might be a
+sub-domain of the flow model and that the model might have a
+different dimensionality.  \\
+   12 & Initial model runs of the above
+single-species model to assess and fix numerical problems that
+result from pure physical transport (e.g., convergence problems,
+oscillations, numerical dispersion).  \\
+   13 & Crude adjustment of
+(longitudinal and transversal) dispersivity values to govern major
+plume characteristics.  \\ \hline
+
+  \end{tabular}
+  \end{table}
+  \begin{table}
+  \centering
+  \begin{tabular}{cp{5in}} \hline
+     14 & Use of initial transport modelling
+results as a (further) plausibility control for the flow model.
+For example, a conservative, i.e., non-reactive species (tracer)
+in the model should travel approximately at the conceptual
+groundwater flow velocity. Where necessary, adjustments of the
+conceptual and numerical flow model. \\
+   15 & If existing reaction
+modules appear unsuitable - preparation of a site-specific
+reaction mod-ule, testing of the reaction module/package for
+simplistic, non site-specific flow configura-tions. \\
+   16 & Data preparation of observation data to allow for comparison with
+simulation results during transport model calibration.  \\
+   17 & If a multi-component reactive transport model is employed -- Batch-type
+geochemical equi-librium modelling of background water chemistry
+to assess aqueous phase - mineral equilib-ria of the
+uncontaminated aquifer. Batch-type reaction simulations to assess
+geochemical changes in response to the mineralisation of
+hydrocarbons.  \\
+   18 & Setup of multi-species, multi-component
+transport model, including first estimate of reaction parameters
+(from literature), where necessary.  \\
+   19 & Biogeochemical transport
+modelling simulations. Adjustment of reaction parameters to match
+observed plume patterns - Plume length/concentrations of
+hydrocarbons, redox zonation/concentrations of dissolved electron
+acceptors, occurrence of reaction products.  \\
+   20 & Sensitivity
+analysis of calibrated model.  \\
+   21 & Computation of detailed mass
+budgets for dissolved species/components.  \\
+   22 & Predictive model
+runs to (i) estimate the long-term contaminant plume evolution and
+the as-sociated risk for receptors (ii) answer `what if' - type
+questions. Estimates of future stresses are needed to perform a
+predictive simulation Care is needed when deciding on `future'
+source conditions for predictive runs - the distri-bution and
+composition of NAPL may be highly variable depending on its
+weathered status and the location of the water table in the
+subsurface. Note - assuming a large lateral dispersivity can lead
+to predictions of short plumes due to unrealistic (over-predicted)
+mixing/dilution of reactants (hydrocarbons and electron
+accep-tors) and inducement of biodegradation in those zones. \\
+   23 & Reporting and documenting the modelling study  \\ \hline \\
+  \end{tabular}
+ % \caption{Checklist of major steps in a reactive transport modelling study}
+  \label{checklist}
+  \end{table}

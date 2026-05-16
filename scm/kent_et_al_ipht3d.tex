@@ -1,0 +1,390 @@
+\section[PHT3D Exercise 6, Zinc transport at the Cape Cod site]{PHT3D Exercise 6, Zinc transport at the Cape Cod site}
+
+In this exercise we will construct a model that provides 
+a good example for the consideration of surface complexation reactions in PHT3D.
+The example is based on a modelling study for the Cape Code site, 
+The full details of this study were reported in \cite{Kent20003411}.    
+The Cape Cod research site is near a wastewater-treatment facility at 
+the Massachusetts Military Reservation (MMR). A treated-sewage plume originated 
+from the facility's infiltration beds, which were used from about 1936 to 1995. 
+At the time the modelling study was undertaken the plume at the site extended 
+more than 6 kilometers from the disposal site in the 
+sand and gravel aquifer. The plume contains a complex mixture of phosphate, nitrate, 
+metal ions (such as zinc), detergents, organic chemicals, and microbes. 
+Over many years the plume and adjacent parts of the aquifer  
+served as a field laboratory for a multidisciplinary team of scientists 
+who investigated many fundamantal aspects 
+of contaminant transport behaviour.
+
+\subsection{Background: Groundwater Flow}
+
+At the Cape Cod site the regional groundwater flow is generally towards 
+the south, but locally the flow direction is directed from the 
+sewage treatment facility towards the eastern shore of Ashumet Pond.  
+The groundwater flow is nearly horizontal.
+Approximately 25 cm/yr of areal recharge results
+in a small vertical component to flow as well as
+in the accumulation of a lens of pristine groundwater on top of 
+the sewage plume, the thickness of which increases with 
+distance away from the sewage 
+treatment plant \citep[]{Leblanc1984,Leblanc1991895}.  
+The magnitude of the hydraulic gradient 
+is approximately 1.7 m/km. 
+Seasonal fluctuations in the flow system result in small 
+variations (approximately 0.2 m/km) in the magnitude
+of the gradient as well as in small annual fluctuation 
+in flow direction.
+
+\subsection{Background: Hydrogeochemistry}
+
+Contrasting chemical conditions between sewage-contaminated
+and ambient groundwater gave rise to longitudinal and 
+vertical gradients in groundwater chemistry. 
+The ambient groundwater surrounding the sewage plume had 
+high concentrations of dissolved oxygen, pH values 
+in the range 5.3-5.8, and low concentrations of dissolved salts 
+\citep[]{Leblanc1991895,Hess1996,Kent1999293}.
+%[LeBlanc  et  al., 1991; Hess  et al., 1996; Kent and Maeder, 1999].
+Sewage-contaminated groundwater under the disposal beds had high 
+concentrations of nitrate.
+Concentrations of dissolved oxygen successively decreased with depth 
+\citep[]{Smith1991285,Smith19911815}.
+%[Smith et al., 1991a].  
+Biodegradation of organic matter in conjunction with solute transport 
+away from the disposal beds resulted in the depletion of dissolved oxygen 
+throughout the plume and the depletion of nitrate, followed by 
+the accumulation of dissolved Fe(II), in the core of the plume 
+%[Smith et al., 1991b; Kent  et  al., 1994]
+\citep[]{Smith1991285,Kent19941099}. 
+ 
+These biodegradation reactions influenced the pH  
+within the aquifer zone affected by the sewage plume 
+%[Abrams et al., 1998; Abrams and Loague, 2000b].
+\citep[]{Abrams19981531,Abrams20002015}.
+The principal chemical process in terms of controlling Zn transport is 
+assumed to be Zn adsorption onto the sediments.
+A single reaction with the stoichiometry could already adequately 
+describe the pH effect observed in laboratory batch studies of
+Zn adsorption onto the sediments \citep[]{Davis19982820}:
+
+\begin{equation}
+Zn^{2+}  +  >SOH    =  >SOZn^+  + H^+,  log  ^SQ_{SOZn}  
+\label{eq:zn_single_site}
+\end{equation} 
+
+Adding a second surface site with the same reaction stoichiometry results in an  
+SCM that can fit both the pH and Zn-concentration 
+effect \citep[]{Davis19982820}.
+This so-called two-site approach was one of the various
+numerical implementations tested by \cite{Kent20003411}.
+This two-site model will be used in the present exercise.
+In the two-site SCM a small percentage of the total 
+adsorption sites are considered to have a much greater affinity 
+for adsorption ("strong sites," $>SsOH$) than the rest of the 
+sites ("weak  sites," $>SwOH$): 
+
+\begin{equation}
+Zn^{2+}  +  >S_sOH    =  >S_sOZn^+  + H^+,  log  ^SQ_{S_sOZn}  
+\label{eq:zn_strong_sites}
+\end{equation} 
+
+\begin{equation}
+Zn^{2+}  +  >S_wOH  =  >S_wOZn^+  + H^+,  log  ^SQ_{S_wOZn}   \\
+\label{eq:zn_weak_sites}
+\end{equation} 
+
+Before proceeding, it is worthwhile to consider the standard state for sorbed species 
+in surface complexation models. 
+The same standard state used for aqueous species - either 1 mole of surface complex \textbackslash L of solution (M)or \textbackslash kilogram water (m) - is often used for surface complexes as well. For example, the comprehensive compilation of equilibrium constants for sorption on hydrous ferric oxide by \cite{Dzombak1990} adopts a standard state of 1 M for sorbed species.  
+One should be aware, however, there is a pitfall associated with this choice of 
+standard state %\citet{appelo_postma_1999})
+\citep[e.g.,][]{appelo_postma_1999}. 
+The pitfall can be illustrated by considering a batch reactor with a suspension in sorptive equilibrium. 
+In this thought experiment, we allow all of the solids to settle to the bottom of 
+the reactor once sorptive equilibrium has been achieved, then we remove half of the solution without removing any solid.
+Sorbed concentrations expressed in moles/kg water have now increased by a factor of two because the volume of solution (hence, mass of water) 
+has decreased by a factor of two with no change in the amount of the solid.  
+For surface complexation reactions such as those described the Eqn. \ref{eq:zn_strong_sites} 
+and Eqn. \ref{eq:zn_weak_sites}, 
+the concentration of sorbed Zn doubles and the concentration of free surface functional groups double,
+so the factor of two cancels out in the mass action expression.  
+For this type of surface complex - 
+called ''monodentate'' (one surface site per sorbed species) -
+the choice of standard state for sorbed species does not affect the value of the equilibrium constant. 
+However, for ''bidentate'' surface complexes, where there are two surface functional groups 
+bound to a single sorbing species, the situation is more complicated.  
+Consider formation of a bidentate surface complexation analogous 
+to Eqn. \ref{eq:zn_strong_sites}:
+
+\begin{equation}
+Zn^{2+}  +  2>S_sOH    =  (>SsO)2Zn + 2H^+  \\
+\label{eq:zn_2}
+\end{equation}
+
+The mass action expression can be written with the concentration 
+of the Zn surface complex raised to
+the first power in the numerator and concentration of free surface 
+sites squared in the denominator.  
+In this mass action expression, the factor of two does not cancel out.  
+This observation can be generalized by stating that equilibrium constants describing sorption where multidentate surface complexes are involved are a function of the solid to liquid ratio if a standard
+state of 1 M or 1 m is adopted for sorbed species.  
+There has been much discussion of this in the literature %(e.g.,\citet{wang_giammar_2013})
+\citep[e.g.,][]{wang_giammar_2013}.  
+To avoid this pitfall, PHREEQC adopts a standard state for sorbed species whereby the fraction 
+of sites occupied by a given sorbed species equals 1.
+In reaction \ref{eq:zn_2}, the relationship between sorbed Zn 
+in units of moles \textbackslash kg water and 
+sorbed Zn in units of mole fraction occupied 
+sites is 
+\begin{equation}
+XZn = 2[(>SsO)2Zn]/[SsOHT],  \\
+\label{eq:xzn}
+\end{equation}
+where square brackets refer to concentrations in moles/kg water and SsOHT is the total 
+concentration of strong sorption sites.  
+The factor of two results from the fact that the surface complex covers two sites.  
+Therefore, when using equilibrium constants for multidentate sorbed species taken 
+from the literature in a transport simulation, it is important to insure 
+that either the equilibrium constant uses mole fraction of sites occupied 
+by any given sorbed species = 1 or is properly converted to that standard state.  
+Formulas for making such conversions are presented 
+in various papers 
+%\citep[see][]{jon90} 	    -->    	(see Jones et al., 1990)
+\citep[e.g.,][]{wang_giammar_2013}.
+
+\par With the sorption and thus the mobility of Zn being strongly 
+depedent on pH, it is important to accurately capture the pH-controlling 
+processes. For the vertical transect model that will be constructed
+in this exercise the evolution of the pH will mostly be 
+affected by (i) the transport and mixing of two different water 
+types, i.e., of the (upstream) water composition
+and the slightly more acidic (pH = 5.6) groundwater recharge water and (ii)
+the pH increase that is induced by the degradation of organic matter
+in conjunction with sulfate and iron reduction. The former causes
+a pH gradient that is the result of physical transport processes. 
+The latter causes inside the plume-affected aquifer zone
+a pH increase towards 6.5, and thus above the 
+pH of 6.0 that characterises the uncontaminated background water. 
+For this exercise the organic matter degradation 
+is represented in a simplistic way by a single kinetically 
+controlled degradation reaction of DOC in conjunction
+with the reduction of two electron acceptors sulfate and goethite.
+It is assumed that nitrate is already depleted at the model's 
+upstream boundary and thus not considered.
+The rate $r_{DOC}$ of the DOC mineralisation is computed from:
+
+\begin{equation}
+r_{DOC} = \frac{C_{DOC}}{K_{DOC} + C_{DOC}} \sum_{i=1,nr_{EA}}{k_{EA_i} \frac{C_{EA_i}}{K_{EA_i} + C_{EA_i}}} 
+\label{eq:doc_deg}
+\end{equation}
+
+where $C_{DOC}$ is the DOC concentration, $C_{EA_i}$ is the concentration of the $i^{th}$
+electron acceptor (in the present case either sulfate or goethite) while $K_{DOC}$ and $K_{EA_i}$
+are half saturation constants for DOC and the $i^{th}$
+electron acceptor, respectively.
+
+\par In reality the composition of the sewage plume and the 
+reactions are obviously far more complex, as discussed in 
+detail by \cite{Kent20003411}.
+Nevertheless, the inclusion of this reaction allows to replicate
+some of the key features observed at the site, and, most importantly,
+allows to mimic the observed pH patterns relatively well.
+Therefore the model constructed in this exercise also reproduces
+the major Zn transport patterns relatively well, i.e., the rates 
+of Zn movement and the vertical differences in the mobility, as induced
+by the spatial variability of the pH.  
+
+\begin{table}[hb]
+\caption{Flow and solute transport parameters used for the setup of PHT3D Exercise 5}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Parameter                                            &         Value \\
+\midrule
+Flow simulation type                                 &  steady state  \\
+Simulation time (days)                               &  21000         \\
+Time step (days)                                     &  60            \\
+Model \  extent\ column\ direction\ $ (m)$           &  400           \\
+Model \ top\ elevation\ $(m)$                        &   16           \\
+Model \ bottom\ elevation\ $(m)$                     &   0            \\
+Horizontal hydraulic conductivity\ $(m/day)$         &   110          \\ 
+Porosity, $\theta$                                   &   0.39         \\
+Piezometric head downstream boundary\ $(m) $         &  14            \\ 
+Longitudinal dispersivity, $\alpha_L$   $(m)$        &   1.0          \\
+Horizontal transverse dispersivity, $\alpha_{TH}$    &   0.1          \\
+Vertical transverse dispersivity,   $\alpha_{TV}$    &   0.01         \\
+Effective diffusion coefficient, D$^{\star}$         &   0            \\
+\bottomrule
+
+\end{tabular}
+\label{cape_cod_table_1}
+\end{center}
+\end{table}
+
+\subsection{Setting up the flow model}
+
+To set up the flow model proceed as follows:
+
+\begin{itemize}
+
+\item In ORTI, create a new model and save it in a new and separate directory (folder).
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}1.Model} 
+$\rightarrow$ {\color{blue}Model} to specify the model dimension {\color{blue}('Xsection')}
+and type {\color{blue}('unconfined')}
+
+\item Select {\color{blue}Parameters} $\rightarrow$ 
+{\color{blue}1.Model} $\rightarrow$ 
+{\color{blue}Domain} to specify the domain as described in Table 
+\ref{cape_cod_table_1}. 
+For the first simulation select a spacing of 20 m in 
+x direction and 1 m in y direction
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}Time} 
+$\rightarrow$ and set the {\color{blue}Total Simulation Time} 
+to 21000 days. Then define the step size to 60 days
+
+\item Set the boundary conditions for heads by selecting 
+{\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} 
+$\rightarrow$ {\color{blue}bas.3 Boundary Conditions} corresponding to
+IBOUND (Modflow). 
+Use the {\color{blue}Zone Tool} to create a zone at the 
+outflow end that extends vertically between z = 0 m and z = 13.9 m.
+
+\item To fix the hydraulic heads at the boundaries, use 
+{\color{blue}Spatial Attributes} $\rightarrow$ 
+{\color{blue}MODFLOW} $\rightarrow$ {\color{blue}bas.5 Initial Heads} and provide 
+a value of 16 in the dialog box. This value will be used everywhere as a 
+starting (initial) head and will be kept at this value at all locations
+where a fixed head boundary condition was defined in the previous step. 
+In order to fix the heads at the outflow boundary, 
+draw a line at the same location as the outflow BC 
+and attribute a head value of 14 m.
+
+\item The inflow boundary is implemented by a single well that vertically extends 
+between 0 and 15 m. The total injection rate of this well should be set to 2.16 $m^3/d$.
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}2.Flow} 
+$\rightarrow$ {\color{blue}Parameters} 
+and use this dialog to set several parametters. 
+In {\color{blue}lpf.2} select {\color{blue}Convertible} 
+for the {\color{blue}type of layer}. 
+Then use {\color{blue}lpf.8} to specify the hydraulic conductivity.
+
+\item To fix recharge, use {\color{blue}Spatial Attributes} $\rightarrow$ 
+{\color{blue}MODFLOW} $\rightarrow$ {\color{blue}rch.2 Recharge}. 
+Create a zone along the top cells and define a value of 0.0014 in the dialog box.
+
+\item To define the porosity select {\color{blue}Spatial Attributes} 
+$\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}btn.11} and 
+set {\color{blue}Value} to 0.39. 
+
+\end{itemize}
+
+Regularely save the changes to avoid loss of your data input.
+
+\subsection{Running MODFLOW}
+
+You have now completed the set up the flow model and are ready to run MODFLOW.
+This step will provide PHT3D with the flow field that will be used to simulate 
+reactive transport.
+
+\begin{itemize}
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}2.Flow} $\rightarrow$ {\color{blue}Write}
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}2.Flow} $\rightarrow$ {\color{blue}Run}
+
+\item When the calculations have finished, a new window will appear. I will show the last line(s) of the MODFLOW output file. Make sure MODFLOW terminated without errors.
+
+\end{itemize}
+
+\subsection{Visualising hydraulic heads}
+
+\begin{itemize}
+
+\item Visualise results by selecting {\color{blue}Results} $\rightarrow$ {\color{blue}2.Flow} $\rightarrow$ {\color{blue}Head}. The time step can be changed
+in {\color{blue}Results} $\rightarrow$ {\color{blue}1.Model} $\rightarrow$ {\color{blue}Time}.
+
+\item Assess if the head distribution is plausible.
+
+\end{itemize}
+
+\subsection{Chemistry}
+
+In this section we will define (i) the initial hydrochemical 
+composition (ii) the solutions that represent the sewage
+plume composition at the upstream model boundary
+and (iii) the groundwater recharge composition. 
+Proceed with the following steps:
+
+\begin{itemize}
+
+\item Import the database from the folder that contains the Supporting Information for this exercise
+
+
+\item The species needed to be activated are $Cl$, $C(4)$, 
+$Fe(2)$ and $Fe(3)$, $Na$, $O(0)$, $S(-2)$ and $S(6)$, $Orgc$, $Zn$ and, as always, $pH$ and $pe$. 
+As described in the previous PHT3D Examples, the activation of these species/componenets 
+and the definition of the solution compositions are done in the {\color{blue}Solution Tab}. 
+All required concentrations are listed in Table \ref{scm_solution_table}.
+
+\item In is assumed that goethite is present at a (background) concentration 0.1 $mol/L_b$. 
+FeS(ppt) must also be ticked. It is initially not present and thus the concentration
+is left at the default value of 0.
+
+\item The allocation of the solutions to define initial and boundary conditions
+can be done via {\color{blue}ph.4 Source / Sink} zones (line). 
+To allocate the correct solutions at the inflow boundary allocate 
+from 14 m to 16 m $Solution\ 2$, from 3 m to 14 m 
+allocate $Solution\ 1$ and between 0 m and 3 m allocate the background solution,
+i.e., $Solution\ 0$.
+
+\item The groundwater recharge composition is entered via {\color{blue}ph.5} as a line along 
+the top grid cells. The recharge water composition is defined by $Solution\ 3$.
+However, make sure that the recharge does not extend to the cell at the inflow end of the grid.   
+
+\item Under the {\color{blue}Rates Tab} specify the degradation rate 
+parameters for Orgc (0,1e-11, 1e-12, 1e-12,1e-17,1e-17 respectively) and also 
+enter the stoichiometry of the mineralisation 
+reaction. The formula is 
+Orgc -1.0 CH2O 1.0.
+%Orgc -1.0 CH2O(NH3)0.15 1.0.
+
+\item Activate both available types of surface sites, i.e., $S\_s$ and $S\_w$.
+Define 1.59e-5 $mol/L_b$ and .0018 $mol/L_b$ as their respective background concentrations.
+
+
+\end{itemize}
+
+\subsection[Running PHT3D]{Running PHT3D}
+
+With the model setup completed run PHT3D and visualise the results via contour plots.
+
+
+\begin{table}[hb]
+\caption{Chemical composition for PHT3D Exercise 5}
+\begin{center}
+\begin{tabular}{lcccc} 
+\toprule
+Parameter  & Background & Solution 1 & Solution 2 & Solution 3\\
+\midrule
+C(4)      &   1e-4 &   1e-4  &   1e-4 &   1e-4\\
+Cl      &   0 &   0  &  0  &   1e-4 \\
+Fe(2)      &   0 &   0  &  0  &   0 \\
+Fe(3)      &   0 &   0  &  0  &   0 \\
+Na      &   2.3e-4 &   2.3e-4 &   2.3e-4 &   3.13e-4 \\
+O(0)      &   5e-4 &   0 &   5e-4 &   5e-4\\
+Orgc      &   0 &   1e-4 &   0  &  0 \\
+S(6)      &   1e-4 &   1e-4  &   1e-4 &   1e-4\\
+S(-2)      &   0 &   0  &  0  &   0 \\
+Zn      &   0 &   8e-6  &  8e-6  &   0 \\
+pH      &   6 &   6 &  6  &   5.6 \\
+pe      &   14.6 &   4 &  14.6  &   14.2 \\
+\bottomrule
+
+\end{tabular}
+\label{scm_solution_table}
+\end{center}
+\end{table}
+

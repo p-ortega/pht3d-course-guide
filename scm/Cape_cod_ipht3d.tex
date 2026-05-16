@@ -1,0 +1,169 @@
+\chapter{Single-Species Transport}
+\def\shorttitle{Single-Species Transport} %
+
+\subsection{PHT3D Exercise , Part 1: Single-Species 2-D Transport Simulation}
+
+
+\subsection{Groundwater Flow}
+
+
+\begin{figure}[tb]
+\centering
+\includegraphics[height=0.9\textwidth, angle = 270]{mt3dms_ex1_3dview.eps}
+\caption[Illustration of the conceptual model ]{Illustration of the conceptual model}
+\label{fig:single_spec_fig1}
+\end{figure}
+
+\subsection{Solute Transport}
+
+The 
+
+\begin{table}[hb]
+\caption{Flow and solute transport parameters used for PHT3D Exercise 7}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Parameter                                            &         Value \\
+\midrule
+Flow simulation type                                 &        steady state \\
+Simulation time (days)                               &  21000           \\
+Time step (days)                               &  60           \\
+Model \  extent\ column\ direction\ $ (m)$           &  400            \\
+Model \ top\ elevation\ $(m)$                        &   16            \\
+Model \ bottom\ elevation\ $(m)$                        &   0            \\
+Horizontal hydraulic conductivity\ $(m/day)$         &   110     \\ 
+Porosity, $\theta$                                   &           0.39  \\
+Piezometric head downstream boundary\ $(m) $         &  14            \\ 
+Longitudinal dispersivity, $\alpha_L$   $(m)$             &           1.0 \\
+Horizontal transverse dispersivity, $\alpha_{TH}$    &           0.1 \\
+Vertical transverse dispersivity,   $\alpha_{TV}$    &           0.01 \\
+Effective diffusion coefficient, D$^{\star}$          &             0  \\
+\bottomrule
+
+\end{tabular}
+\label{single_spec_table_1}
+\end{center}
+\end{table}
+
+\subsection{Setting up the flow model}
+
+To set up the flow model proceed as follows:
+
+\begin{itemize}
+
+\item In iPHT3D, create a new model and save it in a new and separate directory (folder).
+
+\item Select Parameters $\rightarrow$ 1.Model $\rightarrow$ Model to specify the model dimension ('Xsection')
+and type ('free')
+\item Select Parameters $\rightarrow$ 1.Model $\rightarrow$ Domain to specify
+the domain as described in Table \ref{single_spec_table_1}. For the first simulation select a spacing of 20 m in x direction
+and 1 m in y direction
+
+\item Select Parameters $\rightarrow$ Time $\rightarrow$ and set the total Simulation Time to 21000 days. Then define the step size to 60 days
+
+\item Set the boundary conditions for heads by selecting Spatial Attributes $\rightarrow$ Modflow $\rightarrow$ bas.3 boundary conditions corresponding to
+IBOUND (Modflow). Use the zone tool to create a zone at the outflow from 0 to 13.9 m
+
+\item to fix heads at the boundaries, use Spatial Attributes $\rightarrow$ Modflow $\rightarrow$ bas.5 Initial heads. provide a value of 16 in the dialog box.
+this value will be used everywhere as a starting head and will be used as a BC at places where the BC where fixed (-1) previously. In order to 
+set the outflow boundary, draw a line at the same place as the outflow BC and attribute a value of 14 m.
+
+\item the inlet is done by a well between 0 and 15 m height with an total injection rate of 2.16 $m^3/d$
+
+\item select Parameters $\rightarrow$ 2.Flow $\rightarrow$ Parameters and in this dialog set several parametters. 
+In lpf.2 select convertible for the type of layer. Use lpf.8 to set the hydraulic conductivity.
+
+\item to fix recharge, use Spatial Attributes $\rightarrow$ Modflow $\rightarrow$ rch.2 recharge. create a zone 
+on the top cell with a value of 0.0014 in the dialog box.
+
+\item for porosity value, Select Spatial Attributes $\rightarrow$ MT3DMS $\rightarrow$ btn.11 and set the value to 0.39. 
+
+\end{itemize}
+save the model changes.
+
+\subsection{Running MODFLOW}
+
+You have now completed to set up the flow model and you are ready to run MODFLOW.
+This step will provide MT3DMS with the flow field that is used to compute 
+advective-dispersive transport.
+
+\begin{itemize}
+
+\item Select Parameters $\rightarrow$ 2.Flow $\rightarrow$ Write
+
+\item Select Parameters $\rightarrow$ 2.Flow $\rightarrow$ Run...
+
+\item When the calculation has finished, a window appears, verify that 'NORMAL TERMINATION OF MODFLOW' is written.
+
+\end{itemize}
+
+\subsection{Visualising hydraulic heads}
+
+\begin{itemize}
+
+\item Visualise results by selecting Results $\rightarrow$ 2.Flow $\rightarrow$ Head. The time step can be changed
+in Results $\rightarrow$ 1.Model $\rightarrow$ Time.
+
+\end{itemize}
+
+\subsection{Setting up the transport model}
+
+to be copied from previous models
+
+\begin{itemize}
+
+\item Define the observation well Spatial Attributes $\rightarrow$ OBSERVATION $\rightarrow$ obs.1 observations
+use the zone tool to draw a point at any location
+
+\item visualize the head contours in Results $\rightarrow$ 3.Transport $\rightarrow$ Tracer. You can change the Time above 
+to see another time. It is possible, after selecting one time to use the wheel mouse to stream along time.
+
+\item Visualise the breakthrough curve by selecting Results $\rightarrow$ 5.Observation $\rightarrow$ Breakthrough, then below, 
+select the name of the point you just create. A dialog appears that allows you to select value and a breakthrough curves appears.
+The curve can be exported to be used in a spreadsheet.
+
+\end{itemize}
+
+\subsection{Chemistry}
+
+in this section we will define the initial composition and solutions used as source with the following steps :
+\item import the database
+\item the phase in presence everywhere (background) is goethite at 0.1 mol/L. FeS(ppt) must also be ticked but with a null 
+concentration (only precipitaiton allowed)
+\item As previously the initial solution composition are entered in the Solution Tab, we need the background and two solutions.
+the species needed to be activated are Cl,C(4), Fe(2) and Fe(3), Na, O(0), S(-2) and S(6), Orgc, Zn and like always pH and pe. 
+Concentrations are given in table ??
+\item the solutions are entered in the ph.4 source/sink line at inflow cells as zones as follows :
+ from 14 to 16 m : solution 2, from 3 to 14 m : solution 1
+from 0 to 3 m : background (solution 0).
+\item the recharge composition is entered in ph.5 line at the top cells using solution 3.
+\item in Rates specify the degradation rate parameters of Orgc (0,1e-11, 1e-12, 1e-12,1e-17,1e-17 respectively). 
+The formula is Orgc -1.0 CH2O(NH3)0.15 1.0.
+\item use two surface sites : S_s and S_w with 1.59e-5 and .0018 respective background concentrations
+
+\begin{table}[hb]
+\caption{Chemical composition for PHT3D Exercise 7}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Parameter  & Background & Solution 1 & Solution 2 & Solution 3\\
+\midrule
+C(4)      &   1e-4 &   1e-4  &   1e-4 &   1e-4\\
+Cl      &   0 &   0  &  0  &   1e-4 \\
+Fe(2)      &   0 &   0  &  0  &   0 \\
+Fe(3)      &   0 &   0  &  0  &   0 \\
+Na      &   2.3e-4 &   2.3e-4 &   2.3e-4 &   3.13e-4 \\
+O(0)      &   5e-4 &   0 &   5e-4 &   5e-4\\
+Orgc      &   0 &   1e-4 &   0  &  0 \\
+S(6)      &   1e-4 &   1e-4  &   1e-4 &   1e-4\\
+S(-2)      &   0 &   0  &  0  &   0 \\
+Zn      &   0 &   8e-6  &  8e-6  &   0 \\
+pH      &   6 &   6 &  6  &   5.6 \\
+pe      &   14.6 &   4 &  14.6  &   14.2 \\
+\bottomrule
+
+\end{tabular}
+\label{spec_table}
+\end{center}
+\end{table}
+

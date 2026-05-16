@@ -1,0 +1,347 @@
+\chapter{Single-Species Transport}
+\def\shorttitle{Single-Species Transport} %
+
+\section{MT3DMS Exercise 1, Part 1: Single-Species 3-D Transport Simulation}
+The purpose of this exercise is to learn the use of MODFLOW and MT3DMS for analysis of 3-D
+transport of singe-species contaminants under natural-gradient hydraulic conditions. The effect
+of different transport solution techniques on plume migration are examined. In addition, the
+impact of equilibrium sorption and first-order decay will be simulated in the second part of this
+exercise.
+\subsection{Groundwater Flow}
+
+A sketch of the system being modeled is shown on Figure \ref{fig:single_spec_fig1}. 
+The aquifer is confined, with a
+uniform thickness of 6 m that is represented by three 2 m thick layers. 
+The model is discretized
+into 31 rows and 50 columns, with a regular spacing of 5 m in the $column$ and $row$ directions.
+Groundwater flow is assumed to be steady. Hydraulic heads of 18.33 m and 10.0 m are assigned
+along the upstream and downstream faces of the model, respectively, so that there is a uniform
+ambient hydraulic gradient of 0.034 along the x-axis. A uniform horizontal hydraulic
+conductivity of 0.864 m/d (i.e., 1 $\times$ $10^{-3}$ $cm/s$) is assumed, and the vertical anisotropy ratio, $KV/KH$, is 0.01. The resulting uniform seepage velocity is approximately 0.10 $m/day$.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[height=0.9\textwidth, angle = 270]{mt3dms_ex1_3dview.eps}
+\caption[Illustration of the conceptual model and numerical model grid.]{Illustration of the conceptual model and numerical model grid.}
+\label{fig:single_spec_fig1}
+\end{figure}
+
+\subsection{Solute Transport}
+
+The contaminant source is represented by a single cell 
+with a constant concentration of 1.0,
+located at row 16, column 1 in the first model layer, as shown on Figure \ref{fig:single_spec_fig1}. Clean water enters
+along the remaining portion of the upstream boundary. 
+Solute is free to exit from the constant
+head cells along the downstream boundary. 
+The boundary conditions along the other model
+faces are implicitly set as zero mass flux. 
+The transport parameters are listed in Table \ref{single_spec_table_1} and are
+assumed to be uniform for all model layers.
+
+\begin{table}[hb]
+\caption{Flow and solute transport parameters used for MT3DMS Exercise 1.}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Parameter                                            &         Value \\
+\midrule
+Flow simulation type                                 &        steady state \\
+Simulation time (days)                               &  3650           \\
+Model \  extent\ column\ direction\ $ (m)$           &  250            \\
+Model \  extent\ row\ direction\ $ (m)  $            &  155            \\
+Model \  thickness\ $(m)$                            &    6            \\
+Model \ top\ elevation\ $(m)$                        &    6            \\
+Grid \ spacing\ $\Delta x $ $(m)$                    &    5            \\
+Grid \ spacing\ $\Delta y $ $(m)$                    &    5            \\
+Number of columns                                    &    50               \\
+Number of rows                                       &    31               \\
+Number of layers                                     &    3                \\
+Horizontal hydraulic conductivity\ $(m/day)$         &           0.864     \\ 
+Vertical   hydraulic conductivity\ $(m/day)$         &           0.00864   \\ 
+Porosity, $\theta$                                   &           0.3  \\
+Piezometric head upstream boundary\ $(m) $           &  18.33         \\ 
+Piezometric head downstream boundary\ $(m) $         &  10            \\ 
+Longitudinal dispersivity, $\alpha_L$                &           1.0 m \\
+Horizontal transverse dispersivity, $\alpha_{TH}$    &           0.1 m \\
+Vertical transverse dispersivity,   $\alpha_{TV}$    &           0.01 m \\
+Effective diffusion coefficient, D$^{\star}$          &             0  \\
+\bottomrule
+
+\end{tabular}
+\label{single_spec_table_1}
+\end{center}
+\end{table}
+
+\subsection{Setting up the flow model}
+
+To set up the flow model proceed as follows:
+
+\begin{itemize}
+
+\item In PMWIN, create a new model and save it in a new and separate directory (folder).
+
+\item Select Grid $\rightarrow$ Mesh size... to specify the model domain as described in
+Table \ref{single_spec_table_1}. Set the model's Top elevation to 6 m.
+
+\item Select Grid $\rightarrow$ Layer property... and simply click OK. We can leave it as is but PMWIN requires that all menu entries for specifying model input are clicked.
+
+\item Select Parameters $\rightarrow$ Time $\rightarrow$ and set the Simulation Time Unit to days. Then define the simulation time. Divide the total simulation time
+of 10 years into a first stress period of 1095 $days$ (Period length) and a
+second stress period of 2555 $days$. 
+
+\item Set the boundary conditions for heads by selecting Select Grid $\rightarrow$ Cell Status $\rightarrow$ IBOUND (Modflow). Make sure that the value of IBOUND is or becomes 1 (= active cell) at all cells, except the cells at the upstream (column 1) and the downstream boundary (column 50). 
+Change the value of IBOUND at the upstream and downstream boundary cells to -1,
+which will define those cells as fixed head cells. The hydraulic heads
+at these grid cells will remain at the allocated values during the entire simulation.
+To enter the data edit the values in Layer 1. Afterwards copy the values
+to Layers 2 and 3. Leave the editor and save your changes.
+
+\item Select Parameters $\rightarrow$ Initial \& Prescribed Hydraulic Heads $\rightarrow$ Reset Matrix and set the value to 10 m and click ok. Then change the value at all cells at the upstream boundary (column 1) to 18.33 m. Make sure that you apply these values to all three layers. Leave the editor and save your changes.
+
+\item Select Parameters $\rightarrow$ Horizontal Hydraulic Conductivity $\rightarrow$ Reset Matrix and set the value to 0.8640 $m/day$. Make sure that you apply these values to all three layers. Leave the editor and save your changes.
+
+\item Select Parameters $\rightarrow$ Vertical Hydraulic Conductivity $\rightarrow$ Reset Matrix and set the value to 0.00864 $m/day$. Make sure that you apply these values to all three layers. Leave the editor and save your changes.
+
+\item Select Parameters $\rightarrow$ Effective Porosity $\rightarrow$ Reset Matrix and set the value to 0.3. Make sure that you apply these values to all three layers. Leave the editor and save your changes.
+
+\end{itemize}
+
+\subsection{Running MODFLOW}
+
+You have now completed to set up the flow model and you are ready to run MODFLOW.
+This step will provide MT3DMS with the flow field that is used to compute 
+advective-dispersive transport.
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ MODFLOW $\rightarrow$ Run...
+
+\item A window appears that lists all the files that will be generated. There are also a number of options, which you can leave as they are. Click OK to start the calculations. First, PMWIN will generate the necessary MODFLOW files and then it will call MODFLOW to run the
+simulation model. 
+
+\item When the calculation has finished, hit any key to close the command window and return to PMWIN.
+
+\end{itemize}
+
+\subsection{Visualising hydraulic heads}
+
+\begin{itemize}
+
+\item Visualise results by selecting Tools $\rightarrow$ 2D-Visualisation. On the MODFLOW tab select Hydraulic head and klick OK.
+
+\end{itemize}
+
+You should get a steady-state head distribution like shown Figure \ref{fig:single_spec_ex1_heads}.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[height=0.9\textwidth, angle = 270]{mt3dms_ex1_heads.eps}
+
+\caption[Hydraulic head distribution under natural-gradient conditions.]{Hydraulic head distribution under natural-gradient conditions.}
+\label{fig:single_spec_ex1_heads}
+\end{figure}
+
+
+\subsection{Setting up the transport model}
+
+\begin{itemize}
+
+\item Set the boundary conditions for concentrations by selecting Select Grid $\rightarrow$ Cell Status $\rightarrow$ ICBUND (Trabsport models). Leave the editor without
+making changes. The default value for ICBUND of 1 (= active cell) will remain
+at all grid cells.
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ Simulation Settings ... Define a new species by adding a name like Tracer to the Description list. Make it active by placing a tick mark in the box behind it and then click OK. Leave the default Type of Reaction $No$ $kinetic$ $reaction$ $is$ $simulated$.
+
+\item Define the initial concentrations by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Source/Sink Concentration $\rightarrow$ Constant Head Cells. Click Edit to start editing the concentration for the species Tracer (or any other name that 
+you have chosen for the species). 
+Add a pollution source by setting the Flag and the concentration value 
+at the grid cell positioned 
+at $Column 1$, $Row$ 16, $Layer$ 1 to a value of 1 for the first stress period.
+Set the value to 0 for the second stress period.
+Leave the editor and save your changes.
+
+\item Define the initial concentrations by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Initial Concentrations. Click Edit to start editing the initial concentration of Tracer (or any other name that you have chosen for the species). Use  Reset Matrix to change the value for all initial concentrations to 0.
+
+\item Define the advection package by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Advection. Select 3rd-order TVD Scheme (ULTIMATE) as the Solution Scheme and click OK.
+
+\item Define the dispersivity to be used by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Dispersion. In the window that appears, leave TRPT at a value of 0.1.
+Change TRPV to 0.01 for all three layers and then click OK. 
+In the editor, use Reset Matrix to change the value for 
+the longitudinal dispersivity to 1.0 m. 
+Make sure that you apply these values to all three layers.
+Leave the editor and save your changes. 
+
+\item To visualise not only the results from the last time steps of each stress period but also some intermediate results select Models $\rightarrow$ MT3DMS $\rightarrow$ Output Control. Click on the Output Times tab and configure the settings such that results are printed every 50 days (by setting the value for Interval to 50).
+
+\item Run the transport model by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Run and clicking OK.
+
+\end{itemize}
+
+\subsection{Breakthrough curves and contour plots}
+
+To visualise the breakthrough curve for the contaminant at a specific
+location proceed as follows:
+
+\begin{itemize}
+
+\item Define the observation well by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Concentration Observations. For the Observation Borehole add 77.5 as a value for X (easting) and similarely use 77.5 as value for Y (northing). Under Observation Data set the Proportion
+to 1 for Layer 1. Click OK.
+
+\item Visualise the breakthrough curve by selecting Models $\rightarrow$ MT3DMS $\rightarrow$
+View $\rightarrow$ Concentration Time Curve. Select Tracer and click OK. Click on the Chart Tab.
+You can save the result as plot or you can go to the Data Tab export the data to an ASCII text file for use with another program such as Excel.
+
+\end{itemize}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[height=0.9\textwidth, angle = 270]{mt3dms_ex1_btc.eps}
+\caption[Concentration breakthrough curve at the observation point 1
+(column 16, row 16 and layer 1).]{Concentration breakthrough curve at observation point 1 (column 16, row 16 and layer 1).}
+\label{fig:single_spec_ex1_btc}
+\end{figure}
+
+To view a contour plot of the simulated concentrations after a simulation time of 3 years
+
+\begin{itemize}
+
+\item Select Tools $\rightarrow$ 2D-Visualisation. On the MT3DMS tab select Tracer and click OK.
+Click on the right arrow next to Simulation Time until you have reached a value of 1095 days
+As you move forward in time you should see the contaminant plume growing (see Figure \ref{fig:mt3dms_ex1_2dcont} for comparison).
+
+\item Select Options $\rightarrow$ Environment and select the Contours Tab. There you can, for example, define color ranges (Click on the Fill Tab), activate Fill contours and define the
+contour levels that will be displayed. 
+
+\item Note, that you can easily switch over to a cross-sectional view.
+
+\end{itemize}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[height=0.9\textwidth, angle = 270]{mt3dms_ex1_2dcont.eps}
+\caption[Calculated concentration distribution in layer 1 at year 3 under
+natural-gradient conditions.]{Calculated concentration distribution in layer 1 at year 3 under
+natural-gradient conditions.}
+\label{fig:mt3dms_ex1_2dcont}
+\end{figure}
+
+\subsection{Effect of Solution Techniques}
+
+Now let us examine the effect of transport solution techniques on the accuracy of
+simulation results. Export the breakthrough curve at the observation point obtained using
+the TVD option to an ASCII file. Then, change the advection solution option to
+Upstream Finite-Difference and MOC, respectively, and export the calculated
+concentrations to additional ASCII files. Note that dispersion and sink/source terms are
+always solved using the standard finite-difference method and the GCG implicit matrix
+solver.
+Use Excel to graph the three breakthrough curves. 
+% You should get something similar to Figure 5. 
+The TVD 
+%(shown as diamonds) 
+and MOC 
+%(shown as triangles) 
+solutions are
+nearly identical, as both solutions have minimal numerical dispersion. The Upstream
+Finite-Difference solution 
+%(shown as squares)
+, on the other hand, contains a significant
+amount of numerical dispersion.
+In addition, check the mass balance errors for each solution. TVD and FD should have
+close to zero mass balance error, while MOC has a large mass balance error at the
+beginning but diminishes quickly, which is typical of a particle-tracking based solution
+technique.
+
+\subsection{Optional Numerical Experiment}
+
+If you have time left, you can freely experiment with the model you have set up. For
+example, if you increase the longitudinal dispersivity from 1 to 5 m, and rerun the 
+three cases
+%shown in Figure 5
+, do you see all three concentration curves become nearly identical? 
+If so, why?
+
+\section{MT3DMS Exercise 1, Part 2: Single-Species 3-D Transport with with Sorption and First-Order Decay}
+
+\subsection{Linear equilibrium-controlled sorption}
+
+We use the second part of the exercise to introduce some simple reactions.
+Initially we only consider sorption. Proceed as follows:
+
+\begin{itemize}
+
+\item Make a copy of the folder in which the existing model is located.
+
+\item Start to add the reactions by selecting Models $\rightarrow$ MT3DMS $\rightarrow$ Chemical Reactions. Click Edit and start editing the input data. Under the Value Tab
+click Reset Matrix and select Linear equilibrium isotherm as sorption type.
+Add a value of 3 $\times$ $10^{-4}$ $m^3/kg$ for $K_d$ (which corresponds to 3 $\times$ $10^{-7}$ $L/mg$). Click OK and leave the editor.
+
+\end{itemize}
+
+The value to enter for $K_d$ obviously depends on the mass and the length units 
+that are used for the model. Those have to be consistent. 
+Therefore the value will depend on which units will be used for the definition
+of the bulk densitity. With retardation being defined as
+
+\begin{equation}
+R = 1 + \frac{\rho_b}{\theta} K_d
+%\label{eq:retard}
+\end{equation}
+
+a bulk density of 1700  $m^3/kg$ will lead to a dimensionless retardation factor
+of 2.7. 
+
+To enter the bulk density 
+
+\begin{itemize}
+
+\item Select Parameters  $\rightarrow$ Bulk density
+$\rightarrow$ Cell by Cell. Go to Value $\rightarrow$ Reset Matrix and set
+the value to  1700  $m^3/kg$. Make sure that the value is applied to all three
+layers.
+
+\item Also, you need to select the TVD option
+again under the MT3DMS ‘Solution Method’ menu. 
+
+\item  Moreover, if you have changed
+dispersivity values, make sure to change them back to 1.0, 0.1 and 0.01 $m$ for the
+longitudinal, transverse and vertical dispersivities, respectively.
+
+\item Run the MT3DMS simulation and check the concentration distribution in plan view and
+cross sections. 
+
+\item Export the simulated concentrations for the breakthrough curve 
+to an external ASCII file.
+
+%In addition, you should have the concentration breakthrough curve similar
+%to the one marked by the square symbols in Figure 6. Export the simulated
+%concentrations for the breakthrough curve to an external ASCII file.
+
+\end{itemize}
+
+\subsection{First-order Radioactive Decay or Biodegradation}
+
+Next, run another simulation with the same sorption parameters.
+To add a decay reaction
+
+\begin{itemize}
+
+\item Select Models $\rightarrow$ MT3DMS $\rightarrow$ Simulation Settings. 
+Change the Type of reaction to First-order irreversible reaction.
+
+\item Then go again to Models $\rightarrow$ MT3DMS $\rightarrow$ Chemical Reactions 
+$\rightarrow$ View $\rightarrow$ Reset Matrix.
+Now you can edit the first-order decay rate coefficients for both dissolved and sorbed phases 
+to 0.00027397 $1/day$ (= 0.1 1/$year$). Make sure that the value is applied
+to all grid cells in the model domain.
+
+%The concentration breakthrough curve
+%from this case should be similar to the one marked by the triangle symbols in Figure 6.
+\item Export the simulated concentrations for the breakthrough curve to an 
+external ASCII file. You can then use Excel to compare your calculated 
+breakthrough curves under different
+sorption and decay parameters.
+
+\end{itemize}
+
+

@@ -1,0 +1,168 @@
+\normalsize\large\newpage
+\chapter{Cation exchange}
+\def\shorttitle{Ion exchange} % Abbreviated chapter title for right top header
+\section{Background}
+
+Sorption of species on the surface of solids is an important regulating mechanism for concentrations of dissolved ions in natural waters. Natural substances whose surfaces can act as sorbers include clay minerals, organic particles and oxides/hydroxides. The capability of reactive transport models to simulate sorption processes is essential to the successful application of these models.
+
+When dealing with sorption processes a distinction is often made between surfaces with a constant exchange capacity (ion exchange) and surfaces with a variable charge (surface complexation). In ion exchange problems, ions are adsorbed and released in equivalent proportions. The exchange capacity of the exchanging surface is assumed constant and the net charge of the surface does not change during the exchange process. This approach works especially well for cation exchange on clay and organic surfaces. In surface complexation, on the other hand, the charge of the surface is variable and dependent on the amount and kind of ions sorbed. It applies for example to sorption of heavy metals on the surface of oxides and hydroxides. 
+
+PHREEQC can simulate sorption through ion exchange and surface complexation and both approaches will be discussed below.
+
+Cations readily adsorb to negatively charged clay and organic particles. A change of the composition of the water that is in contact with the exchange complex induces exchange and hence a change in the composition of both the water and the exchange complex. Since the amounts of adsorbed ions can be large compared to the amounts in solution, the effect of this process on the water composition can be significant.
+
+Cation exchange occurs in a variety of natural systems but is especially relevant in coastal areas. In seawater Na, Mg and K are present at increased levels compared to fresh water, which generally contains Ca as the dominant cation. When the fresh water displaces the seawater Na, Mg and K from the sediment's exchange complex are displaced by Ca. The exchange of \na\ (on the exchange complex) for \ca\ that occurs in a freshening aquifer is described by the following equilibrium reaction:
+\begin{equation}
+\half \ca + \nax \leftrightarrow \half \cax + \na
+\end{equation}
+where X indicates the soil exchanger.
+
+As the affinity of the exchanger differs for each individual cation, a spatial separation of the displaced cations can develop. Going upstream of the fresh- saltwater interface a so-called chromatographic sequence of Na, K, Mg and Ca dominated water types is found (Appelo and Postma, 1994). 
+
+The reverse occurs when seawater intrudes in a fresh water aquifer:
+\begin{equation}
+\na + \half \cax \leftrightarrow \nax + \half \ca
+\end{equation}
+
+The equilibrium constant for this reaction is given by:
+\begin{equation}
+K_{\text{Na} \backslash \text{Ca}} = \frac{[\beta_{\text{Na}}][\ca]^{\half}}{[\beta_{\text{Ca}}]^{\half}[\na]} = 0.398
+\label{eq:knaca}
+\end{equation}
+where $[\beta]$ indicates the activity of the sorbed species and the subscripts Na and Ca denote the sorbed species $\nax$ and $\cax$, respectively. The equilibrium constant for cation exchange reactions is also called the selectivity coefficient. Values of selectivity coefficients for cations commonly found in natural systems can be found in Appelo and Postma (2005). They are also included in the PHREEQC-2 database.
+
+PHREEQC uses the Gaines-Thomas convention, which means that the activity of the sorbed species $\beta$ is defined as the equivalent fraction. For example for $\cax$:
+\begin{equation}
+\beta_{Ca} = \frac{\text{meq}_{\cax}}{\text{CEC}}
+\end{equation}
+in which $\text{meq}_{\cax}$ is the adsorbed $\ca$ concentration expressed in meq/100g and CEC is the \textit{cation exchange capacity}, also expressed in meq/100g. The CEC is a measure of the capability of a material to sorb cations and equals the equivalent sum of all sorbed species. Therefore:
+\begin{equation}
+\sum \beta = 1
+\label{eq:betas}
+\end{equation}
+
+Note that equilibrium constants (e.g., Eqn. \ref{eq:knaca}) describing ion exchange in the Gaines-Thomas convention use equivalent fraction = 1 for the standard state for each sorbed species but may use either 1 M or 1 m as the standard state for aqueous species.  When using equilibrium constants taken from the literature to describe ion exchange reactions, it is important to make sure they are consistent with these standard states.
+
+Equation \ref{eq:betas} can be conveniently used to calculate the activities of the adsorbed species at a known water composition by combining it with the expressions of the selectivity coefficients (equation \ref{eq:knaca} and similar expressions for other ions). The result is a quadratic expression that can be solved using the abc-formula (Appelo and Postma, 2005).
+
+\section{PHREEQC Exercise 3: Calculation of the exchange complex composition}
+In this exercise you will first calculate the composition of the exchanger complex by hand and then with PHREEQC. For the hand calculations you are provided with the concentration of the major cations in seawater (in mmol/kgw):
+
+\begin{table}[hb]
+\centering
+\footnotesize
+\begin{tabular}{llll}
+\toprule
+\na	& \ka & \ca & \mg \\
+\midrule
+485 & 10.6 & 10.7 & 55.1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+and the selectivity coefficients of $\ka$ and $\mg$:
+
+\begin{equation}
+K_{\text{Na} \backslash \text{K}} = \frac{[\beta_{\text{Na}}][\ka]}{[\beta_{\text{K}}][\na]} = 0.20
+\label{eq:knak}
+\end{equation}
+
+\begin{equation}
+K_{\text{Na} \backslash \text{Mg}} = \frac{[\beta_{\text{Na}}][\mg]^{\half}}{[\beta_{\text{Mg}}]^{\half}[\na]} = 0.501
+\label{eq:knamg}
+\end{equation}
+
+Rewrite equations \ref{eq:knaca}, \ref{eq:knak} and \ref{eq:knamg} to express $\beta_\text{Ca}$, $\beta_\text{K}$ and $\beta_\text{Mg}$ as functions of $\beta_\text{Na}$ and the solute concentrations. Insert into equation \ref{eq:betas} and solve for $\beta_\text{Na}$. The other values are found by back-substitution. Fill in the values below:
+
+\begin{table}[hb]
+\centering
+\footnotesize
+\begin{tabular}{lllll}
+\toprule
+$\beta_\text{Na}$	& $\beta_\text{K}$ & $\beta_\text{Ca}$ & $\beta_\text{Mg}$ & $\sum \beta$\\
+\midrule
+\ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+You can also use PHREEQC to get the same answer. Enter the cation concentrations as the solution composition and use the keyword \textbf{EXCHANGE} to have PHREEQC calculate the exchange complex. The syntax is as follows:
+
+\begin{quote}
+EXCHANGE 1 \\
+	X 0.06 \\
+	-equilibrate 1 \\
+END
+\end{quote}
+
+Under \textbf{EXCHANGE}, the concentration of element X is defined. This is the number of exchanger sites in moles. In this case, there are 60 millimoles of exchanger sites. The number in milliequivalents is the same because the exchanger is assumed to have a single negative charge in PHREEQC. Here, the exchanger is in contact with a solution that has 1 kg of water (the default amount in PHREEQC), or 1 l. So, the cation exchange capacity expressed in meq/l is CEC = 60 meq/l. Can you calculate how much that is in meq/100g? The answer is CEC = \ldots\ldots meq/100g.
+
+The identifier \textbf{-equilibrate} is used to have the exchanger composition calculated by PHREEQC according to equilibrium with a solution. The number after the identifier indicates a solution number, 1 in this case. Alternatively, the solution composition may be entered explicitly by typing the concentrations of the sorbed species. For the purpose of this exercise however, the \textbf{-equilibrate} option is required.
+
+The activities of the sorbed species ($\beta$) are listed in the PHREEQC output file under the heading `Beginning of initial exchange-composition calculations'. Look for the numbers in the column `Equivalent fractions', which are the $\beta$ values, and insert the appropriate values in the table below.
+
+\begin{table}[hb]
+\centering
+\footnotesize
+\begin{tabular}{lllll}
+\toprule
+ & \na	& \ka & \ca & \mg \\
+\midrule
+$\beta$ & \ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots \\
+meq/l   & \ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots \\
+$K_d$   & \ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Also insert the sorbed concentrations expressed as meq/l of pore water and calculate the distribution coefficient, $K_d$. The distribution coefficient is the ratio of the sorbed concentration over the dissolved concentration and is often used in solute transport studies to estimate a retardation factor. The $K_d$ values for seawater are clearly different from the values for a typical fresh water, listed below, which demonstrates the limited applicability of this approach in settings with a strong concentration gradient.
+
+\begin{table}[hb]
+\centering
+\footnotesize
+\begin{tabular}{llll}
+\toprule
+ & \na	& \ca & \mg \\
+\midrule
+$\beta$           & 0.0169 & 0.9291 & 0.054 \\
+sorbed (meq/l)    & 1.014  & 55.75  & 3.24 \\
+solute (mmol/kgw) & 2.43   & 3.04   & 0.28 \\
+$K_d$             & 0.417  & 9.17   & 5.79 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As a final part of this exercise you can also examine the effect of dilluting a solution that is in equilibrium with the exchange complex. Because the amount of cations on the exchanger is relatively large compared to the amount of dissolved ions in a dilute solution, the exchanger tends to work as a buffer. Dillution of the solution will be accompanied by an increase of the monovalent ions relative to the divalent ions, which can be seen by rewriting equation \ref{eq:knaca}:
+\begin{equation}
+K_{\text{Na} \backslash \text{Ca}} \frac{[\nax]}{[\cax]^{\half}} = \frac{[\na]}{[\ca]^{\half}}
+\end{equation}
+
+The left-hand side is essentially constant when the sorbed concentrations are large compared to the solute concentration, which means that a 10-fold dillution of \na\ is accompanied by a 100-fold dillution of \ca.
+
+Simulate a 1000-fold dillution of the solution in equilibrium with the exchanger from the previous PRHEEQC simulation. You can do this by appending a new simulation in which you equilibrate the exchanger with a new solution that has concentrations 1000 times less than the seawater. Include the following line:
+
+\begin{quote}
+USE exchange 1
+\end{quote}
+
+to equilibrate the new solution with the exchange complex from the previous simulation. PHREEQC remembers the composition of the exchange complex and the keyword \textbf{USE} ensures that the exchanger will be used again in the new simulation.
+
+Inspect your output file and fill in the table below.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{llllll}
+\toprule
+ & \na	& \ka & \ca & \mg & $\frac{\na}{\sqrt{\ca}}$ \\
+\midrule
+seawater 				& 485   & 10.6   & 10.7   & 55.1   & 4.69 \\
+dill. seawater  & 0.485 & 0.0106 & 0.0107 & 0.0551 & 0.148 \\
+dill. + equil.  & \ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots \\
+sorbed (meq/l)  & \ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots & \\
+sorbed (meq/l)  & \ldots\ldots & \ldots\ldots & \ldots\ldots & \ldots\ldots & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Notice that the ratio $\frac{\na}{\sqrt{\ca}}$ has hardly changed after the diluted solution has equilibrated, just as the composition of the exchange complex.

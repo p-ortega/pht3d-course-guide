@@ -1,0 +1,112 @@
+\section[PHT3D Exercise 8: Reductive dissolution of Fe-oxides]{PHT3D Exercise 8: Reductive dissolution of Fe-oxides}
+
+Millions of humans worldwide are exposed to the consumption
+of groundwater contaminated with arsenic concentrations that
+exceed the World Health Organizations acceptable drinking
+water limit of 10 \micro g/L. 
+
+Arsenic occurs naturally in sediments, particularly in low-lying flood plain type environments with the most noteworthy occurrences in parts of Argentina, Bangladesh, Chile, China, Hungary, India, Mexico, Romania, Taiwan, and Vietnam. Understanding the coupled geochemical and hydrological processes that control arsenic mobility is vital for minimizing health impacts through the development of suitable mitigation strategies. 
+
+Under oxidising aquifer conditions, at circumneutral pH, arsenic generally does not pose
+a significant threat to groundwater resources because it strongly
+sorbs onto Fe-phases such as ferrihydrite or goethite. 
+However, the intrusion of reactive organic carbon from sources such as
+carbon-rich sediments, constructed ponds, recent degradation
+of plants, and wastewater has in the meantime been
+identified as triggers for microbially mediated reductive
+dissolution of these iron phases, accompanied by the release
+of ferrous iron and trace elements such as arsenic.
+
+This exercise illustrates the complex interplay of the key of geochemical processes that are involved in the
+release and transport of arsenic during the intrusion of (reactive) dissolved organic carbon into an aquifer that is initially characterised by low concentrations of dissolved arsenic. A more comprehensive discussion of modelling reductive dissolution of iron oxides and the associated fate of arsenic can be found, for example, in \cite{Rawson20162459}, who constrained their model development with the experimental data collected earlier by \cite{Tufano20084777} and in \cite{rawson2017}, which highlights the importance of multiple secondary reactions that were induced in parallel with the reductive dissolution of iron during a sucrose injection experiment.   
+.    
+
+\subsection[Groundwater flow]{Groundwater flow}
+
+In this exercise we use a pre-constructed model for groundwater flow and reactive transport 
+while the focus of the exercise is to append the specific model input required to
+study iron mineral reactions and the fate of arsenic.
+
+\begin{itemize}
+
+\item In ORTI, load the copy of the numerical model that was readily prepared 
+for this exercise. 
+%The model files are located in the folder {\color{red} \textbf{2d\_iron\_red}}.
+The groundwater flow in this vertical transect model is induced 
+by a steadily increasing hydraulic head gradient between the zone representing the interface with a river and the 
+the model's downstream boundary. The modelled aquifer is characterised by two discrete
+aquifer zones of differing hydraulic conductivity. 
+The upper, less permeable zone has a hydraulic conductivity of $5 m/day$ while the lower zone has a higher 
+hydraulic conductivity of 40 $m/day$. 
+
+\item Load the model file {\color{red} \textbf{as\_river\_base\_model.orti}} into ORTI. 
+
+\item Inspect which aqueous species are included in the basic model. 
+
+\item Run first MODFLOW and then PHT3D to inspect the results of this (effectively) non-reactive simulation. 
+
+\end{itemize}
+
+\subsection[Initiating redox reactions with dissolved electron acceptors]{Initiating redox reactions with dissolved electron acceptors} 
+
+\begin{itemize}
+
+\item Add degradable dissolved organic carbon ({\color{red} \textbf{Orgc}}) as electron donor to the reaction network. Suitable reaction rate parameters for {\color{red} \textbf{Orgc}} have already been entered for you.
+
+\item Add an {\color{red} \textbf{Orgc}} concentration of 2 $\times$ $10^{-3}$ to 
+the river water composition ({\color{red} \textbf{solu 1}}).   
+
+\end{itemize}
+
+\subsection[Adding iron minerals to the reaction network]{Adding iron minerals to the reaction network} 
+
+\begin{itemize}
+\item Activate the iron mineral {\color{red} \textbf{Goethite}}, {\color{red} \textbf{Siderite}} 
+and {\color{red} \textbf{FeS(ppt)}} to the reaction network (under the {\color{red} \textbf{PHASES}} Tab).
+To do so select Parameters $\rightarrow$ Chemistry $\rightarrow$ Phases and 
+activate the species (tick the checkbox) for these minerals. 
+
+\item Add a initial goethite concentration of 5 $\times$ $10^{-3}$ mol/L$_{bulk}$. Assume that siderite and FeS(ppt) are not present at the beginning. 
+
+\end{itemize}
+
+\subsection[Arsenite sorption]{Arsenite sorption} 
+
+So far the model contains only a small concentration of arsenite in the aqueous phase. 
+In the next step the generic surface site {\color{red} \textbf{Site\_s}} will be added and the
+sorption site number will be linked to the amount of goethite that is present. As the amount of goethite can vary during the model simulation this will increase of decrease the number of sorption site accordingly. 
+During reductive dissolution of iron this causes a steady loss of sorption capacity.   
+
+\begin{itemize}
+
+\item Select Parameters $\rightarrow$ Chemistry $\rightarrow$ Surface and 
+activate the species (tick the checkbox) {\color{red} \textbf{Site\_s}} 
+
+\item Under Surface $\rightarrow$ Name add {\color{red} \textbf{Goethite}} and under Surface $\rightarrow$ Switch  add {\color{red} \textbf{equil}} to the text box. This will tell PHT3D that the sorption site concentration will be proportional to the concentration of Goethite. Define the ratio $mol$ $of$ $sorption$ $sites$ 
+$per$ $mol$ $of$ $Goethite$ where normally the initial concentrations for {\color{red} \textbf{Site\_s}} are defined.
+For this example enter 0.1 as the ratio of sorption sites per mass of goethite. 
+Be careful to enter the value as concentration (second column) and not as a saturation index (first column).
+
+\item Adding the surface {\color{red} \textbf{Site\_s}} to the model will cause the equilibration of the aqueous solution with the surface. The concentrations of the surface complexes on the {\color{red} \textbf{Site\_s}} surface can be inspected by opening the file phout.dat, which is created by PHT3D during the model execution. After activation of the surface sites arsenite in the aquifer is initially mostly stored as sorbed arsenic.  
+
+\item Rerun PHT3D and inspect the results. 
+
+\item Check out how the {\color{red} \textbf{Orgc}} plume evolves over time
+
+\item Check out the changes of the electron acceptors that participate in the 
+degradation of {\color{red} \textbf{Orgc}}, i.e., {\color{red} \textbf{O(0)}}, 
+{\color{red} \textbf{N(5)}}, {\color{red} \textbf{S(6)}} and {\color{red} \textbf{Goethite}}
+
+\item Check how the arsenite plume evolves over time and try to explain the simulated behaviour. 
+
+\end{itemize}
+
+
+
+ 
+
+
+
+
+
+

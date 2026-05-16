@@ -1,0 +1,562 @@
+%\DeclareGraphicsExtensions{.png}
+\chapter{Redox Reactions}
+\def\shorttitle{Redox Reactions} 
+\section[Background]{Background}
+
+Understanding oxidation-reduction (redox) reactions that occur in natural 
+and contaminated systems is central to developing accurate conceptual and 
+quantitative models. Redox reactions involve the transfer of electrons 
+between constituents and therefore, changes in the oxidation state of 
+one or more elements. Changes in oxidation state of an element can 
+result in dramatic changes in its chemical and physical properties.  
+For example, iron in the plus three oxidation 
+state - Fe(III) - in surficial deposits renders 
+a reddish hew to Mars whereas iron in the plus II oxidation 
+state - Fe(II) - in surficial basalts on the Moon is, in no 
+small part, responsible for the blackness of the lunar mares. 
+Two important examples of redox reactions are the oxidation 
+of aqueous Fe(II) to Fe(III) or organic carbon by dissolved oxygen:
+
+\begin{equation}
+4Fe^{+2} + O_{2,aq} + 10H_2O \rightarrow 4Fe(OH)_{3,s} + 8H^+  \\
+\label{eq:fe2_oxidation}
+\end{equation}
+
+\begin{equation}
+CH_2O  + O_{2,aq} + 10H_2O \rightarrow CO_{2,aq} + H_2O \\
+\label{eq:om_reduction}
+\end{equation}
+
+Rather than representing formaldehyde, $CH_2O$ is often used to represent 
+one sixth of a glucose molecule.
+
+The classical approach to discussing redox reactions in aqueous geochemistry 
+is to split the redox reactions into two hypothetical 
+half reactions involving electrons. 
+Using this approach, reaction \ref{eq:fe2_oxidation} and \ref{eq:om_reduction} 
+would be broken up into the following half reactions:
+
+\begin{equation}
+Fe^{+2} + 3H_2O  \rightarrow Fe(OH)_{3,s} + 3H^+ + e^-  \\
+\label{eq:fe_half_reac}
+\end{equation}
+
+\begin{equation}
+CH_2O + H_2O \rightarrow CO_{2,aq} + 4H^+ + 4e^-  \\                    
+\label{eq:om_half_reac}
+\end{equation}
+
+\begin{equation}
+O_{2,aq} + 4H^+ + 4e^-  \rightarrow 2H_2O \\
+\label{eq:ox_half_reac}
+\end{equation}
+
+Mass action expressions are then written for the half reactions.
+For example, for the Fe(II)/Fe(III) half reaction, 
+the mass action expression is:
+
+\begin{equation}
+K = a_{Fe(OH)_{3,s}} a_{H^+}^3 a_{e^-}/a_{Fe}^{+2} a_{H_2O}^3 \\
+\label{eq:rdx6}
+\end{equation}
+
+The standard state of the $e^-$ is the same as other aqueous species,
+1 mole per kilogram water.  
+This approach comes from the field of electrochemistry, where the oxidation and 
+reduction half reactions can be made to occur in separate place
+connected, for example, 
+through a meter that measures the electromotive force (or power source) 
+and a salt bridge.
+In dilute solutions the activity of water can be equated with its mole fraction,
+which is essentially 1. If pure ferric hydroxide forms then it 
+can be assumed to be in 
+its standard state (mole fraction $Fe(OH)_{3,s}$
+equals 1), 
+so Eqn (\ref{eq:rdx6}) can be re-written:
+
+\begin{equation}
+K=a_{H^+}^3 a_{e^-}/a_{{Fe}^{+2}} \\    
+\label{eq:rdx7}
+\end{equation}
+                                                         
+Taking the base-10 logarithm, \ref{eq:rdx7} becomes: 
+\begin{equation}
+logK = 3loga_{H^+} + loga_{e^-} -loga_{{Fe}^{+2}}  \\                          
+\label{eq:rdx8}
+\end{equation}
+
+Analogous to the definition of $pH$,
+$loga_{e^-}$
+is defined as $pe$.
+This formalism is useful for graphically representing the 
+relative thermodynamic stability of redox-reactive species 
+in natural and contaminated systems 
+(typically in their standard state).
+
+Electrochemists have established logK values for 
+half reactions based on the 
+convention that the hydrogen gas -
+hydrogen ion half reaction
+\begin{equation}
+H_{2,g}  =  2H^+ + 2e^- \\   
+\label{eq:rdx9}
+\end{equation} 
+has an electromotive force and, therefore a logK 
+value of 0 for $H_{2,g}$ and $H^+$ in their 
+standard states (1 atmosphere and 1 mol/kgw, respectively).  
+Using this convention, logK values for half reactions can be assembled 
+in order of thermodynamic favorability, 
+called a redox ladder, such as Table \ref{tab:rdx1}.  
+Note that the logK values apply to all species in their standard state 
+(1 mol/kgw for aqueous species, pure solid phase activity 
+equals 1, and 1 atmosphere for gasses).  
+Also, the logK value for half reactions where solid phases are participants 
+depends on the thermodynamic stability of the solid phase.  
+For example, reduction of $ferrihydrite$ (fhy) is more favorable than 
+reduction of $goethite$ (based on the logK values for goethite that 
+applies to the Cape Cod aquifer, Kent et al., 2008) because $goethite$ 
+is thermodynamically more stable than $ferrihydrite$.  
+Plots of $pH$ against $pe$ constructed using reactions and logK values like 
+those in Table \ref{tab:rdx1} are used to illustrate 
+trends expected in redox processes 
+with changes in pH. In the exercises that will follow below, 
+we will explore these trends.
+
+\begin{table}[h]
+\topcaption{Half reactions and logK values for some redox-reactive species}
+\centering
+%\footnotesize
+\begin{tabular}{rcll}
+\toprule
+Half reactions, per electron				  & &									                  & logK \\ \hline
+0.25 $O_{2,aq}$ + $e^-$ + $H^+$       &=& $0.5H_2O$											    & 21.52 \\
+0.2  $NO_3^-$ + $e^-$ + $1.2H^+$      &=& 0.1 $N_{2,aq}$ + 0.6 $H_2O $      & 20.71 \\
+0.5 $MnO_2:H_2Os$ + $e-$ + $2H^+$     &=& $0.5Mn^{+2}$ + $1.5H_2O$				  & 20.69 \\
+0.5 $HAsO_4^{-2}$ + $e^-$ + $2H^+$    &=&  0.5 $As(OH)_{3,aq}$ +  $0.5H_2O$	      & 19.80 \\
+$FeOOH$ + $e^-$ + $3H^+$              &=& $Fe^{+2}$ + $2H_2O$  fhy							    & 17.91 \\
+$FeOOH$ + $e^-$ + $3H^+$              &=& $Fe^{+2}$ + $2H_2O$  Goethite (Kent et al. 2008)	    & 13.52 \\
+$0.125SO_4^{-2}$ + $e^-$ + $1.125H^+$ &=& $0.125HS^-$ + $0.5H_2O$							    & 4.21 \\
+$0.125CO_3^{-2}$ + $1.25H^+$ + $e^-$  &=& $0.125CH_{4,aq}$ + $0.375H_2O$						& 5.13 \\
+\bottomrule
+\label{tab:rdx1}
+\end{tabular}
+\end{table}	
+
+\begin{table}[h]
+\topcaption{PHREEQC keywords for simulating redox equilibria}
+\centering
+\footnotesize
+\begin{tabular}{llll}
+\toprule
+Constituents	& Database	                & Input	     & Selected\_Output   \\ \hline
+Aqueous       &	SOLUTION\_MASTER\_SPECIES & SOLUTION n & Totals (e.g., Ca)   \\
+              & SOLUTION\_SPECIES	        & MIX n      & Molalities (e.g., $Ca^{+2}$) \\
+              &                           &            & Activities (e.g., $Ca^{+2}$) \\
+              &                           &            & Saturation\_index  \\
+              &                           &            & USER\_PUNCH       \\
+              &                           &            &        SC         \\
+              &                           &            &     Rho           \\
+              &                           &            &   Soln\_Vol        \\ \hline
+Gas phase	    & Phases	   & EQUILIBRIUM\_PHASES n   & EQUILIBRIUM\_PHASES \\
+              &            &                         & USER\_PUNCH   \\
+              &            &                         & EQUI(...)     \\ \hline
+Solid phase	  & Phases     & EQUILIBRIUM\_PHASES n   & See Gas Phase \\ \hline
+Surface       & SURFACE\_MASTER\_SPECIES & SURFACE n & See aqueous   \\
+complexation  & SURFACE\_SPECIES         &           &       \\ \hline
+Other         &                          &           &       \\ \hline
+SAVE, USE	    & Solution n,              &           &       \\
+              & EQUILIBRIUM\_PHASES n    &           &       \\ 
+							& EXCHANGE  n              &           &       \\ 
+							& SURFACE n                &           &       \\ \hline
+REACTION n    &	Irreversible addition    &           &       \\
+              & of compounds             &           &       \\ 
+
+\bottomrule
+\label{tab:keywords}
+\end{tabular}
+\end{table}	
+
+\section[PHREEQC Exercise 6]{PHREEQC Exercise 6}
+
+This series of exercises involves using PHREEQC to react 
+oxidized and reduced species. As you will see, 
+the oxidation reduction reactions 
+also induce changes in pH and other secondary reactions.
+
+
+\begin{table}[h]
+\caption{Water compositions for the mixing exercise. Adjust Na to achieve charge balance for the oxic solution and Cl to achieve charge balance for the anoxic solution.}
+\begin{center}
+\begin{tabular}{lccc} 
+\toprule
+Parameter   & Oxic GW & Anoxic GW & Units  \\ \hline
+pH          & 6.50 		& 6.50 			& -      \\
+pe          & 12   		& 4    			& -      		\\
+Temperature & 21   		& 21   			& $^\circ$C \\
+Alkalinity  & 710  		& 710  			& $\mu$eq/L  		\\
+Na          & 780  		& 580  			& $\mu$mol/L \\ 
+K           & 8.0  		& 75   			& $\mu$mol/L \\
+Mg          & 18.0 		& 53   			& $\mu$mol/L \\
+Ca          & 9.0  		& 170  			& $\mu$mol/L \\ 
+Cl          & 82   		& 550  			& $\mu$mol/L \\ 
+S(6)        & 24.0 		& 100  			& $\mu$mol/L \\ 
+O(0)        & 500  		& 0    			& $\mu$mol/L \\ 
+Fe(2)       & 0    		& 179 			& $\mu$mol/L \\ 
+\bottomrule
+\end{tabular}
+\label{tab:rdx2}
+\end{center}
+\end{table}
+
+\subsection[Mixing-induced redox reactions]{Mixing-induced redox reactions}
+
+\begin{itemize}
+\item Set up two solutions, one with $O_2$ and one with $Fe(II)$, using the compositions in Table \ref{tab:rdx2}. {\color{red} \textbf{MIX}} them in equal proportions. (Keywords: {\color{red} \textbf{SOLUTION n}}, {\color{red} \textbf{SOLUTION m}}, {\color{red} \textbf{MIX o}}). The solutions begin with the same $pH$ and $alkalinity$. What about the $TCO_2$ concentration ? $TCO_2$ is the sum of the concentrations of all carbonate-containing aqueous species. 
+	\begin{enumerate} 
+	\item What happens to the $pH$, $alkalinity$, and $TCO_2$ concentrations after mixing ?
+	\item What happens to the concentrations of $O_2$, $Fe(II)$, and $Fe(III)$ after mixing?  What are the dominant $Fe$ aqueous species ?
+	\item What happens to the $PCO_2$ after mixing?
+	\end{enumerate} 
+\item Use the anoxic solution. Allow 10 umoles of $O_2(g)$ from the atmosphere ($PO_2$ = 0.2 atmospheres) to equilibrate with the solution. 
+(Keyword: {\color{red} \textbf{EQUILIBRIUM\_PHASES n}}.)
+  \begin{enumerate} 
+	\item What happens to the $pH$, $alkalinity$, and $TCO_2$ concentrations after mixing ?
+	\item What happens to the concentrations of $O_2$, $Fe(II)$, and $Fe(III)$ after mixing?  What are the dominant $Fe$ aqueous species?
+	\item What happens to the $PCO_2$ after mixing?
+  \end{enumerate}
+\item Repeat the previous exercise where first 100 $\mu$moles then 1000 $\mu$moles of $O_2$ from the atmosphere equilibrate with the anoxic solution, but allow ferrihydrite ($Fe(OH)3(a)$) or goethite ($Goethite$) to precipitate until it reaches equilibrium.
+	\begin{enumerate}  
+	\item What happens to the $pH$, $alkalinity$, and $TCO_2$ concentrations after mixing ?
+	\item What happens to the concentrations of $O_2$, $Fe(II)$, and $Fe(III)$ after mixing?  What are the dominant $Fe$ aqueous species ?
+	\item What happens to the $PCO_2$ after mixing ?
+	\item What happens when the solution is allowed to equilibrate with atmospheric $PCO_2$ ?
+	\end{enumerate} 
+\item Simulate reacting the oxic solution with 500 umoles of amorphous $FeS$ ($FeS(ppt)$) (ca. 44 mg) allowing $Fe(OH)3(a)$ to precipitate. 
+	\begin{enumerate}  
+	\item What got oxidized ? What did not get oxidized? What was the $pH$ ?
+	\item Repeat the simulation, this time allowing the suspension to equilibrate with atmospheric $O_2$. What was the $pH$ ? What got oxidized ?
+	\end{enumerate}  
+\end{itemize} 
+
+
+\subsection[Redox sequence]{Redox sequence}
+
+The next exercise compares the standard sequence of oxidation- reduction reactions 
+predicted using the redox ladder to the sequence in which oxidants (electron acceptors) 
+actually get reduced by organic carbon based on thermodynamic considerations.   
+The exercise uses the keyword {\color{red} \textbf{REACTION n}} to add $CH_2O$, 
+which represents one six$^{th}$ of a glucose molecule, to a suspension with aqueous and solid-phase oxidants.  
+As $CH_2O$ is added it reacts with the oxidants that are most thermodynamically favorable. 
+Thermodynamic favorability depends on concentrations and solid-phase solubilities 
+(which depend on $pH$ for some important oxidants).  
+Thus the order in which the oxidants react with $CH_2O$ may change during the course 
+of the redox titration as the chemical conditions change.  
+
+\textbf{Note, that you will need to use either the {\color{red} \textbf{Wateq4f.dat}} 
+or {\color{red} \textbf{Minteq.v4.dat}} database, 
+because the Phreeqc.dat database does not include arsenic or uranium.}
+
+
+\begin{itemize}
+\item Create a PHREEQC input file and set up the initial solution and solid-phase compositions 
+in the suspension using the data in Table \ref{tab:rdx3}.  
+Assume the suspension has one kilogram of water.  
+(Keywords: {\color{red} \textbf{SOLUTION n}}, {\color{red} \textbf{EQUILIBRIUM\_PHASE n}}).  
+Adjust the chloride concentration to insure charge balance of the solution. 
+Two solid phases with reduced species may precipitate if they become supersaturated: 
+amorphous $FeS$ ($FeS(ppt)$ in Phreeqc) and $Siderite$.
+
+\begin{table}[h]
+\caption{The composition of the suspension used for the redox sequence and redox titration exercises}
+\begin{center}
+\begin{tabular}{lcc} 
+\hline
+	   & Value	 & Units \\
+pH	 & 5.80	   & - \\
+T 	 & 22	     & $^\circ$C \\
+C(4) &	2514	 & $\mu$M \\
+Na	 & 2580	   & $\mu$M \\
+K	   & 330	   & $\mu$M \\
+Mg	 & 170	   & $\mu$M \\
+Ca	 & 570	   & $\mu$M \\
+Cl	 & 1766	   & $\mu$M \\ 
+Water	& 1	     & Kg = L \\ \hline % should be approx. not equal
+Redox-reactive constituents & &\\ \hline
+O2 	  & 250	      & $\mu$M \\
+N(5)	& 1500	    & $\mu$M (use Nit not N) \\
+Pyrolusite & 800	& $\mu$moles \\
+As(5)      &	1	  & $\mu$M \\
+U(6)	     &  1	  & $\mu$M \\
+Fe(OH)3(a) or Goethite 	& 8000	& $\mu$moles \\
+S(6) 	                  & 260	  & $\mu$M \\ \hline
+\end{tabular}
+\label{tab:rdx3}
+\end{center}
+\end{table}
+
+
+Using thermodynamic data from the PHREEQC database 
+(and the Wateq4f or Minteq.v4 database if arsenic or uranium are included), 
+the redox ladder for the oxidized species in Table \ref{tab:rdx1} follows the sequence: 
+$O_2$, $NO_3^-$, $MnO_2$ ($Pyrolusite$), $As(V)$, ferric hydroxide (ferrihydrite, $Fe(OH)3(a)$ 
+in the PHREEQC database, or $Goethite$), and $SO_4^{-2}$ 
+(Table \ref{tab:rdx1}).  
+This sequence is based on all reactants in Table \ref{tab:rdx1} 
+being in their standard state at $pH$ 7 and 25 $^\circ$C.  
+Use the {\color{red} \textbf{SAVE}} keyword to save 
+the composition of the solution and the equilibrium phase assemblage.
+
+\item Use the keyword {\color{red} \textbf{USE}} to recall the compositions 
+of the solution and equilibrium phase assemblage created previously.  
+Use the {\color{red} \textbf{REACTION n}} keyword to add an increment of $CH_2O$.  
+Try adding a suffiently large amount of $CH_2O$ to remove about half of the dissolved oxygen, 
+then try again with a now sufficiently large amount of $CH_2O$ 
+to remove all the dissolved oxygen and even some of the nitrate, etc.  
+Examine the order in which oxidants get reduced. Any surprises ?
+
+\item Using the keyword {\color{red} \textbf{SELECTED\_OUTPUT}}, 
+set up a file that includes simulation data of interest to this exercise 
+without a lot of the other information that, while interesting, 
+clutters the most significant simulation results.  
+Consult the manual under the {\color{red} \textbf{SELECTED\_OUTPUT}} 
+keyword to have the following information sent to the selected output file: 
+$pH$, $alkalinity$, concentrations of the total dissolved oxygen ($O(0)$), nitrate ($N(5)$), 
+$Pyrolusite$, $As(5)$, ferric hydroxide ($Fe(OH)3(a)$ or $Goethite$, 
+whichever you chose to use), $S(6)$, $Siderite$, and $FeS(ppt)$.  
+For the solid phases, you can use the {\color{red} \textbf{-equilibrium\_phases}} 
+list-of-phases command under {\color{red} \textbf{SELECTED\_OUTPUT}}.  
+For each phase in the list, this will send the total number of moles 
+remaining and the number of moles added (positive value) or removed (negative value) 
+to the {\color{red} \textbf{selected output file}}.  
+Alternatively, you can also add a {\color{red} \textbf{USER\_PUNCH}} 
+list to your {\color{red} \textbf{SELECTED\_OUTPUT}}.  
+Consult the PHREEQC manual under the {\color{red} \textbf{USER\_PUNCH}} keyword.  
+It will explain how to add the appropriate heading.
+To add the moles of a solid (or gas) phase, use 
+{\color{red} \textbf{PUNCH Phases (phase name)}}, % shoul be Phases("`phase name”)
+as explained in Table 8 of the PHREEQC manual.  
+The selected output file (note, you should not forget to give it a name 
+using the {\color{red} \textbf{-filename}} 
+name command) can be opened using the Excel wizard 
+(it as a delimited file).
+
+\end{itemize}
+
+\subsection[Redox titration]{Redox titration}
+
+In this exercise we conduct a redox titration, where $CH_2O$ 
+is added incrementally to a suspension with aqueous- and solid-phase oxidants.  
+We will begin by assuming that the oxidants will be reduced sequentially based 
+on the redox ladder in Table \ref{tab:rdx1} and compare this to the actual sequence.
+The exercise is broken down into a number of steps:
+
+\begin{enumerate}
+\item Determine how many moles (per liter) of $CH_2O$ to you need add to titrate away each of the oxidants. One possible approach is described below.
+\item Set up the solution and phase compositions. The beginnings of a PHREEQC file is provided (in an Excel file). To that file, add the solution composition and equilibrium phase assemblage in Table Table \ref{tab:rdx1}.
+\item Set up a {\color{red} \textbf{SELECTED\_OUTPUT}} file following instruction in step 3 of exercise 5, above. 
+\item Using the {\color{red} \textbf{REACTION keyword}}, 
+add blocks to the input file in which each oxidant is titrated away sequentially be $CH_2O$ in a series of small steps.
+\item Run the simulation, plot the results.
+\end{enumerate}
+
+\begin{itemize}
+\item Determine how many moles of $CH_2O$ must be added to 
+titrate away each of the oxidants in Table \ref{tab:rdx1}. 
+One approach is first to establish the moles of $CH_2O$ required 
+to reduce one mole of each oxidant and second to multiply the concentrations 
+of each oxidant by the ratio of $CH_2O$ reduced per mole of oxidant.
+\end{itemize}
+
+The half reaction for the oxidation of $CH_2O$ to $CO_2$ written:
+
+
+
+\begin{equation}
+CH_2O  + H_2O \rightarrow CO_{2,aq} + 4H^+ + 4e- \\
+\label{eq:half_reac_om}
+\end{equation}
+
+Four electrons are released by the reduction of one $CH_2O$.  
+The half reaction for reduction of $O_2$ (Table \ref{tab:rdx1}) is written:
+
+\begin{equation}
+O_{2,aqu}  + 4e- + 4H^+ \rightarrow 2H_2O \\
+\label{eq:half_reac_ox}
+\end{equation}
+
+Four electrons are consumed for each $O_2$ reduced.  
+So the ratio of $CH_2O$ oxidized to $O_2$ reduced is 1.  
+In order to reduce 250 $\mu$moles (per liter) of dissolved oxygen, 
+250 $\mu$moles (per liter) of $CH_2O$ must be added.
+Repeating this process allows a set of balance redox 
+reactions to be written, from which the stoichiometric relationship 
+between $CH_2O$ added and oxidant removed can be determined 
+(Table \ref{tab:rdx4}).
+
+
+\begin{table}[h]
+\topcaption{Overall reactions for the oxidation of $CH_2O$ by dissolved oxygen, nitrate, manganese oxide, arsenate, FeOOH, and sulfate.}
+\centering
+\footnotesize
+\begin{tabular}{lcr}
+\toprule
+Overall reaction		& &														         \\ \hline 
+$O_{2,aq}$ +  $CH_2O$               &=& $CO_{2,aq}$ + $H_2O$ = $HCO_3^-$ + $H^+$  \\
+4 $NO_3^-$ +   $5CH_2O$ + $4H^+$    &=&  2 $N_{2,aq}$ + 5 $CO_{2,aq}$ + 7 $H_2O$ \\
+2 $MnO_2·H_2Os$ + $CH_2O$ + 4 $H^+$ &=& 2 $Mn^{+2}$ + $CO_{2,aq}$ + 5 $H_2O$ \\
+2 $H_2AsO^{4-}$ + $CH_2O$ + 2 $H^+$ &=&  2 $As(OH)_{3,aq}$ + $CO_{2,aq}$ + $H_2O$ \\
+4 $FeOOHs,fhy$ +  $CH_2O$ + 8 $H^+$ &=&  4 $Fe^{+2}$ +  $CO_{2,aq}$ + 7 $H_2O$ \\
+4 $FeOOHs,gte$ +  $CH_2O$ + 8 $H^+$ &=&  4 $Fe^{+2}$ +  $CO_{2,aq}$ + 7 $H_2O$ \\
+  $SO_4^{-2}$ +  2 $CH_2O$ + $H^+$  &=&   2 $CO_{2,aq}$ +  $HS^-$ + 2 $H_2O$ \\
+2 $CH_2O$                           &=& $CH_4.aq$ + $CO_{2,aq}$ \\
+\bottomrule
+\label{tab:rdx4}
+\end{tabular}
+\end{table}	
+
+The redox titration will be conducted on a suspension with the composition listed in Table \ref{tab:rdx3}.
+
+% OK UP TO HERE
+
+\begin{itemize}
+\item Calculate the number of $\mu$moles of $CH_2O$ required to deplete each 
+of the oxidants listed in Table \ref{tab:rdx3}.  
+Record the number of $\mu$moles of $CH_2O$ required to reduce each of the oxidants 
+and the running total of $CH_2O$ in Table \ref{tab:rdx6}.  
+These will be used to set up the PHREEQC input file for the redox titration. 
+
+\item Set up PHREEQC input file. Use the Excel file provided to set up the input file.  
+This file has thermodynamic data for arsenic that are not in the Phreeqc.dat/Amm.dat database, 
+an alternative to the $N$ called $Nit$, 
+and phases $FeOOH(s)$ and $Mangox(s)$ defined so that their 
+logK values can be changed without extensive editing of the input file.  
+It also has a {\color{red} \textbf{SELECTED\_OUTPUT}} 
+block set up to produce a file called {\color{blue} Redox\_titration.sel}.
+
+\end{itemize}
+
+\begin{table}[h]
+\caption{Mass of $CH_2O$ required to titrate each oxidant in Table \ref{tab:rdx3}}
+\begin{center}
+\begin{tabular}{lccc} 
+\hline
+
+EA	        & Initial         & $\mu$moles $CH_2O$ 	 & Total $\mu$moles  \\
+            &   $\mu$moles    &  to deplete EA       &  $CH_2O$ added    \\ \hline
+$O_2$	      &     250	        &       250	           &     250        \\
+$NO_3^-$    &	1500            &                      &                \\		
+$MnO_{2,s}$	& 800	            &                      &                \\	
+$As(5)$	    & 1               &                      &                \\		
+$FeOOH_s$	  & 8000            &                      &                \\		
+$U(6)$      &	1               &                      &                \\		
+$SO_4^{-2}$	& 260             &                      &                \\	 \hline
+
+\end{tabular}
+\label{tab:rdx6}
+\end{center}
+\end{table}
+
+
+\begin{enumerate}
+\item Enter the groundwater composition from Table \ref{tab:rdx3}, 
+including the aqueous oxidants under {\color{red} \textbf{SOLUTION 1}}.  
+Note that $Nit(5)$ is used for nitrate in place of $N(5)$.  
+This is defined as a {\color{red} \textbf{SOLUTION\_MASTER\_SPECIES}} and the thermodynamic 
+data for the species are supplied under {\color{red} \textbf{SOLUTION\_SPECIES}}.  
+Use the $Cl^-$ concentration to charge-balance the solution.
+
+\item Enter the solid-phase oxidants from Table \ref{tab:rdx3}, 
+including the phase-name, saturation index, and number of moles initially present 
+under {\color{red} \textbf{EQUILIBRIUM\_PHASES 1}}.  
+Use $FeOOHs$ as the name for hydrous ferric oxide.  
+Thermodynamic data for a phase by this name is provided 
+under the {\color{red} \textbf{PHASES}} input data block provided.  
+In addition to the oxidants from Table \ref{tab:rdx1}, include $FeS(ppt)$ (amorphous FeS) 
+as a phase the can form if it becomes supersaturated.
+
+\item The {\color{red} \textbf{SURFACE 1}} data block provides 
+the data needed to include surface complexation sites on $FeOOH(s)$.  
+The sites are linked to the {\color{red} \textbf{EQUILIBRIUM\_PHASE}} $FeOOH(s)$ 
+so that as it dissolves, surface complexation sites will disappear.  
+{\color{red} \textbf{equilibrate 1}} forces the initial surface assemblage 
+(species bound to the surface sites) to be in equilibrium with {\color{red} \textbf{Solution 1}}.
+
+\item The titration will be conducted using the {\color{red} \textbf{REACTION n}} keyword.  
+As $CH_2O$ is added, $C$ will be converted to $C(4)$ or $C(-4)$, 
+depending on which is thermodynamically favorable under the conditions in the simulations.  
+The total number of $\mu$moles of $CH_2O$ will be added in a series of steps.  
+For example, for titrating $O_2$ we know that 250 $\mu$moles 
+of $CH_2O$ must be added (Table \ref{tab:rdx6}).  
+Here we chose to add them in 15 steps.  
+By using {\color{red} \textbf{INCREMENTAL\_REACTIONS True}}, 
+results are reported at the end of each step to the output files 
+(both the default and Selected\_Output files)
+ 
+\item Next, the {\color{red} \textbf{SOLUTION}}, 
+{\color{red} \textbf{EQUILIBRIUM\_PHASE}} assemblage, and {\color{red} \textbf{SURFACE}} 
+assemblage after the last incremental addition of $CH_2O$ are saved using 
+the {\color{red} \textbf{SAVE}} key word.  
+Test the file to make sure it runs without error(s).  
+Open the selected output file to make sure the O2 has been titrated away.
+
+\item Next, set up the part of the redox titration where nitrate is completely 
+removed by incremental additions of $CH_2O$.  
+You have calculated the total number of $\mu$moles of $CH_2O$ 
+to add to remove the nitrate in Table 6.5. 
+Using the {\color{red} \textbf{USE}} keyword, 
+retrieve the compositions of the {\color{red} \textbf{SOLUTION}}, 
+{\color{red} \textbf{EQUILIBRIUM\_PHASE}} assemblage, and {\color{red} \textbf{SURFACE}} 
+assemblages that were saved at the end of the $O_2$ titration.  
+Use the {\color{red} \textbf{REACTION}} keyword (with {\color{red} \textbf{INCREMENTAL\_STEPS}}) 
+to add the number of $\mu$moles of $CH_2O$ required to reduce all of the 
+nitrate in a reasonable number of steps (for example, 20).  
+Don’t forget to save the compositions of the 
+{\color{red} \textbf{SOLUTION}}, {\color{red} \textbf{EQUILIBRIUM\_PHASE}} 
+assemblage, and {\color{red} \textbf{SURFACE}} assemblages for use in the subsequent simulations.
+
+\item Follow the same steps to set up titrations for $Mangox(s)$, $FeOOH(s)$, and $S(6)$.  
+You could try with 20 steps to titrate nitrate ($Nit(5)$), 
+10 steps to titrate $Mangox(s)$, 20 steps to titrate $FeOOH(s)$, 
+and 35 steps to titrate sulfate.
+
+\end{enumerate}
+
+\begin{itemize}
+
+\item Peruse the selected output file for $O(0)$, $Nit(5)$, etc.  
+How does the sequence compare with what you expected?  
+The results are plotted in 
+Figures \ref{fig:doug_redox_1} - \ref{fig:doug_redox_4}.
+ 
+\item This simulation assumed that the logK for $FeOOH(s)$ was 4.89, 
+which applies to $ferrihydrite$. What happens if this is changed to the logK for $goethite$, i.e., -1.0 ?
+
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.0\textwidth, angle = 0]{doug_redox_1}
+\caption[]{}
+\label{fig:doug_redox_1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.0\textwidth, angle = 0]{doug_redox_2}
+\caption[]{}
+\label{fig:doug_redox_2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.0\textwidth, angle = 0]{doug_redox_3}
+\caption[]{}
+\label{fig:doug_redox_3}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.0\textwidth, angle = 0]{doug_redox_4}
+\caption[]{}
+\label{fig:doug_redox_4}
+\end{figure}

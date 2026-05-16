@@ -1,0 +1,313 @@
+\section[PHT3D Exercise 3: Precipitation/dissolution fronts in acid mine drainage]{PHT3D Exercise 3: Precipitation/dissolution fronts in acid mine drainage}
+
+%\subsection{Introduction}
+
+This exercise is another simulation problem that involves mineral dissolution and precipitation reactions as the principle geochemical reactions. Compared to the previous 
+exercise it is somewhat more complicated as it contains significantly more 
+aqueous components and mineral reactions.
+It was first presented by \cite{walt94a} and later also used as a benchmark problem by \cite{gmt3d}. In contrast to the previous exercise this case includes now also redox reactions. 
+The simulations demonstrate the typical hydrogeochemical changes that occur 
+when acidic mine tailings leach into an anaerobic carbonate aquifer. 
+Aqueous complexation and dissolution/precipitation are all considered as equilibrium reactions. 
+If the original reaction network defined by \cite{walt94a} is used, the simulation 
+includes 17 aqueous components, 15 of which are transported, 54 aqueous species and six minerals. 
+
+\subsection[Spatial discretisation and flow problem]{Spatial discretisation and flow problem}
+
+The problem is set up as a simple two-dimensional flow and transport problem with dimensions and properties as defined in \ref{ex3_flow}. To construct the MODFLOW model that underlies the transport problem proceed as follows:
+
+%\begin{figure}[b]
+%\centering
+%\includegraphics[width=80mm]{walter.eps}
+%\caption[Initial definition of the model grid for PHT3D Exercise 2]{Initial definition of the model grid for PHT3D %Exercise 2}
+%\label{fig:mesh_walter}
+%\end{figure}
+
+
+\begin{itemize}
+
+\item In ORTI, create a new model and save it again in a new, separate directory.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Model} button and specify the attributes of the new model. Select the values {\color{blue}Xsection} for {\color{blue}Dimension}, {\color{blue}Confined} for {\color{blue}Type} 
+and {\color{blue}MODFLOW Family} for {\color{blue}Group} 
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Grid} button and specify the details of the model domain and the spatial discretisation in the dialog that opens up. Define a vertical transect that is 100m long and 10m thick. The model domain
+may be discretised into grid cells of 4m length and 1m height. Note, that the 
+model discretisation can be easily changed again later. 
+
+\item Select {\color{blue}Parameters} and select the {\color{blue}Time} button.
+Set the {\color{blue}Total Simulation Time} to 2000 days and select a time {\color{blue}Step size}
+of 20 days. 
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.8} to specify the hydraulic conductivity to 1 $m/day$
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.9} to specify the vertical hydraulic conductivity to 1 $m/day$
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}BTN} $\rightarrow$ {\color{blue}btn.11} and specify the effective porosity to be 0.35.
+
+
+\item Implement hydraulic boundary conditions by defining the hydraulic heads at the upstream and the downstream boundary of the model. First, define the type of boundary condition by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.3 Boundary Conditions} and setting the value to 1 (= active cell) for all cells. After that select {\color{blue}Zone} and use the {\color{blue}Zone Tools} to add one line at the inflow end of the model and one line at the effluent end. 
+In both cases the lines need to extend over the whole depth of the aquifer. 
+The value for both lines (=zones) needs to be set to -1. Use, for example,
+$bc\_up$ and $bc\_down$ as {\color{blue}Zone Names}. You will see the selected names displayed near 
+the location of the lines.
+  
+This will define the type of boundary condition to a fixed head boundary 
+at the inflow and outflow model boundaries.
+The hydraulic head at these grid cells will therefore remain unchanged
+over the whole simulation period. It will remain at the same values that we will now define as initial heads.  
+
+\item Set initial hydraulic heads by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.6 Initial Heads} and set {\color{blue}one\_value} 
+to 10, corresponding to a head of 10m. Then press {\color{blue}'OK'} to confirm the value. In addition
+define a zone (line) at the upstream end of the model domain (where you also defined that the type of 
+boundary condition is -1) and allocate a hydraulic head of 12m over the entire depth of the aquifer. 
+
+% Maybe lets not use recharge here to save time
+%\item Add a value for recharge by selecting Models $\rightarrow$ MODFLOW $\rightarrow$ Flow 
+% Packages $\rightarrow$ Recharge $\rightarrow$ Reset Matrix and change the value for the Recharge % flux to 0.001 m/d (365 mm/year) and click ok. 
+
+\end{itemize}
+
+\begin{table}[t]
+\caption{Flow and transport parameters for the simulation.}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Flow simulation                     & steady state \\
+Total simulation period\ $ (days)      $         &  2000            \\
+Model \  length\ $ (m)      $         &  100            \\
+Model \  thickness\ $(m)$                        &  10            \\
+Grid \ spacing\ $\Delta x $ $(m)$                &    4            \\
+Grid \ spacing\ $\Delta z $ $(m)$                &    1            \\
+Porosity\     $            $         &  0.35           \\
+Horizontal hydraulic conductivity\ $(m/day)$               &  1         \\ 
+Vertical   hydraulic conductivity\ $(m/day)$               &  1         \\ 
+Piezometric head upstream boundary\ $(m)          $         &  12           \\ 
+Piezometric head downstream boundary\ $(m)        $         &  10           \\ 
+Longitudinal dispersivity\ $(m)         $         &  2.5          \\ 
+Transverse  vertical dispersivity\ $(m)         $         &  0.025          \\ 
+\bottomrule
+\end{tabular}
+\label{ex3_flow}
+\end{center}
+\end{table}
+
+\subsection{Running MODFLOW}
+
+You have now completed to set up the flow model and you are ready to run MODFLOW.
+
+\begin{itemize}
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow} use the {\color{blue}Write Button} to write all the input files required to run MODFLOW
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow} use the 
+{\color{blue}Red Arrow} button to start the MODFLOW simulation
+
+\item Check the simulated head contours and assess whether the results are plausible.
+
+% Olivier, maye we can practise the use of some more iPHT3D output features 
+
+\end{itemize}
+
+% Here we had a non-reactive model step in the pmwin version of the tutorial
+
+\subsection[Data input for solute transport properties]{Data input for solute transport properties}
+
+For the simulation of the solute transport of the mobile components the model parameters that control advective and dispersive transport need to be entered. 
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Transport} and select the {\color{blue}Parameter} button
+
+\item In the dialog box that subsequently appears, select {\color{blue}ADV} and select under {\color{blue}adv.1 Solver Parameters} the {\color{blue}3rd-order TVD Scheme (ULTIMATE)} as the Solution Scheme. Leave the default parameters and click {\color{blue}ok}.
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}DSP}, enter a longitudinal dispersivity value of 2.5 m. and click {\color{blue}OK}
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}DSP}, and specify that the ratio between transverse vertical dispersivity and the longitudinal dispersivity is 0.01.
+This will define that the actual value is 0.025 m (= 25mm). 
+
+
+\end{itemize}
+
+\subsection[Data input for reactive transport]{Data input for reactive transport}
+
+In this step we define the reaction network and the various water and mineral compositions that play a role in this problem. Both the initial and the inflow concentrations of of the aqueous components that will be used in the simulation are shown in Table \ref{ex3_caqu}. Also the initial concentrations of the minerals are
+given in Table \ref{ex3_cmin}. 
+
+\begin{table}
+\caption{Aqueous concentrations used in the Walter et al. Example.}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+Aqueous  component        & $C_{init}$ & $C_{tailing}$      \\
+                  & $(mol\ l^{-1}_w)$   & $(mol\ l^{-1}_w)$      \\ \hline
+pH              &   6.96    &  3.99           \\
+pe              &   1.67    &  7.69           \\
+C(4)            &  3.94 $\times$ $10^{-3}$ & 4.92 $\times$ $10^{-4}$   \\
+S(6)            &  7.48 $\times$ $10^{-3}$ & 5.00 $\times$ $10^{-2}$   \\
+S(-2)           &     -             &     -              \\
+Fe(2)           &  5.39 $\times$ $10^{-5}$ & 3.06 $\times$ $10^{-2}$   \\
+Fe(3)           &  2.32 $\times$ $10^{-8}$ & 1.99 $\times$ $10^{-7}$   \\
+Mn(2)           &  4.73 $\times$ $10^{-5}$ & 9.83 $\times$ $10^{-6}$   \\
+Ca              &  6.92 $\times$ $10^{-3}$ & 1.08 $\times$ $10^{-2}$   \\
+Mg              &  1.96 $\times$ $10^{-3}$ & 9.69 $\times$ $10^{-4}$   \\
+Na              &  1.30 $\times$ $10^{-3}$ & 1.39 $\times$ $10^{-3}$   \\
+K               &  6.65 $\times$ $10^{-5}$ & 7.93 $\times$ $10^{-4}$   \\
+Cl              &  1.03 $\times$ $10^{-3}$ & 1.19 $\times$ $10^{-4}$   \\
+Al              &  1.27 $\times$ $10^{-7}$ & 4.30 $\times$ $10^{-3}$   \\
+Si              &  1.94 $\times$ $10^{-3}$ & 2.08 $\times$ $10^{-3}$   \\ \hline
+\end{tabular}
+\label{ex3_caqu}
+\end{center}
+\end{table}
+
+\begin{table}
+\caption{Mineral concentrations Walter et al. Example.}
+\begin{center}
+\begin{tabular}{ l c }
+\hline
+Mineral        & $C_{init}$  \\
+                  & $(mol\ l^{-1}_{v})$  \\ \hline
+Calcite \   $(CaCO_3)  $  & 1.95 $\times$ $10^{-2}$  \\
+Siderite  \ $(FeCO_3)  $  & 4.22 $\times$ $10^{-3}$  \\
+Gibbsite \ $(Al(OH)_3) $  & 2.51 $\times$ $10^{-3}$  \\
+amorphous \ $Fe(OH)_3  $  & 1.86 $\times$ $10^{-3}$  \\
+Gypsum \ $(CaSO_4.2H_2O) $ & 0.0                     \\
+amorphous  \ $SiO_2    $  & 4.07 $\times$ $10^{-1}$  \\ \hline
+\end{tabular}
+\label{ex3_cmin}
+\end{center}
+\end{table}
+
+\begin{itemize}
+
+\item Copy the database file that is going to be used for the PHT3D simulation
+into the folder that contains all files for this exercise and name the file {\color{red} \textbf{pht3d\_datab.dat}}.
+You can use the same database as in PHT3D Exercise 1, i.e., the standard PHREEQC database.
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} and select the
+{\color{blue}Import database} button. ORTI will then read and interpret 
+the PHT3D database file.
+
+\item In this next step we define all initial concentrations of all aqueous components and minerals and 
+also the concentrations at the upstream model boundary (which will be allocated to the inflowing groundwater).
+
+The composition of the ambient water (initial water composition at the start of the simulation) 
+needs to be entered under the {\color{blue}Solutions} Tab in the {\color{blue}Background} column.
+Activate all relevant species by ticking the appropriate boxes for 
+$pH$, $pe$, $C(4)$, $S(6)$, $S(-2)$, $Fe(2)$, $Fe(3)$, $Mn(2)$, $Ca$, $Mg$, $Na$, $Cl$, $Al$ and $Si$
+and enter the concentrations. The set of minerals that are considered in this simulation
+must be activated and the corresponding mineral composition must be entered 
+under the {\color{blue}Phase} Tab.
+
+In addition to the background water composition we will also need to define the composition of the 
+acidic tailings water that enters the model domain in the upper section of the upstream boundary. 
+This water composition will be defined in the {\color{blue}Solution 1} column 
+under the {\color{blue}Solutions} Tab.
+For the lower section of the inflow boundary it is assumed that the inflowing water
+is the same as the background water composition.   
+
+\item The allocation of the appropriate water compositions as model boundary condition can be
+done by selecting {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}BTN} $\rightarrow$ {\color{blue}btn.12 Boundary Condition} and defining a zone (line)
+for the lower section of the inflow (upstream) boundary (between y = 0m and y = 7m)
+for which a value of -1 is allocated. This defines that the concentrations at these grid cells 
+will not change during the entire simulation.   
+The concentrations that ORTI will allocate to the model's grid cells are the ones defined 
+as initial concentrations. This means that the water composition that was defined as background
+water composition will also be used as inflow water composition. 
+
+To additionally define that the acidic leachate composition is used in the upper section we need to 
+select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}PHT3D} $\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.4 Source \/ Sink} and define a zone (line) for the uppermost 3 m (y= 7m to y = 10m)
+of the boundary (the depth zone at which the acidic leachate enters) and allocate 
+a {\color{blue}Zone Value} of 1. This induces that the concentrations that were previously defined 
+for $Solution\ 1$ in the {\color{blue}Solutions} Tab will be applied to the water that enters 
+the model domain in the upper section of the inflow boundary. 
+
+\end{itemize}
+
+\subsection[Running PHT3D]{Running PHT3D}
+
+To run PHT3D, proceed as earlier in the exercise when executing MODFLOW:
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue} Chemistry} and use 
+the {\color{blue}Write Button} to write all the input files required to run PHT3D
+
+\item Then go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} and use the {\color{blue}Plume Button} to start PHT3D.
+
+\end{itemize}
+
+\subsection[Visualisation of results]{Visualisation of results}
+
+After the end of the simulation visualise the results in various ways.
+
+\begin{itemize}
+
+\item Obtain a contour plot by navigating in the {\color{blue} Results} panel of ORTI.
+Select a specific timestep and a species for which you want to see your results.
+For example to see the pH contours after 1000 days select {\color{blue}Results} $\rightarrow$ {\color{blue}Aquifer} 
+$\rightarrow$ {\color{blue}Tstep} and select {\color{blue}1000} and then go to   
+{\color{blue}Results} $\rightarrow$ {\color{blue}Chemistry} 
+$\rightarrow$ {\color{blue}Species} and select {\color{blue}pH}.  
+You can easily move forward and backward in time by clicking {\color{blue}Tstep} once more and then
+using your keyboard arrows to move forward or backward.
+
+\item Plot a breakthrough curve at a selected location to visualise how concentrations change over time.
+First, define the location for which you want to plot breakthrough curves by
+going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}Observation} $\rightarrow$ {\color{blue}OBS} $\rightarrow$ {\color{blue}obs.1} $\rightarrow$ {\color{blue}Zone}
+and use your mouse to position the cursor and clicking at the location
+where you wan to create an observation point. In the dialog that comes up name the zone $BTC1$. 
+No specific input is required for the {\color{blue}Zone Value} field.
+The coordinates of the location selected by the mouse click can be modified, if required.  
+ 
+\end{itemize}
+
+
+
+
+\subsection[Discussion of simulation results]{Discussion of simulation results}
+
+\par Only a few aspects of the geochemical evolution
+observed in the model simulation are described
+in the following. For a detailed description see \cite{walt94a}.
+The acidic inflow solution is initially buffered by 
+calcite ($CaCO_3$), maintaining the $p$H
+at an almost neutral level (6.5 - 7). In this zone, gypsum
+($CaSO_4.2H_2O$) is formed from calcium released during calcite
+dissolution and sulphate ($S(6)$) from the inflow solution
+($C_{in,S(6)} > C_{backgr,S(6)}$). Similarly, siderite ($FeCO_3$)
+can form from $C(4)$ ($CO_3$) released during dissolution and the
+$Fe(2)$-rich inflow solution. At locations where calcite is
+completely dissolved, siderite becomes the buffering mineral,
+dissolving until it is also entirely removed. Finally, gibbsite
+($Al(OH)_3$) precipitation is the buffer mechanism at locations
+where both calcite and siderite are completely removed. The three
+different buffering mechanisms lead to three distinct levels of
+$p$H. Also three distinct
+$p$e levels evolve with fronts from more reduced to more oxidised
+water. The fronts have the same positions as those in the $p$H
+plot. As the $p$e of the solution is completely controlled by the
+redox couple $Fe(2)/Fe(3)$, the $p$e changes reflect the changes
+in their concentration ratio. Both $Fe(2)$ and $Fe(3)$
+concentrations are strongly controlled by the $p$H of the
+solution. Generally, their solubility increases with a decreasing
+$p$H. However, as the increase of their solubilities is not
+proportional, the $Fe(2)/Fe(3)$ ratio can change and so does the
+$p$e.
+
+\subsection[Model variants]{Model variants}
+
+\begin{itemize}
+
+\item To see the effect of calcite buffering rerun the model with a much 
+smaller initial calcite concentration and compare how far the 
+low pH zone and dissolved aluminium are migrating in this case.
+
+\item Test the effect of calcite-filled permeable reactive barrier (PRB).
+To do that add a small zone (between x = 40m and x = 50 m and y = 0m and y = 10m) 
+where a high concentration of calcite is present but no other minerals. 
+After rerunning the model inspect the evolution of the low pH zone and of the aluminium migration.
+
+\end{itemize}
+

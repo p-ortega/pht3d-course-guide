@@ -1,0 +1,279 @@
+\section[PHT3D Exercise 2: Mineral buffering Acid rain and mineral bufferin]{PHT3D Exercise 2: Acid rain and mineral buffering}
+
+%\subsection{Introduction}
+
+This exercise is a simple two-dimensional simulation problem that involves mineral dissolution reactions. 
+Most importantly this example illustrates the concept of mineral buffering reactions that can occur 
+in response to acidic groundwater recharge entering an aquifer. 
+The problem is set up as a vertical transect representing a small catchment with groundwater being the only driver for groundwater flow. We will study the evolution of the water quality that discharges to the river over a 50-year period (18250 days). This will mimic, although in a crude way, the response to the atmospheric sulfur deposition that has occurred (and in some places still occurs) in conjunction with air pollution from industrial emissions.
+The increased sulphur input was associated with a decline of the pH within the rain and the recharge water.
+The increased acidity of the recharge water can cause the enhanced dissolution of selected minerals, which act as pH buffers. The dissolution of these minerals will raise the pH of the groundwater until they are depleted. 
+With the exercise we compare different scenarios and show the influence of the initial concentration of the buffering mineral on the longevity of the buffering process.
+
+\subsection[Spatial discretisation and flow problem]{Spatial discretisation and flow problem}
+
+The problem is set up as a simple two-dimensional flow and transport problem with dimensions and properties as defined in Table \ref{franken_flow}. To construct the MODFLOW model that underlies the transport problem proceed as follows:
+
+%\begin{figure}[b]
+%\centering
+%\includegraphics[width=80mm]{walter.eps}
+%\caption[Initial definition of the model grid for PHT3D Exercise 2]{Initial definition of the model grid for PHT3D %Exercise 2}
+%\label{fig:mesh_walter}
+%\end{figure}
+
+
+\begin{itemize}
+
+\item In ORTI, create a new model and save it in a new, separate directory.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Model} button and specify the attributes of the new model. Select the values {\color{blue}Xsection} for {\color{blue}Dimension}, {\color{blue}unconfined} for {\color{blue}Type} 
+and {\color{blue}MODFLOW series} for {\color{blue}Group} 
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Grid} button and specify the details of the model domain and the spatial discretisation in the dialog that opens up. Define a vertical transect that is 2000m long and 20m thick. The model domain
+may be discretised into grid cells of 40m length and 1m height. Note, that the 
+model discretisation can be easily changed again later. 
+
+\item Select {\color{blue}Parameters} and select the {\color{blue}Time} button.
+Set the {\color{blue}Total Simulation Time} to 18250 days and select a time {\color{blue}Step size}
+of 182.5 days. 
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.8} to specify the horizontal hydraulic conductivity to 20 $m/day$
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.9} to specify the vertical hydraulic conductivity to 1 $m/day$
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}BTN} $\rightarrow$ {\color{blue}btn.11} and specify the effective porosity to be 0.25.
+
+
+\item Implement a hydraulic boundary condition that represents the river at the down stream end of this synthetic catchment by defining a specified head boundary at the downstream side of the model. First, define the type of boundary condition by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.3 Boundary Conditions} and setting the value to 1 (= active cell) for all cells. After that select {\color{blue}Zone} and use the {\color{blue}Zone Tools} to draw a short line near the effluent end. Choose an elevation of z = 8.5 m for the line and draw it from x = 1m to x = 20m. 
+The value for the line (=zone) needs to be set to -1. Use, for example,
+$river\_bc$ as {\color{blue}Zone Names}. You will see the selected name displayed near 
+the location of the line.
+  
+By setting the boundary condition type to -1 the hydraulic head at the grid cells 
+near the defined line will remain unchanged
+over the entire simulation period, i.e., it will remain at the value that corresponds to the elevation of
+the river water level. In the next step the initial heads need to be defined. 
+
+\item First the define the global initial hydraulic head for the entire domain (Background value) by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.6 Initial Heads} and set the
+ {\color{blue}Backg.} value to 20m. Then press {\color{blue}'OK'} to confirm the value.  
+
+\item Define the initial hydraulic head at the location of the river by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.6 Initial Heads}.
+Select {\color{blue}Zone} and use the {\color{blue}Zone Tools} to draw again a short line near the effluent end. Choose an elevation of z = 8.5 m for the line and draw it from x = 1m to x = 20m. 
+Note, that you can edit the coordinates manually after you have completed the drawing.
+The value for the line (=zone) needs to be set to 8.5. Use, for example,
+$river\_head$ as {\color{blue}Zone Names}. You will see the selected name and the selected value
+displayed near the location of the line.
+  
+
+To define the groundwater recharge for this model you will first need to activate the recharge package,
+as it is not automatically activated.
+This can be done by going to {\color{blue}Add-in} $\rightarrow$ {\color{blue}MODFLOW modules} 
+and ticking the box {\color{blue}RCH}. Then tick {\color{blue}OK}.
+You will see that you can now go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}RCH} $\rightarrow$ {\color{blue}rch.2 Recharge value} and set the {\color{blue}Backg.} value to 0.001m, corresponding to an annual groundwater recharge of 365mm per year.
+Then press {\color{blue}'OK'} to confirm the value. 
+
+
+
+\end{itemize}
+
+\begin{table}[t]
+\caption{Flow and transport parameters for the simulation.}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Flow simulation                     & steady state \\
+Total simulation period\ $ (days)      $         &  18250            \\
+Time step length\ $ (days)      $         &  182.5            \\
+Model \  length\ $ (m)      $         &  2000            \\
+Model \  thickness\ $(m)$                        &  20            \\
+Grid \ spacing\ $\Delta x $ $(m)$                &    40            \\
+Grid \ spacing\ $\Delta z $ $(m)$                &    1            \\
+Porosity\     $            $         &  0.25           \\
+Horizontal hydraulic conductivity\ $(m/day)$               &  20         \\ 
+Vertical   hydraulic conductivity\ $(m/day)$               &  1         \\ 
+Piezometric head downstream boundary (River)\ $(m)        $         &  8.5           \\ 
+Longitudinal dispersivity\ $(m)         $         &  2.5          \\ 
+Transverse  vertical dispersivity\ $(m)         $         &  0.025          \\ 
+\bottomrule
+\end{tabular}
+\label{franken_flow}
+\end{center}
+\end{table}
+
+\subsection{Running MODFLOW}
+
+You have now completed to set up the flow model and you are ready to run MODFLOW.
+
+\begin{itemize}
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow} use the {\color{blue}Write Button} to write all the input files required to run MODFLOW
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow} use the 
+{\color{blue}Red Arrow} button to start the MODFLOW simulation
+
+\item Check the simulated head contours and assess whether the results are plausible.
+
+\item Try, for example to set the head contours manually at 0.25m intervals, starting from 8.5m.
+
+% Olivier, maye we can practise the use of some more iPHT3D output features 
+
+\end{itemize}
+
+% Here we had a non-reactive model step in the pmwin version of the tutorial
+
+\subsection[Data input for solute transport properties]{Data input for solute transport properties}
+
+For the simulation of the solute transport of the mobile components the model parameters that control advective and dispersive transport need to be entered. 
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Transport} and select the {\color{blue}Parameter} button
+
+\item In the dialog box that subsequently appears, select {\color{blue}ADV} and select under {\color{blue}adv.1 Solver Parameters} the {\color{blue}MMOC} as the Solution Scheme. Leave the default parameters and click {\color{blue}ok}.
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}DSP}, enter a longitudinal dispersivity value of 5 m. and click {\color{blue}OK}
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}DSP}, and specify that the ratio between transverse vertical dispersivity and the longitudinal dispersivity is 0.01.
+This will define that the actual value is 0.05 m (= 50mm). 
+
+
+\end{itemize}
+
+\subsection[Data input for reactive transport]{Data input for reactive transport}
+
+In the following step we will now activate the geochemical reaction network and define the various water and mineral compositions that will play a role in this simulation problem. The initial and the groundwater recharge water composition that will be employed in this example are shown in Table \ref{franken_caqu}. 
+
+\begin{table}
+\caption{Aqueous concentrations used in acid groundwater recharge exercise}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+Aqueous  component        & $C_{init}$ & $C_{recharge}$      \\
+                  & $(mol\ l^{-1}_w)$   & $(mol\ l^{-1}_w)$      \\ \hline
+pH              &   7.00    &  4.18           \\
+pe              &   4.00    &  4.00           \\
+Al              &  1.538 $\times$ $10^{-5}$ & 0   \\
+C(4)            &  6.041 $\times$ $10^{-5}$ & 5.736 $\times$ $10^{-5}$   \\
+C(-4)           &  0                       &     0                     \\
+Cl              &  9.345 $\times$ $10^{-4}$ & 7.335 $\times$ $10^{-5}$   \\
+Na              &  1.000 $\times$ $10^{-3}$ & 2.827 $\times$ $10^{-5}$   \\
+S(6)            &  1.000 $\times$ $10^{-6}$ & 1.072 $\times$ $10^{-5}$   \\
+S(-2)           &     0             &     0               \\
+Si              &  1.107 $\times$ $10^{-4}$ & 0  \\ \hline
+\end{tabular}
+\label{franken_caqu}
+\end{center}
+\end{table}
+
+
+\begin{itemize}
+
+\item Copy the database file that is going to be used for the PHT3D simulation
+into the folder that contains all files for this exercise and name the file {\color{red} \textbf{pht3d\_datab.dat}}. You can use the standard PHREEQC database for this example.
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} and select the
+{\color{blue}Import database} button. ORTI will then read and interpret 
+the PHT3D database file.
+
+\item In this next step we define all initial concentrations of all aqueous components
+also the concentrations of the acidic groundwater recharge. The composition of the ambient water (initial water composition at the start of the simulation) 
+needs to be entered under the {\color{blue}Solutions} Tab in the {\color{blue}Background} column.
+Activate all relevant species by ticking the appropriate boxes for 
+$pH$, $pe$,  $Al$, $C(4)$,  $C(-4)$, $Cl$, $Na$, $O(0)$, $S(6)$, $S(-2)$,and $Si$
+and enter the concentrations that are provided in the Table. In the next step define the acid 
+recharge water composition by entering the values from the Table in the {\color{blue}Solution 1} column 
+under the {\color{blue}Solutions} Tab.  
+
+\item The {\color{blue}Background} water composition will automatically be used to define the 
+initial concentrations.
+
+\item The allocation of {\color{blue}Solution 1} groundwater water recharge composition can be
+done by selecting {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}PHT3D} $\rightarrow$ {\color{blue} ph.5Recharge} and set {\color{blue}Backg.} to 1.  
+
+\end{itemize}
+
+\subsection[Running PHT3D]{Running PHT3D}
+
+In this first step we will now run PHT3D without invoking any mineral reactions. This means that all temporal and spatial concentration changes of the aqueous components that occur over the simulation period are solely a function of advective-dispersive transport. This provides the basis for subsequently studying the impact of mineral reactions.    
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue} Chemistry} and use 
+the {\color{blue}Write Button} to write all the input files required to run PHT3D
+
+\item Then go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} and use the {\color{blue}Plume Button} to start PHT3D.
+
+\end{itemize}
+
+\subsection[Visualisation of results]{Visualisation of results}
+
+After the end of the simulation visualise the results in various ways.
+
+\begin{itemize}
+
+\item Obtain a contour plot by navigating in the {\color{blue} Results} panel of ORTI.
+Select a specific timestep and a species for which you want to see your results.
+For example to see the pH contours after 10 years select {\color{blue}Results} $\rightarrow$ {\color{blue}Aquifer} 
+$\rightarrow$ {\color{blue}Tstep} and select {\color{blue}3650} and then go to   
+{\color{blue}Results} $\rightarrow$ {\color{blue}Chemistry} 
+$\rightarrow$ {\color{blue}Species} and select {\color{blue}pH}.  
+You can easily move forward and backward in time by clicking {\color{blue}Tstep} once more and then
+using your keyboard arrows to move forward or backward.
+
+\item Plot breakthrough curves at the river discharge point to illustrate how the quality of the
+water discharging from the groundwater to the river changes over time.
+First, define the location for which you want to plot breakthrough curves by
+going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}Observation} $\rightarrow$ {\color{blue}OBS} $\rightarrow$ {\color{blue}obs.1} $\rightarrow$ {\color{blue}Zone}
+and use your mouse to position the cursor and clicking at the location
+where you wan to create an observation point. In the dialog that comes up name the zone $BTC1$. 
+No specific input is required for the {\color{blue}Zone Value} field.
+The coordinates of the location selected by the mouse click can be modified, if required.
+
+\item Alternatively you can visualise results with PHT3DPlot. 
+
+\item What changes occur to the chloride concentrations and what does this mean ?
+
+\item How much does pH decrease over the duration of the simulation ? 
+
+\item Save the simulated breakthrough curves for pH, Si and Al so you can later directly 
+plot and compare these results together with the results from your next model variants.  
+ 
+\end{itemize}
+
+
+
+\subsection[Role of mineral reactions]{Role of mineral reactions}
+
+\begin{itemize}
+
+\item Let's first study the effect of including $Quartz$ in this simulation. 
+This can be done under the {\color{blue}Phase} Tab. The input allows to activate mineral phases 
+and to define values for the saturation index (SI) to which the mineral should be equilibrated (typically 0).
+and the initial concentration (Backgr\_SI and Backgr\_Mol, respectively.
+Leave the Backgr\_SI at the default value of 0 and define a background concentration Backgr\_Mol of 1 mol/L\_bulk. 
+
+\item Now rerun PHT3D and inspect again the breakthrough curves for pH, Si and Al.
+
+\item How can you interpret these results ?  
+
+\end{itemize}
+
+Now we will inspect the impact of $Al(OH)_3$ on the composition of the discharging groundwater.
+
+\begin{itemize}
+
+\item Add initially a relatively small initial concentration such as 1 $\times$ $10^{-4}$ mol/L\_bulk 
+of $Al(OH)_3$, rerun the model and save again the breakthrough concentrations that you obtained for the observation point at the river.
+
+\item Increase the initial concentration to a value such as 1 $\times$ $10^{-2}$ mol/L\_bulk 
+of $Al(OH)_3$, rerun the model and save again the breakthrough concentrations that you obtained for the observation point at the river.
+
+\item Make comparative plots for pH and Al for your different model variants. 
+
+\end{itemize}
+
+
+
+
+
+

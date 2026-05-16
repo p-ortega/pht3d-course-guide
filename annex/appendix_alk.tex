@@ -1,0 +1,25 @@
+\chapter*{Appendix I}
+
+\addcontentsline{toc}{chapter}{Appendix I}
+
+\def\shorttitle{Appendix I}
+
+\section*{Options for entering TIC, alkalinity and pH in PHREEQC}
+There are a number of options available in PHREEQC to enter the carbon concentration, alkalinity
+and the pH. The best option depends on the problem at hand. The options are:
+
+\begin{enumerate}
+\item Enter pH and alkalinity. Total moles of carbon(4) is calculated by the program.
+\item Enter pH and total carbon. Alkalinity is calculated by the program.
+\item Enter alkalinity and total carbon. pH is calculated by the program.
+\item Enter pH, estimate of total carbon, and a partial pressure of \co. Program will adjust total carbon
+until desired $P_{\co}$ is attained.
+\item Enter total alkalinity or total carbon, estimate of pH, and a partial pressure of \co. If possible, the
+program will adjust the pH to attain the desired $P_{\co}$.
+\end{enumerate}
+
+The first option is used when both pH and alkalinity were determined in the field. The second option
+should be used when alkalinity was not titrated in the field but pH and total carbon are known from
+the laboratory analysis. The third option can be used to check the measured pH of a water sample in
+which both alkalinity and total carbon were analysed. Options 4 and 5 are useful when the \co\
+pressure of the water sample is known.

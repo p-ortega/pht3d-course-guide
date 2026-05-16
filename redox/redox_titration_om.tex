@@ -1,0 +1,300 @@
+%\DeclareGraphicsExtensions{.png}
+\chapter{Redox Reactions}
+\def\shorttitle{Redox Reactions} 
+\section[Background]{Background}
+
+Understanding oxidation-reduction (redox) reactions that occur in natural 
+and contaminated systems is central to developing accurate conceptual and 
+quantitative models. Redox reactions involve the transfer of electrons 
+between constituents and therefore, changes in the oxidation state of 
+one or more elements. Changes in oxidation state of an element can 
+result in dramatic changes in its chemical and physical properties.  
+For example, iron in the plus three oxidation 
+state - Fe(III) - in surficial deposits renders 
+a reddish hew to Mars whereas iron in the plus II oxidation 
+state - Fe(II) - in surficial basalts on the Moon is, in no 
+small part, responsible for the blackness of the lunar mares. 
+Two important examples of redox reactions are the oxidation 
+of aqueous Fe(II) to Fe(III) or organic carbon by dissolved oxygen:
+
+\begin{equation}
+4Fe^{+2} + O_{2,aq} + 10H_2O \rightarrow 4Fe(OH)_{3,s} + 8H^+  \\
+\label{eq:fe2_oxidation}
+\end{equation}
+
+\begin{equation}
+CH_2O  + O_{2,aq} + 10H_2O \rightarrow CO_{2,aq} + H_2O \\
+\label{eq:om_reduction}
+\end{equation}
+
+Rather than representing formaldehyde, $CH_2O$ is often used to represent 
+one sixth of a glucose molecule.
+
+The classical approach to discussing redox reactions in aqueous geochemistry 
+is to split the redox reactions into two hypothetical 
+half reactions involving electrons. 
+Using this approach, reaction \ref{eq:fe2_oxidation} and \ref{eq:om_reduction} 
+would be broken up into the following half reactions:
+
+\begin{equation}
+Fe^{+2} + 3H_2O  \rightarrow Fe(OH)_{3,s} + 3H^+ + e^-  \\
+\label{eq:fe_half_reac}
+\end{equation}
+
+\begin{equation}
+CH_2O + H_2O \rightarrow CO_{2,aq} + 4H^+ + 4e^-  \\                    
+\label{eq:om_half_reac}
+\end{equation}
+
+\begin{equation}
+O_{2,aq} + 4H^+ + 4e^-  \rightarrow 2H_2O \\
+\label{eq:ox_half_reac}
+\end{equation}
+
+Mass action expressions are then written for the half reactions.
+For example, for the Fe(II)/Fe(III) half reaction, 
+the mass action expression is:
+
+\begin{equation}
+K = a_{Fe(OH)_{3,s}} a_{H^+}^3 a_{e^-}/a_{Fe}^{+2} a_{H_2O}^3 \\
+\label{eq:rdx5}
+\end{equation}
+
+The standard state of the $e^-$ is the same as other aqueous species,
+1 mole per kilogram water.  
+This approach comes from the field of electrochemistry, where the oxidation and 
+reduction half reactions can be made to occur in separate place
+connected, for example, 
+through a meter that measures the electromotive force (or power source) 
+and a salt bridge.
+In dilute solutions the activity of water can be equated with its mole fraction,
+which is essentially 1. If pure ferric hydroxide forms then it 
+can be assumed to be in 
+its standard state (mole fraction $Fe(OH)_{3,s}$
+equals 1), 
+so \ref{eq:rdx6} can be re-written:
+
+\begin{equation}
+K=a_{H^+}^3 a_{e^-}/a_{{Fe}^{+2}} \\    
+\label{eq:rdx7}
+\end{equation}
+                                                         
+Taking the base-10 logarithm, \ref{eq:rdx7} becomes: 
+\begin{equation}
+logK = 3loga_{H^+} + loga_{e^-} -loga_{{Fe}^{+2}}  \\                          
+\label{eq:rdx8}
+\end{equation}
+
+Analogous to the definition of $pH$,
+$loga_{e^-}$
+is defined as $pe$.
+This formalism is useful for graphically representing the 
+relative thermodynamic stability of redox-reactive species 
+in natural and contaminated systems 
+(typically in their standard state).
+
+Electrochemists have established logK values for 
+half reactions based on the 
+convention that the hydrogen gas -
+hydrogen ion half reaction
+\begin{equation}
+H_{2,g}  =  2H^+ + 2e^- \\   
+\label{eq:rdx9}
+\end{equation} 
+has an electromotive force and, therefore a logK 
+value of 0 for $H_{2,g}$ and $H^+$ in their 
+standard states (1 atmosphere and 1 mol/kgw, respectively).  
+Using this convention, logK values for half reactions can be assembled 
+in order of thermodynamic favorability, 
+called a redox ladder, such as Table \ref{tab:rdx1}.  
+Note that the logK values apply to all species in their standard state 
+(1 mol/kgw for aqueous species, pure solid phase activity 
+equals 1, and 1 atmosphere for gasses).  
+Also, the logK value for half reactions where solid phases are participants 
+depends on the thermodynamic stability of the solid phase.  
+For example, reduction of ferrihydrite (fhy) is more favorable than 
+reduction of goethite (based on the logK values for goethite that 
+applies to the Cape Cod aquifer, Kent et al., 2008) because goethite 
+is thermodynamically more stable than ferrihydrite.  
+Plots of $pH$ against $pe$ constructed using reactions and logK values like 
+those in Table \ref{tab:rdx1} are used to illustrate 
+trends expected in redox processes 
+with changes in pH. In the exercise that follows, we will explore these trends.
+
+\begin{table}[h]
+\topcaption{Half reactions and logK values for some redox-reactive species}
+\centering
+\footnotesize
+%\begin{tabular*}{0.4\textwidth}{@{\extracolsep{\fill}}lll}
+\begin{tabular}{ll}
+\toprule
+Half reactions, per electron	& logK \\
+0.25O2,aq + e- + H+ = 0.5H2O	21.52 \\
+0.2NO3- + e- + 1.2H+ = 0.1N2,aq + 0.6H2O	20.71 \\
+0.5MnO2:H2Os,pyrolucite + e- + 2H+ = 0.5Mn+2 + 1.5H2O	20.69 \\
+0.5HAsO4-2 + e- + 2H+   =  0.5As(OH)3,aq +  0.5H2O	19.80 \\
+FeOOH + e- + 3H+ = Fe+2 + 2H2O  fhy	17.91 \\
+FeOOH + e- + 3H+ = Fe+2 + 2H2O  Goethite (Kent et al. 2008)	13.52 \\
+0.125SO4-2 + e- + 1.125H+ = 0.125HS- + 0.5H2O	4.21 \\
+0.125CO3-2 + 1.25H+ + e- = 0.125CH4.aq + 0.375H2O	5.13 \\
+\bottomrule
+\label{tab:rdx1}
+\end{tabular}
+\end{table}	
+
+\section[PHREEQC Exercise 6]{PHREEQC Exercise 6}
+In this exercise we will examine the influence of chemical composition 
+on redox processes and feedback between redox reactions and chemical composition.
+
+Consider the half reactions listed in Table \ref{tab:rdx1}.  
+Based on these half reaction fill in column two of \ref{tab:rdx2}. 
+Enter the ratio of $H^+$ produced per $e-$ consumed.  
+Use positive numbers where $H^+$ is produced by the consumption of 
+electrons and negative numbers where $H^+$ is 
+consumed by the consumption of electrons.  
+This is, of course, not the conventional way of calculating stoichiometry, 
+but what we are after is whether the redox process should 
+decrease the pH (produce $H^+$), 
+increase the pH (consume $H^+$), or have no impact on pH.  	
+
+\begin{table}[h]
+\topcaption{$H^+$ stoichiometry of redox reactions.}
+\centering
+\footnotesize
+%\begin{tabular*}{0.4\textwidth}{@{\extracolsep{\fill}}lll}
+\begin{tabular}{lll}
+\toprule
+Redox Couple	& $H^+$/$e^-$	& $H^+$/$C_6H_6$ \\
+\midrule
+$O_{2,aq}$/$H_2O$	         & & \\
+$NO_3^-$/$N_{2,aq}$	       & & \\
+$MnO_2·H_2O_{s}$/$Mn^{+2}$ & & \\
+$H_2AsO_4^-$/$As(OH)_{3,aq}$ & & \\
+$FeOOH_{s,fhy}$/$Fe^{+2}$ 	 & & \\
+$FeOOH_{s,gte}$/$Fe^{+2}$ 	 & & \\
+$SO_4^{-2}$/$CO_{2,aq}$ 		 & & \\
+$CO_3^{-2}$/$CH_{4,aq}$      & & \\
+\bottomrule
+\label{tab:rdx2}
+\end{tabular}
+\end{table}	
+
+Now, consider the half reaction where benzene is oxidized to $CO_{2,aq}$: 
+
+\begin{equation}
+C_6H_{6,aq} + 12H_2O   =  6CO_{2,aq} + 30e^- + 30H^+
+\label{eq:rdx8}
+\end{equation}
+
+The $logK$ for this reaction is uncertain but we will assume that conversion 
+of benzene to either $CO_2$ or methane is favorable.  
+Combining this half reaction with each of the reactions in 
+Table \ref{tab:rdx1} to eliminate $e-$ produces the following overall 
+reactions for the oxidation of benzene by each of the oxidants.  
+Using the reactions in Table \ref{tab:rdx3}, 
+fill in column three of Table \ref{tab:rdx2}
+
+\begin{table}[h]
+\topcaption{Overall reactions for the oxidation of benzene by the }
+\centering
+\footnotesize
+%\begin{tabular*}{0.4\textwidth}{@{\extracolsep{\fill}}lll}
+\begin{tabular}{rll}
+\toprule 
+Overall reaction &  &\\
+\midrule
+$15O_{2,aq}$ + $2C_6H_{6,aq}$ + $6H_2O$    & = & $12CO_{2,aq}$ + $6H_2O$  = $12HCO_3^-$ + $12H^+$  \\
+$6NO_3^-$ + $C_6H_{6,aq}$ + $6H^+$         & = & $3N_{2,aq}$ + $6CO_{2,aq}$ + $6H_2O$ \\
+$15MnO_2·H_2O_s$ + $C_6H_{6,aq}$ + $30H^+$ & = & $15Mn^{+2}$ + $6CO_{2,aq}$ + $33H_2O$ \\
+$15H_2AsO_4^-$ + $C_6H_{6,aq}$  + $15H^+$  & = & $15As(OH)_{3,aq}$ +  $3H_2O$ + $6CO_{2,aq}$ \\
+$30FeOOH_{s,fhy} + C_6H_{6,aq} + 60H^+$    & = & $30Fe^{+2} + 48H_2O + 6CO_{2,aq}$ \\
+$30FeOOH_{s,gte} + C_6H_{6,aq} + 60H^+$    & = & $30Fe^{+2} + 48H_2O + 6CO_{2,aq}$ \\
+$15SO_4^{-2} + 4C_6H_{6,aq} + 15H^+$       & = & $24CO_{2,aq} + 15HS^- + 12H_2O$ \\
+$4C_6H_{6,aq} + 18H_2O$                    & = & $15CH_{4.aq} + 9CO_{2,aq}$ \\
+\bottomrule
+\label{tab:rdx3}
+\end{tabular}
+\end{table}	
+
+\begin{itemize}
+
+\item For which reactions are there qualitative changes in the $H^+$
+stoichiometry (influence of pH) when the overall reaction 
+is considered as compared to the half reaction ?
+
+\item What quantitative differences are there in the
+$H^+$ stoichiometry between Fe(III) reduction and sulfate 
+reduction when the overall reaction is considered as compared to 
+the half reaction ?  \\
+Fe(III) reduction and methanogenesis ?
+
+\item Calculate the number of umoles of $C_6H_6$ required to deplete 
+each of the electron acceptors.  
+Record the number of umoles of $C_6H_6$ to the tenths place and 
+then tabulate the running total in Table \ref{tab:rdx4}.  
+You will use the running total in the PHREEQC exercise that follows.
+
+\end{itemize}
+
+\begin{table}[h]
+\topcaption{Hand-calculation table. EA refers electron acceptor.}
+\centering
+\footnotesize
+%\begin{tabular*}{0.4\textwidth}{@{\extracolsep{\fill}}lll}
+\begin{tabular}{llll}
+\toprule 
+EA	& Initial $\mu$moles & $\mu$moles $C_6H_6$ to deplete EA	& Total $\mu$moles $C_6H_6$ added \\
+$O_2$	& 250		& & \\
+$NO_3^-$	& 1500	& & \\
+$MnO_{2,s}$	& 800	& & \\
+$As(V)$	& 0.55 & & \\
+$FeOOH_s$	& 8000 & & \\
+$SO_4^{-2}$	& 260	& & \\
+\bottomrule
+\label{tab:rdx4}
+\end{tabular}
+\end{table}
+
+Now we will use PHREEQC to conduct a redox titration 
+(Abrams et al., 1996; Appelo and Postma, 2005).  
+Small increments of benzene will be added to a suspension with 
+one kilogram of water whose initial composition 
+is listed in {\color{blue}redox\_titration.phrq}
+% Table \ref{tab:rdx5}.
+Based on the composition and thermodynamic data already described, 
+in what order to you expect the electron acceptors 
+to be completely reduced by benzene ?
+
+We will use the PHREEQC file {\color{blue}redox\_titration.phrq}
+%in Table \ref{tab:rdx5},
+which adds benzene in a series of steps 
+pre-determined to make the model data plot up well. The results of the redox titration are shown in 
+Figure \ref{fig:redox_titration}.  \\
+\\
+In what order were the electron acceptors reduced ?  \\
+\\
+How does this order differ from the order predicted by the redox ladder (Table \ref{tab:rdx1}) ? \\
+\\
+Why ?
+
+ 
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{redox_figure}
+\caption[Results of the redox titration simulation.]{Results of the redox titration simulation.}
+\label{fig:redox_titration}
+\end{figure}
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+

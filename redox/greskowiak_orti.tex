@@ -1,0 +1,442 @@
+\section[PHT3D Exercise 7: Artificial recharge and micropollutant fate]{PHT3D Exercise 7: Artificial recharge and micropollutant fate}
+
+\subsection[Background]{Background}
+Observed concentrations of reactive solutes in artificially recharged groundwater systems 
+can often be highly dynamic and thus puzzling to interpret. For instance, 
+concentration variations might be caused by effects, such as temperature variations, 
+changes in groundwater flow rates, variations in the injected water quality, or a combination of those. 
+One such example where the latter occurs is a study site in Berlin, Germany \citep[]{greskowiak_2006}, 
+where aquifers are  recharged by passing wastewater-impacted surface water through 
+engineered infiltration ponds, as schematically illustrated in Figure \ref{fig:berlinpond}. 
+At this site, the temperature-dependent degradation of sediment-bound 
+organic matter (SOM) was an important control for spatiotemporally varying oxygen concentrations. 
+However, in addition, highly variable pond infiltration rates caused 
+groundwater flow rates to change accordingly and to contribute 
+further to the variability of the redox zonation. The model simulations focused 
+initially on matching the data collected from in situ temperature loggers, 
+and subsequently, the field-observed redox dynamics were replicated. 
+In a final step, the degradation behavior of the micropollutant phenazone, 
+a pharmaceutical residue, was investigated. 
+\par Through the model-based hypothesis testing and data interpretation 
+it could be demonstrated that phenazone degraded in this system solely 
+under aerobic aquifer conditions that dominated during winter. 
+In contrast, phenazone remained persistent under the nitrate-reducing conditions 
+that dominated during summer, while oxygen was depleted rapidly (Figure \ref{fig:berlinpond}).
+Constraining the groundwater flow and solute transport processes prior 
+to evaluating and calibrating the reactive processes associated with oxygen 
+consumption allowed for residence time effects to be distinguished from temperature effects.
+
+\par The hypothesized degradation behaviour was based on the results 
+of various earlier laboratory experiments that have demonstrated that 
+phenazone is biodegradable under oxic conditions \citep{phdzuelke} 
+in the presence of the aerobic bacterium $Phenylobakterium$ $immobile$. 
+Batch experiments with sterilised and non-sterilised filter material suggest that aerobic microbial
+degradation is the most important removal process.
+Sorption of phenazone to filter material, sludge, or soil was
+found to be negligible. Importantly, it was also found that the degradation
+rate of phenazone is temperature-dependent, as its degradation,
+like that of organic matter, relies on microbial metabolism.
+
+\par The model simulations in this exercise will employ and discuss the 
+model approach that is described in more detail in \cite{greskowiak_2006}. 
+The type of redox-sensitive degradation behaviour that is illustrated in 
+this exercise was previously also observed for many other micropollutants such as 
+pesticides. 
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=1.0\textwidth]{berlin_transect}
+\caption[Schematic figure of the modelled infiltration pond transect]{Schematic figure of the modelled infiltration pond transect} 
+\label{fig:berlinpond}
+\end{figure}
+
+\subsection[Governing kinetic reactions]{Governing kinetic reactions}
+The degradation rate $r_{SOM}$ of the sediment-bound organic matter (SOM) that is present throughout the aquifer
+is simulated by a Michaelis-Menten type formulation:
+
+\begin{equation}
+r_{SOM} = f_{T} \bigg[ r_{ox} \frac{C_{ox}}{K_{ox} + C_{ox}} + r_{nit} \frac{C_{nit}}{K_{nit} + C_{nit}} 
+\frac{K_{ox,inh}}{K_{ox,inh} + C_{ox}}+ r_m \bigg]
+\label{eq:som_deg}
+\end{equation}
+
+where $f_{T}$ is an empirical function that describes the temperature dependent degradation 
+of SOM. 
+Thereby $C_{ox}$ and $C_{nitr}$ are the concentrations of dissolved oxygen and nitrate, 
+respectively, $r_{ox}$, $r_{nitr}$, $r_{mn}$ are the maximum rate constants under oxic, nitrate reducing 
+and manganese reduction conditions, respectively, $K_{ox}$, $K_{nitr}$ are the 
+corresponding half-saturation constants, $K_{ox,inh}$ is the inhibition constant 
+for nitrate reduction in the presence of oxygen. 
+The degradation rate of phenazone is computed from:
+
+\begin{equation}
+{r_{phena} = r_{phena,max} {\frac{C_{ox}}{(k_{phena,ox} + C_{ox})}} C_{phena} f_T }
+\label{eq:phenazone_deg}
+\end{equation}
+
+where $r_{phena,max}$ is the degradation rate constant,
+$k_{phena,ox}$ is the half-saturation concentration, 
+and $C_{phena}$ represents the concentration of phenazone.
+
+The dependence of the reaction rate 
+on the temperature T ($^{\circ}$C) is considered through 
+the empirical function, $f_T$, as proposed by \cite{oconnel_1990} 
+and \cite{kirschbaum_1995}:
+
+\begin{equation}
+{f_{T} = exp({\alpha + \beta T (1 - 0.5 {\frac{T}{T_{opt}}})  )}}
+\label{eq:temp_dep}
+\end{equation}
+
+where $\alpha$ and $\beta$ are fitting parameters and $T_{opt}$ is the optimal
+temperature for the degradation reaction. 
+$T$ is the water temperature, 
+
+In the PHREEQC database 
+the reaction rate expression for phenazone 
+as used in \cite{greskowiak_2006} is formulated such that the reaction 
+will only proceed in the presence of dissolved oxygen.
+
+There are two parameters, i.e., ${\color{blue} parm(1)}$
+and ${\color{blue} parm(2)}$ that can be modified 
+within ORTI under the ${\color{blue} Rates}$ Tab. 
+If additional parameters should be edited, 
+this can be achieved by editing the 
+rate expression below accordingly. 
+
+{\color{red}
+\begin{quote}
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\\
+Phenazone \\
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\\
+\# from Greskowiak et al. 2006 (EST)
+-start \\
+ 7 mTmp   = 1000 * tot("Tmp") \\
+10  Cphena = TOT("Phenazone") \\
+20  Cox = TOT("O(0)") \\
+26  a = -1.5; \\
+27  b = 0.18; \\
+28  Topt = 35 \\
+30  fT = exp(a+b*mTmp*(1-0.5*mTmp/Topt)) \\
+34  rph\_max = parm(1) \\
+36  Khalf = parm(2) \\
+50  rate = fT* rph\_max*(Cox/(Khalf+Cox)) * Cphena \\
+70 moles = rate * TIME \\
+200 save moles \\
+-end \\
+\end{quote}}
+
+The present exercise consists of three consecutive, increasingly complex stages: 
+\begin{itemize}
+\item First we construct a steady-state flow and reactive transport model that simulates 
+the fate of phenazone under constant temperature condition
+\item Subsequently we modify this model to study the impact of the filed-observed dynamic 
+temperature changes and associated with those, the temporal variations in the redox zonation 
+\item Finally we also consider the highly variable infiltration rates and s
+tudy how this affects the dynamics of the biogeochemical processes.
+\end{itemize}
+
+
+\subsection[Steady flow model]{Steady flow model}
+To set up the steady state flow model
+\begin{itemize} 
+\item Create a new model an set the model up as a 
+{\color{blue}confined} 
+{\color{blue}Xsection} model within the
+{\color{blue}modflow series}.
+
+\item Set the geometry of the model domain with an extension in the x-direction from 0-125 m 
+and in z-direction from 0-41 m. 
+The grid discretization can be uniform with dx = 6.25m and dz = 4.1m.
+
+\item To assist with the model construction, 
+position a map of the cross section (Background\_image.png) to use it as a background image during the model setup. 
+To do this use the {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} $\rightarrow$ {\color{blue}Map} button
+
+\item The total simulation period considered is one year by going to 
+{\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} $\rightarrow$ {\color{blue}time} button
+and setting the maximum time to 360 days. Set the timestep length to 5 days, which will cause 
+the model to force a reaction simulation every 5 days.
+
+\item Position a boundary condition for modflow ({\color{blue}bas.3}) at the right side (east) 
+of the cross section from z=0.25m to 33.25m. 
+
+\item Add at the same location a fixed head ({\color{blue}bas.5}) boundary condition at H = 35 m. 
+Set the head for the background at 40 m, which will then be used as the starting head of the model.
+\end{itemize}
+
+The pond will be considered as a discrete recharge area, while the recharge 
+in other areas can be neglected. 
+In order to set this recharge area that represents the pond, 
+
+\begin{itemize}
+\item Go into the {\color{blue}Addin menu} $\rightarrow$ {\color{blue}modflow modules} 
+and select the {\color{blue}RCH} module. To see the module in the interface just click again on modflow. 
+
+\item In this first phase of the exercise we will apply a steady recharge 
+rate of 1.4 m/d under {\color{blue}RCH} $\rightarrow$ {\color{blue}rch.2} 
+keep the background value at 0 and draw a horizontal line at the model 
+top at the location of the pond, i.e., from x=0m to x = 53m, and provide 
+a value of 1.4 (m/d). 
+
+\item As the infiltration rate is very high, 
+we need to increase the number of internal time steps, 
+in order to achieve an adequate numerical solution of the reactive transport problem. 
+Click the {\color{blue}Parameter} Button under {\color{blue}Flow} 
+and chose {\color{blue}DIS} $\rightarrow$ {\color{blue}dis.8} 
+and change the {\color{blue}NSTP} value to 2. 
+This results in 2 time steps within each stress period. 
+
+\item Set the hydraulic conductivity to 50 m/d by going to {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.8} 
+and writing 50 in the background box before clicking {\color{blue}ok}. 
+This will apply to the whole model. 
+
+\item The vertical hydraulic conductivity 
+is set by defining a ratio for Kh/kv. 
+To do this go first to {\color{blue}Flow} $\rightarrow$ 
+{\color{blue}Parameters} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.5} 
+and set the value to a ratio kh/kv. 
+Then in {\color{blue}Spatial attributes} $\rightarrow$ {\color{blue}modflow} $\rightarrow$ {\color{blue}lpf.9} 
+set the value of the ratio of 1 for the whole model (use the background value)
+
+\item Now run MODFLOW.
+
+\end{itemize}
+
+\subsection[Steady flow, chemistry and constant temperature (Stage 1)]
+{Steady flow, chemistry and constant temperature (Stage 1)}
+
+To integrate the reactive transport processes into our model 
+
+\begin{itemize}
+\item You will first specify the advection scheme that will be used. 
+We will select the MOC scheme in 
+{\color{blue}Parameters} $\rightarrow$ {\color{blue}Transport} $\rightarrow$ {\color{blue}Parameters} 
+$\rightarrow$ {\color{blue}ADV} $\rightarrow$ {\color{blue}adv.1 major data}.
+ 
+\item Subsequently the dispersivity is defined under
+{\color{blue}Spatial attributes} $\rightarrow$ {\color{blue}mt3dms} $\rightarrow$ {\color{blue}dsp.2} 
+for the longitudinal dispersion, where we will keep the default value of 1 m.
+
+\item Furthermore, we will also leave the ratio of the vertical to 
+the longitudinal dispersivity at 0.05. 
+
+\item The porosity (0.35) is set in the 
+{\color{blue}Spatial attributes} $\rightarrow$ {\color{blue}mt3dms} $\rightarrow$ 
+{\color{blue}btn.11} $\rightarrow$ {\color{blue}porosity}. 
+
+\item Import the pht3d\_datab.dat via the import button under Chemistry. 
+You will get a long list of aquoeus components under 
+{\color{blue}(Add\_Chemistry} Button $\rightarrow$ {\color{blue}Solutions}. 
+However, we will need to activate only a few of those.
+
+\item Check the file {\color{blue}Berlin\_data\_for\_model.xls} sheet stage 1. 
+Copy the species values for the {\color{blue}Backgrd} and the {\color{blue}Solu1} column 
+from the spreadsheet into the corresponding columns of the ORTi3D interface. 
+Check the values, and click those active where at least one value of 
+the {\color{blue}Backgrd} and {\color{blue}Solu1} is non-zero. 
+
+\item Note that for numerical reasons 
+the species Tmp carrying the Temperature is given in milli $^\circ$C.
+This means that, for example, the input value representing a 
+temperature of 19 $^\circ$C would be 0.019.
+
+\item Under {\color{blue}Rates}, all {\color{blue}RATES} are imported 
+from the {\color{blue}pht3d\_datab.dat} database. 
+Select only {\color{blue}Orgc\_sed} and {\color{blue}Phenazone}. 
+Also, select {\color{blue}Orgc\_sed} to act as an immobile (IM) species
+to reflect the fact that this organic matter is attached to sediments.
+\end{itemize}
+
+The {\color{blue}Orgc\_sed} species is here not 
+really meant as the concentration of sedimentary organic matter. 
+Rather, it is used in here as a reactivity parameter that defines the 
+overall reactivity of the organic matter in the aquifer, and linked to the 
+consumption of terminal electron acceptors via {\color{blue}RATES} in the database. 
+It was assumed that that there is always a sufficient amount of degradable 
+organic matter such that it does not 
+become rate-limiting. The parameters {\color{blue}parm1} to {\color{blue}parm5} 
+correspond to the parameters that are used in the database. 
+
+\begin{table}[b]
+\caption{Reaction parameters in the included reaction rate expressions.}
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+                 & Parm(1) & Parm(2)                  & Parm(3)    & Parm(4)     & Parm(5)        \\
+ SOM / Org\_sed  & $r_{ox}$ & $K_{ox}$ = $K_{ox,inh}$  & $r_{nitr}$ &  $K_{nitr}$ & $r_{mn}$ \\
+ Phenazone       & $r_{phena,max}$ & $K_{phena,ox}$        &         &         &          \\
+ \bottomrule
+\end{tabular}
+\label{parms_berlin}
+\end{center}
+\end{table}
+
+All kinetic reaction and temperature parameters are given 
+in Table \ref{parm_values_berlin}. 
+Note that the constants $T_{opt}$, $\alpha$ and $\beta$ 
+were hard-coded in the {\color{blue}pht3d\_database.dat} database 
+and don't need to be specified via the ORTi3D user interface.
+
+
+\begin{table}[b]
+\caption{Parameter values for kinetically controlled reactions}
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+  Parameter             &  Value    &    Unit   \\  $\times$ $10^{-3}$ mol/L$_{bulk}$
+$r_{ox}$                & 1.32 $\times$ $10^{-5}$  & mol/L/d   \\
+$K_{ox}$ = $K_{ox,inh}$ & 1.00 $\times$ $10^{-5}$  & mol/L     \\
+$r_{nitr}$              & 3.31 $\times$ $10^{-6}$  & mol/L/d   \\
+$K_{nitr}$              & 1.00 $\times$ $10^{-5}$  & mol/L     \\
+$r_{mn}$                & 7.70 $\times$ $10^{-8}$  & mol/L/d   \\
+$r_{phena,max}$         & 12        & 1/d       \\
+$K_{phena,ox}$          & 4.00 $\times$ $10^{-4}$  & mol/L     \\
+$T_{opt}$               & 35        & $^{\circ}$C   \\
+${\alpha}$            & -1.5      & -             \\
+${\beta}$             & 0.18      & 1/$^{\circ}$C \\
+ \bottomrule
+\end{tabular}
+\label{parm_values_berlin}
+\end{center}
+\end{table}
+
+\begin{itemize}
+\item For the rate {\color{blue}Orgc\_sed} the stoichiometry of the reactive constituents 
+associated with the reaction has to be entered under 
+formula: Enter {\color{blue}Orgc\_sed -1.0 CH2O 1.0 NH3 0.15}.
+
+\item Subsequently enter the formula {\color{blue}Phenazone -1} to be 
+associated with the rate of {\color{blue}Phenazone} degradation.
+
+\item Go to {\color{blue}Phases} and click  {\color{blue}Calcite} and provide a background concentration
+under {\color{blue}Backg\_Moles} of 1.7 and for {\color{blue}Pyrolusite} 
+add a concentration of 3.0 $\times$ $10^{-3}$ under {\color{blue}Backg\_moles} and similarly enter 0 for 
+{\color{blue}Rhodochrosite}. 
+
+\item Now we have to assign the aqueous solutions 
+that will act as initial and boundary conditions in the model. 
+Choose {\color{blue}Pht3d} $\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.3 Initial concentrations}. 
+Make sure that {\color{blue}Backg.} is set to 0, which means that 
+solution 0 is used to define the initial water composition.
+
+\item Now choose {\color{blue}ph.5 Recharge}. 
+Define a zone that coincides with the infiltration area 
+and enter solution number 1 into the right recharge box. 
+
+\item Finally, everything is ready to run PHT3D.
+  
+\item To visualise the simulation results of, for example, 
+temperature, oxygen, nitrate and phenazone at monitoring wells, 
+set observations zones {\color{blue}Spatial attributes} 
+$\rightarrow$ {\color{blue}observation} $\rightarrow$ {\color{blue}obs.1} 
+create lines that span the screened distance of the wells with well names. 
+Then, in the panel {\color{blue}results} $\rightarrow$ {\color{blue}observation}, 
+select time series graphs and chemistry. 
+In the dialog select the wells and then a layer (it can be any layer) 
+and click twice on {\color{blue}Apply}. 
+
+\item To better compare the graphs, they may be exported and then 
+the txt file can be opened in excel or further processed by python or matlab.
+
+\end{itemize}
+
+\subsection[Seasonal temperature dynamics (Stage 2)]
+{Seasonal temperature dynamics (Stage 2)}
+
+\begin{itemize}
+\item First, under {\color{blue}Chemistry} $\rightarrow$ 
+{\color{blue}Parameters} $\rightarrow$ {\color{blue}PH} 
+$\rightarrow$ {\color{blue}ph.6} $\rightarrow$ 
+{\color{blue}specific options} and increase the {\color{blue}nb solutions parameter} to {\color{blue}12}.
+This will allow to define 12 individual aqueous solutions (default is max 4).  
+
+\item After that re-import the database file {\color{blue}pht3d\_datab.dat}.
+
+\item Under the {\color{blue}Ad\_chemistry} feature, copy the composition from 
+solution 1 ({\color{blue}solu1}) to solutions 2 ({\color{blue}solu2}) - solution 12 ({\color{blue}solu12}). 
+
+\item Now you can enter or copy and paste the varying temperatures ({\color{blue}Tmp}) 
+for {\color{blue}solu1} to {\color{blue}solu12}. 
+The values are provided in the Excel spreadsheet {\color{blue}Stage 2} (indicated in yellow) 
+into the ORTi Interface to the species Tmp. 
+
+\item Now choose {\color{blue}ph.5 Recharge}. 
+Choose the zone for infiltration area, make it transient, and copy and paste the solution time series 
+(time and solution number) given in Sheet {\color{blue}Stage 2} 
+(marked in yellow, without the titles) into the right recharge box.
+ 
+\item Run PHT3D and study how the breakthrough curves at the observation wells have changed.
+ 
+\end{itemize}
+
+\subsection[temperature retardation due to heat exchange with the aquifer matrix]{Temperature retardation due to heat exchange with the aquifer matrix}
+
+As now the temperature varies with time in the infiltration water, 
+the generated temperature signal in the aquifer will be retarded due to 
+heat exchange with the aquifer matrix. The retardation factor depends on the 
+thermal characteristics of the porous medium is approximately R = 2.1 in the Berlin aquifer. 
+This can be simulated with the {\color{blue}RCT} reaction package, specified 
+under MT3DMS (this will automatically also assigned to PHT3D). 
+To do so, we have to provide MT3DMS with the apparent density of the medium 
+and the Kd to calculate the retardation factor R (R = 1+$rho_{a}$*Kd/porosity). 
+With a porosity of 0.35 and a bulk density of 1722 kg/m3, this gives a Kd of 2.2 $\times$ $10^{-4}$. 
+
+\begin{itemize}
+\item To set these values you will have to add the {\color{blue}RCT} module to MT3DMS by
+(menu {\color{blue}Addin} {\color{blue}mt3dms modules}).
+
+\item then to go to the dialog 
+{\color{blue}Parameters} {\color{blue}mt3dms} $\rightarrow$ {\color{blue}Parameters} 
+$\rightarrow$ {\color{blue}RCT} $\rightarrow$  {\color{blue}rct.1} 
+and set the sorption to linear. 
+
+\item Once this is done go to 
+{\color{blue}Spatial attributes} $\rightarrow$ {\color{blue}Mt3dms} $\rightarrow$ 
+{\color{blue}Rct} $\rightarrow$  {\color{blue}rct.2a density} 
+and set the value at 1722 for the background (i.e., everywhere). 
+
+\item Then go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Transport} 
+and click on {\color{blue}SPC}, 
+select {\color{blue}pht3d} in the choice box and write {\color{blue}Tmp} in the species box. 
+
+\item After that, go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}transport} $\rightarrow$ 
+{\color{blue}Rct} and you will get a new dialog box with 4 parameters. 
+
+\item Now enter a Kd value of 2.2 $\times$ $10^{-4}$ in the {\color{blue}SP1} column.
+
+\item Re-run PHT3D 
+
+\end{itemize}
+
+Inspect how this changes the time-concentration curves at the observation wells. 
+You will notice that now the temperature breakthrough is slightly shifted towards later times, 
+as the retardation of the heat transport also affects the redox system and thus ultimately 
+also the phenazone breakthrough behaviour.
+
+\subsection[Seasonal temperature and variable infiltration (Stage 3)]
+{Seasonal temperature and variable infiltration dynamics (Stage3)}
+
+In this part of the exercise the recharge at the pond (infiltration rate) will changed to a time-varying input
+to reflect the highly dynamic changes in infiltration rates that occurred at the field site.
+The 1-year long simulation period is therefore split into 12 monthly stress-periods. 
+The employed rates are provided in the Excel spreadsheet {\color{blue}Stage 3}.
+
+\begin{itemize} 
+\item Select the two columns time and recharge (marked in yellow, without the titles) 
+and copy them into ORTi to {\color{blue}RCH} $\rightarrow$ {\color{blue}rch.2}, 
+select the recharge zone and click on {\color{blue}value}, which triggers the {\color{blue}zone dialog} to open. 
+In this dialog select the {\color{blue}transient} option. A grid will appear in {\color{blue}values}.
+Now paste the recharge values that you copied from the spreadsheet into this grid. 
+
+\item Click the {\color{blue}Parameter} Button under {\color{blue}Flow} 
+and select {\color{blue}DIS} $\rightarrow$ {\color{blue}dis.8} and change the simulation mode from 
+{\color{blue}steady-state} to {\color{blue}transient} simulation.
+
+\item You now need to re-run MODFLOW. You can then check 
+how the heads values and gradients are dynamically changing in the model.
+
+\item Finally re-run PHT3D and inspect how the transient recharge affected the breakthrough behaviour.
+
+\end{itemize}
+

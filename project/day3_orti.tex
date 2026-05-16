@@ -1,0 +1,67 @@
+\section[Cation Exchange and Surface Complexation]{Cation Exchange and Surface Complexation}
+
+Due to the difference in composition, especially pH, between native groundwater and rainwater, and the associated dissolution of $Al(OH)_3$, which releases $Al^{3+}$ and destructs sediment surface sites, the passage of the recharge water in the aquifer will lead to a series of exchange and adsorption/desorption processes. In the following step we will now activate the cation exchange and surface complexation reactions and explore their role in this simulation problem.
+
+\subsection[Cation exchange]{Cation Exchange}
+To include the cation exchange process in the reaction network, you will proceed as follows:
+
+\begin{itemize}
+
+\item Open your ORTi model from yesterday, plot and save the breakthrough curves for the concentrations of some of the cations (e.g., Al, Ca, Mg, K and Na). 
+
+\item To add the exchanger species to the reaction network, go to {\color{blue}Parameters} 
+$\rightarrow$ {\color{blue}4.Chemistry}  
+$\rightarrow$ {\color{blue} (Ad\_Chemistry)} 
+and activate X- under the Exchange Tab. 
+Add a background value of 0.01 for the cation exchange capacity (CEC).
+
+\item Now rerun PHT3D.
+
+\item Once the model run is complete, plot again the breakthrough curves for the Al, Ca, Mg, K and Na concentrations, and compare the current results with previous modeling results without cation exchange.
+
+\item You can also study the impact of CEC on the reactive transport behaviour by rerunning the model with a different CEC.
+
+\item Remember to save your ORTi file.
+
+\end{itemize}
+
+\subsection[Surface complexation]{Surface complexation}
+
+The default PHREEQC database (i.e., the database you have been using in this exercise so far) uses surface data from \cite{Dzombak1990}, which were developed for hydrous ferric oxide. In this simulation problem, the sediment surface sites are assumed to be provided dominantly by Al(OH)3(a). Therefore, to include the adsorption/desorption processes in the reaction network, you will first need to add the surface complexation reactions between 
+aquoeus species and the $Al(OH)_3$ surface into the database. 
+
+While there is not a comprehensive literature database on surface complexation reactions for $Al(OH)_3$, data for surface complexation reactions with gibbsite (a crystalline aluminum hydroxide) are available.
+These are described in detail in \cite{Karamalidis2010}.
+
+We will use gibbsite surface data as approximation in this exercise. Copy the relevant tables with surface reaction data from \cite{Karamalidis2010} for this exercise from the wechat group. At this point, you should know how and where to add those reactions into the database. 
+
+\begin{itemize}
+
+\item Open your database file
+
+\item Define one new surface master species of Gb/GbOH and have a try. You only need to include the reactions that are relevant, but you can of course include all the reactions in those tables if there is time. (If you accidentally make any error you can always make a new copy of the file phreeqc.dat and restart.) We will then send out our database such that you can compare and see if your reactions are correctly defined. 
+
+\end{itemize}
+
+Once the surface complexation reactions are ready in the database, you will proceed as follows:
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$  {\color{blue}4.Chemistry} and select the {\color{blue}Import database} button. ORTi will then read and interpret the new PHT3D database file.
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}4.Chemistry} $\rightarrow$ {\color{blue}Ad\_Chemistry} and go to the {\color{blue}Surface} Tab. 
+
+\item Now, activate the surface with the name Gb. Enter Al(OH)3(a) and equilibrium under name and switch, respectively, to link the surface site to the concentration of Al(OH)3(a) in the aquifer, which is an equilibrium mineral. Enter 1.0 $\times$ $10^{-3}$ as the surface site density (unit: mole of sites per mole of mineral) under {\color{blue}Site\_back}. After we define this concentration of surface sites as background concentration, it will be applied throughout the model domain. The initial occupancy of the surface sites will be automatically determined at the start of the simulation, i.e., there will be an equilibration step that makes sure that the aqueous composition(s) and the surface(s) are in equilibrium. The presence of the surface sites will cause the aqueous species to undergo surface complexation reactions, with the variable extent of the sorption being a function of the spatially and temporally variable geochemical conditions.
+
+\item The present model is using the {\color{blue}no\_edl} option, which means that the surface complexation reactions do not consider any electric double layer effects. When you use the {\color{blue}no\_edl} mode, no input is required for surface area and sorbent mass. If required in the future for your own research project, 
+the {\color{blue}no\_edl} option can be changed under {\color{blue}Parameters} $\rightarrow$  {\color{blue}4.Chemistry} $\rightarrow$ {\color{blue}Parameters} $\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.6- specific options} where a different option such as {\color{blue}-ddl} could be entered.
+
+\item Now rerun PHT3D and investigate how much the adsorption/desorption reactions have impacted the transport behaviour of the relevant species. Not all the species you added to the surface reactions will show differences because of the geochemical condition studied here, but some will.
+
+\item You can also study the impact of the surface site density on the reactive transport behaviour by rerunning the model with a different site density. The number 1.0 $\times$ $10^{-3}$ you used is actually very low. Now add a 100-fold increased surface site density of 0.1, rerun PHT3D and inspect the simulation results.
+
+\item Remember to save your ORTi file.
+
+\item End of Day 3.
+
+\end{itemize}

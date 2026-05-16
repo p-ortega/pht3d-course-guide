@@ -1,0 +1,145 @@
+\section[PHT3D Exercise 4: Transport and nitrification of ion exchangeable ammonium]{PHT3D Exercise 4: Transport and nitrification of ion exchangeable ammonium}
+
+This modelling example is based on a field site contamination problem near
+Mansfield UK \citep[see, e.g.,][]{broholm98, phddavison,jones1998, davison2000,
+jones2001}, where ammonium liquor, a by-product of the production
+of smokeless fuel, has polluted groundwater over several decades.
+A reactive transport modelling study that integrated 
+and reproduced the major processes that were believed to occur at the
+field site was presented by \cite{haerens_phd}. 
+One of the key features observed at the site is the
+strongly retarded migration of ammonium and the geochemical footprint that
+was left behind as a result of the cation exchange of ammonium.  
+In the modelling example the development of an ammonium plume
+and the subsequent flushing of ammonium contaminated groundwater by
+pristine background water is simulated.  The processes included in
+the example are advection, dispersion, cation exchange
+and the kinetically controlled oxidation of ammonium.
+Dispersion, ion exchange and nitrification act as attenuation 
+processes for ammonium.
+
+For simplicity the two-dimensional reactive transport problem is already set up, except for the 
+cation exchange process. 
+
+
+
+\begin{table}
+\caption{Flow and transport parameters used for PHT3D Exercise 4.}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Flow simulation                     & steady state \\
+Total simulation time $(days)$       & 3000 \\
+Time step size                       & 40 \\
+Model \  length\ $ (m)      $         &  100            \\
+Model \  thickness\ $ (m)      $         &  10            \\
+Grid \ spacing\ $\Delta x $ (m)                &    4            \\
+Grid \ spacing\ $\Delta z $ (m)                &    0.5            \\
+Porosity\     $            $         &  0.35           \\
+Horizontal hydraulic conductivity\ $(m)           $         &  1 m/d         \\ 
+Vertical   hydraulic conductivity\ $(m)           $         &  1 m/d         \\ 
+Piezometric head upstream boundary\ $(m)          $         &  12 m          \\ 
+Piezometric head downstream boundary\ $(m)        $         &  10 m          \\ 
+Longitudinal dispersivity\ $(m)         $         &  2.5          \\ 
+Transverse vertical dispersivity\ $(m)         $         &  0.025          \\ 
+\bottomrule
+
+\end{tabular}
+\label{bruno_flow}
+\end{center}
+\end{table}
+
+
+\begin{table}
+\caption{Concentrations of aqueous components and initial mineral concentration in PHT3D Exercise 4.}
+\begin{center}
+\begin{tabular}{l c c c c }
+\toprule
+      & \multicolumn{1}{c}{Background and} & \multicolumn{1}{c}{Contaminated water} \\
+      & \multicolumn{1}{c}{flushing water} &                & \\
+      & \multicolumn{1}{c}{$C_{backgr}$, $C_{flush}$} & \multicolumn{1}{c}{$C_{cont.}$} \\
+      &    $mol\ l^{-1}$   & $mol\ l^{-1}$ \\ 
+\midrule
+O(0)     & 2.51 $\times$ $10^{-4}$    & $0$  \\
+Na       & 8.62 $\times$ $10^{-4}$    & 1.30 $\times$ $10^{-3}$ \\
+K        & 1.24 $\times$ $10^{-4}$    & 1.30 $\times$ $10^{-4}$ \\
+Ca       & 1.83 $\times$ $10^{-3}$    & 1.50 $\times$ $10^{-4}$ \\
+Mg       & 1.38 $\times$ $10^{-3}$    & 5.00 $\times$ $10^{-5}$ \\
+Amm      & $0$                        & 6.87 $\times$ $10^{-3}$ \\
+Cl       & 1.74 $\times$ $10^{-3}$    & 3.23 $\times$ $10^{-3}$ \\
+S(6)     & 9.89 $\times$ $10^{-4}$    & 1.56 $\times$ $10^{-3}$ \\
+N(5)     & 8.88 $\times$ $10^{-4}$    & $0$ \\
+N(3)     &                            & $0$ \\ 
+N(0)     &    $0$                     & $0$ \\ 
+C(4)     & 2.82 $\times$ $10^{-3}$    & 2.92 $\times$ $10^{-3}$ \\ 
+C(-4)    &  $0$                       &   $0$ \\ 
+ & & \\
+pH    & 7.9               & 8.3             \\
+pe    & 13.5              & 0            \\
+\midrule 
+        &      $C_{init}$       &          \\
+                &        $mol\ l_b^{-1}$     &          \\
+Calcite &      0.1             &          \\
+\bottomrule
+
+\end{tabular}
+\label{bruno_caqu}
+\end{center}
+\end{table}
+
+
+%\subsection[Running MODFLOW and PHT3D]{Running MODFLOW and PHT3D}
+
+To run MODFLOW and PHT3D, proceed as follows:
+
+\begin{itemize}
+
+\item Copy the ORTi file for this exercise and the database file from {\color{blue}wechat}    
+
+\item Load the provided ORTi model and inspect the model input.
+
+\item Now run MODFLOW to regenerate the flow-file (mt3d.flo), which will subsequently be used 
+by the reactive transport model.
+
+\item Inspect the simulated hydraulic heads - make sure the results are plausible
+
+\item To run PHT3D go to {\color{blue}Parameters} $\rightarrow$ {\color{blue} Chemistry} and use 
+the {\color{blue}Write Button} to write all the input files required to run PHT3D
+
+\item Then go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} and use the {\color{blue}Plume Button} to start PHT3D.
+
+\item After the end of the simulation visualise the ammonium plume and check if the 
+simulation results are plausible. 
+
+\item Now plot also the breakthrough curves for the cations Amm, Ca, and Na at x = 50 m
+and z = 7m. 
+
+\item To do this use ORTi's multiplot functionality, where it is possible to visualise several species simultaneously for both simulated and observed concentrations. You will notice the obvious disagreement between simulated and observed concentrations. 
+
+
+\end{itemize}
+
+To improve the agreement between observed and simulated data we now consider cation exchange reactions. 
+To include this process in the reaction network and to estimate
+a suitable value for the cation exchange capacity (CEC) of the exchanger sites 
+proceed as follows: 
+
+\begin{itemize}
+
+\item To add the exchanger species to the reaction network
+select go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} 
+and activate {\color{blue} X-} under the {\color{blue} Exchange Tab}.
+Add a background value of 0.001 as a first estimate for the CEC. 
+
+\item Now rerun PHT3D.
+
+\item Once the model run is complete, plot again the breakthrough 
+curves (BTCs) for the ammonium, Ca and Na concentrations and repeatedly compare the results 
+with the observed data.
+
+\item Continue this manual calibration of the CEC by rerunning the model with successively improved
+estimates until a good agreement is achieved.  
+
+\end{itemize}
+
+

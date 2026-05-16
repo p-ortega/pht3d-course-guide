@@ -1,0 +1,480 @@
+\section[PHT3D Exercise 5: Impact of cation exchange on groundwater-bentonite interaction]{PHT3D Exercise 5: Impact of cation exchange on groundwater-bentonite interaction}
+
+Bentonite clays are candidate materials for engineered barrier
+systems for the encapsulation of hazardous wastes because of their
+low hydraulic permeability, swelling potential, ability to self-heal
+cracks in contact with water and their sorption potential.
+%\cite{Pusch_2001} 
+Compacted bentonite buffers are being investigated in
+deep geological repositories for radioactive waste 
+(Figure \ref{fig:nagra}) for their suitability
+to encapsulate waste canisters and ability to seal access
+galleries, isolating the nuclear waste from the hydrogeological
+environment. Accordingly, the geochemical stability of bentonite
+clays is essential for the performance and safety evaluation ofwaste
+repositories. As part of these safety assessments, experiments on bentonite
+durability and stability over time and under different thermal,
+geochemical and mechanical conditions at different scales have
+been performed over the years. Potential mineral transformations
+and alterations in porewater chemistry and mineralogy under welldefined
+conditions have been investigated in laboratory experiments
+in order to predict solute mobility and the geochemical
+stability of bentonites. During the re-saturation phase after placement
+of spent nuclear fuel, the transport of solutes in bentonite
+clays has been found to be controlled by advection \citep{salas_2014}.
+
+\begin{figure}[hb]
+\centering
+\includegraphics[width=0.6\textwidth, angle = 0]{nagra}
+%\includegraphics[height=0.3]{mt3dms_ex1_map.eps}
+%\includegraphics{mt3dms_ex1_map.eps}
+\caption[Schematic illustration of geological disposal concept (source: NAGRA)]{Schematic illustration of geological disposal concept (source: NAGRA)}
+\label{fig:nagra}
+\end{figure}
+
+However, due to the low hydraulic conductivity of clays,
+following saturation, the main transport process is in this media is by molecular diffusion. 
+In order to predict solute migration under conditions expected in a
+repository, the diffusive behaviour within compacted bentonites
+has been investigated in laboratory experiments for different species
+(e.g., water, anions, cations, colloids) 
+\citep{appelo_vanloon_2010, gimmi_2011, vanloon_2007, melkior_2009, sanchez_2008} 
+among others; 
+under different temperatures 
+\citep{kozaki_1998, suzuki_2004, sanchez_2008}
+and as a function of compaction \citep{suzuki_2004}. 
+%(Pusch, 2002;  
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth, angle = 0]{bentonite_expt}
+%\includegraphics[height=0.3]{mt3dms_ex1_map.eps}
+%\includegraphics{mt3dms_ex1_map.eps}
+\caption[ABM Experiment]{ABM Experiment}
+\label{fig:abm}
+\end{figure}
+
+Nevertheless, the underlying phenomena controlling
+diffusion within bentonites is still an active field of research,
+including their mechanistic representation in numerical models.
+%(Idiart and Pekala, 2016).
+Uncertainties result from a lack of a well-established and widely
+accepted conceptual model of the structure of compacted bentonite
+at the nano-scale at different dry densities and salinities. Available
+characterisation techniques for porosity distribution and nanostructure
+of compacted bentonite often perturb the structure of
+the water saturated bentonite and are therefore of limited applicability.
+In addition, the validity of the classical Fickian diffusion
+approach based on a single bulk (total) porosity has been questioned
+in some cases, as it is unable to represent the diffusion of
+cations, anions and neutral species simultaneously. As a result,
+more complex mechanistic models have been proposed in the
+literature to explain experimental data, based on different conceptualizations
+of the pore space, e.g., \citep{birgersson_2009, appelo_vanloon_2010, gimmi_2011, tachi_2014}.
+
+Solute mobility in compacted 
+bentonites is further influenced by
+geochemical reactions such as cation and anion exchange 
+\citep{valter_2013, birgersson_2009, tachi_2014}, 
+as well as the dissolution of primary minerals or the
+precipitation of secondary phases \citep{arcos_2008, kaufhold_2013}, 
+%(Liu and Neretnieks, 2006; 
+%Idiart et al., 2013) 
+which impact on the performance of bentonites as barriers 
+by altering, e.g., the swelling capacity or the hydraulic and gas 
+conductivities of these clays. 
+In order to upscale laboratory findings and to test the
+behaviour of bentonite clays under the thermo-hydraulic conditions
+expected in radioactive waste repositories, several countries
+are conducting large scale in-situ tests of engineered barrier systems.
+
+In 2006 a field scale experiment was launched, the Alternative Buffer
+Material (ABM) test 
+%(Eng et al., 2007; 
+\citep{svensson_2011}
+, which extended investigations to a range of clays, including compacted
+sedimentary clay materials (Friedland clay, Germany and Callovo-
+Oxfordian clay, France) and various compacted bentonites. 
+
+Three columns consisting of these different compacted clay buffer blocks
+were installed in three boreholes (ABM1-3). The analysis of the first
+package, ABM1 as illustrated in Figure \ref{fig:abm}, 
+is the subject of this modelling exercise. 
+The aim of the ABM1 test was to compare different clay materials 
+and their performance over time when in contact with 
+the heater, the seals, the fractured
+host rock, and ambient groundwater at relevant depths as well as
+the expected maximum in-situ temperatures. 
+The main objective was to provide a basis for selecting an ideal 
+buffer for the Swedish spent nuclear fuel repository. 
+The experiment consists of a vertical borehole placed at
+450 m depth \citep{svensson_2011}. 
+
+It contains a central heater inside an iron tube surrounded by 11
+different compacted clay blocks. The column of blocks was artificially
+saturated with Aspo groundwater and heated to a maximum
+temperature of 130 C. Over a duration of 28 months data were
+recorded on the temperature and water pressure evolution.
+Following the test, a comprehensive characterization of the cation
+exchange population and distribution with time \citep{dohrmann_2013}
+as well as mineralogical alterations \citep{kaufhold_2013} 
+was carried out. All buffers started with distinctly different
+exchangeable cation (EC) populations and it was expected that,
+after the field experiment, the ECs would display horizontal variations
+for all bentonite rings due to the radial heat distribution
+induced by the central heater element. However, in contrast to this,
+large scale variations in the ion exchange composition had
+occurred. That is, the composition of exchangeable cations had
+changed markedly in all clay materials over the whole test parcel
+after 28 months, but no significant horizontal variations in the EC
+populations within each ring was detectable. The most significant
+change was an increase in exchangeable $Ca^{2+}$, and a decrease in
+exchangeable $Na^{+}$ and Mg$^{2+}$. 
+Mineralogical changes of the bentonites
+were unable to explain these significant changes, and it was
+postulated that interaction with the surrounding groundwater
+must have caused partial equilibration of the porewater chemistry
+within and possibly between the different bentonite blocks within
+a short time frame \citep{dohrmann_2013}. 
+%(Idiart et al., 2014; 
+%Pekala et al., 2012)
+
+In order to assess this hypothesis and to enhance the understanding
+of the processes controlling the changes in porewater chemistry 
+in bentonites under the influence of in-situ groundwater 
+and heat conditions, a numerical model of the ABM1 
+field test was developed.
+For the modelling study the aim was (i) to develop a numerical model that
+could provide a process-based description of the physical and
+geochemical mechanisms controlling the chemical evolution of
+bentonite porewaters at the field (i.e., meter) scale; 
+(ii) to quantify the influence of groundwater on the chemical evolution of the
+different clays with time, and (iii) to verify the model by applying it
+to the available field data set collected during the ABM1 test.
+
+The set-up of the ABM1 experiment, which is described in detail
+in x 
+%Eng et al. (2007) 
+and \cite{svensson_2011}, 
+consists of a central
+steel canister with heaters, surrounded by ring shaped bentonite
+blocks situated in a borehole of 300 mm diameter in crystalline
+bedrock at about 450 m depth (Figure \ref{fig:abm}). 
+
+Eleven different clay materials
+(two sedimentary clays and nine bentonites) were included in
+the ABM tests as compacted rings 
+%(Table 1 and 
+(Figure \ref{fig:abm}) 
+with an outer diameter of 280 mm, and an inner diameter of 100 mm. 
+Additionally, four rings were included which consisted of cloth-covered
+steel-cages filled with bentonite pellets with and without additional
+quartz to also test granulated material. All clay materials
+were installed multiple times and the total number of material
+blocks stacked on top of each other was 30 (Figure \ref{fig:abm}). 
+Each block had a height of 100 mm, resulting in a total length of 3 m for the whole
+ABM1 package. The gap between the ABM1 package and the crystalline
+host rock was filled with sand, in which an artificial wetting
+system was installed. This consisted of titanium tubes, connected to
+a water tank, which supplied native 
+Aspo groundwater over the
+duration of the experiment. The wetting system was aimed at
+simulating water bearing fractures within the host rock and supplied
+ambient groundwater in addition to natural water inflow
+through fractures into the deposit bore. However, the effectiveness
+of the artificial wetting system to evenly supply groundwater to the
+ABM1 package was open to question, as monitoring of applied
+water pressure and injected water volume during the experiment
+suggested leakage of injected water into the surrounding host rock
+at some unknown depth within the bore \citep{svensson_2011}. 
+
+The inflow of water through the fractures into the empty borehole was
+measured at 3.6 l/hour before the test, but inflow locations were
+not identified 
+%(Eng et al., 2007). 
+The ABM1 package was heated from the start of the experiment 
+for the entire duration of the test
+with exposure of the blocks to maximum temperatures of 130 C
+for about one year (Figure \ref{fig:abm}). 
+
+A heating element ran through the entire
+axis of the ABM1 package with additional heaters being installed at
+the top and bottom of the package to provide a relatively homogeneous
+temperature distribution throughout the package length.
+A chemical and mineralogical characterization of the different
+clay materials was undertaken before the start of the test in order to
+obtain a reference and to provide initial conditions before heating
+and saturation \citep{svensson_2011}.
+%Kumpulainen and Kiviranta, 2011)
+
+After 28 months, the ABM1 experiment was terminated
+and each block was sampled at five different radial distances from
+the contact with the metal tube to record geochemical and
+mineralogical alterations. Additionally, samples were collected at
+three different vertical intervals in each block. It was found that,
+apart from the EC distribution, almost all geochemical and mineralogical
+alterations of the different clay materials were restricted to
+a less than 5 mm wide zone from the interface between the central
+steel canister and the blocks. Here, alterations included the accumulation
+of Fe and organic carbon, the precipitation of carbonates
+and gypsum/anhydride and the dissolution of some silicates
+\citep{kaufhold_2013, wersin_2015}. 
+
+Also, the cation exchange
+capacity of the materials (CEC) showed little change compared to
+the start of the test for most material blocks, with only 5 out of 30
+showing a change of >5\% in CEC. 
+In contrast, large scale alterations in the EC population 
+had occurred in all blocks and modifications
+occurred, without significant gradients over the entire horizontal
+radial distance \citep{dohrmann_2013}.
+
+\subsection[Basic numerical model setup]{Basic numerical model setup}
+
+Based on the observed thermal and geochemical
+changes during the ABM1 tests 
+\citep{dohrmann_2013, kaufhold_2013, svensson_2011} 
+%Idiart et al., 2014)
+, 
+we initially simulate a simplified subset of the processes that 
+played during the experiment. We focus on the interaction between diffusive transport 
+of the groundwater constituents and the cation exchange reactions that took place 
+during the experiment. We exploit the radial symmetry of the experimental setup, 
+which allows for considerable computational time savings compared to a fully 
+three-dimensional setup.
+Furthermore we simplify the problem by simulating only 3 different bentonite buffers
+rather than the 11 different buffers that were included in the experiment and simulated
+in \cite{wallis_2016}. A summary of the model setup is provided in Table \ref{wallis_setup}.
+Note, that the circulating flow that occurred outside the bentonite rings was neglected.
+Instead, the (constant) water composition of the circulating fluid was used to define 
+a specified (constant) concentration boundary condition.  
+
+\begin{itemize}
+
+\item In ORTI, create a new model and save it in a new, separate directory.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Model} button and specify the attributes of the new model. Select the values {\color{blue}Radial} for {\color{blue}Dimension}, {\color{blue}unconfined} for {\color{blue}Type} 
+and {\color{blue}MODFLOW series} for {\color{blue}Group} 
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model} select the {\color{blue}Grid} button and specify the details of the model domain and the spatial discretisation in the dialog that opens up. 
+Define a (radial) transect that extends from Xmin = 0.05 to Xmax = 0.145m. 
+For the vertical extent we consider Zmin = 0 to Zmax = 0.3m.  
+The model domain may be discretised into grid cells of 5mm length and 1cm height. 
+Note, that the model discretisation can be easily changed again later. 
+
+\item Select {\color{blue}Parameters} and select the {\color{blue}Time} button.
+Set the {\color{blue}Total Simulation Time} to 880 days and select a time {\color{blue}Step size}
+of 5 days. 
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.8} to specify the horizontal hydraulic conductivity to 0.001 $m/day$.
+Note that the entered hydraulic conductivity will not affect the results as the groundwater will not move
+in this example. 
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.9} to specify the vertical hydraulic conductivity to 0.001 $m/day$
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}BTN} $\rightarrow$ {\color{blue}btn.11} and specify a uniform effective porosity of 0.45, even though the 
+porosities of the various bentonites used in the ABM test varied slightly \citep{wallis_2016}.   
+
+
+\item Given that there is no groundwater flow involved in this example there is in principle no need to define any hydraulic boundary conditions. However, for numerical reasons we define a specified head boundary at a single point by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.3 Boundary Conditions} and setting the value to -1 (= active cell) at X = 0.00525 m and 0.006 m in vertical direction. 
+
+\item We will also define a global initial hydraulic head for the entire domain (Background value) by going to {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.6 Initial Heads} and set the
+ {\color{blue}Backg.} value to 1m. Then press {\color{blue}'OK'} to confirm the value.
+
+\end{itemize}
+
+Again, as there will not be any groundwater flow this input is solely made for numerical reasons.
+For the same reason MODFLOW needs to be executed before the next stage of the model setup.
+
+\begin{itemize}
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow} use the {\color{blue}Write Button} to write all the input files required to run MODFLOW
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow} use the 
+{\color{blue}Red Arrow} button to start the MODFLOW simulation   
+
+\end{itemize}
+
+\begin{table}[t]
+\caption{Model geometry and summary of key input parameters.}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Simulation type                     & steady state \\
+Total simulation period\ $ (days)      $         &  880            \\
+Time step length\ $ (days)      $         &  10            \\
+Model \  length\ $ (m)      $         &  0.095            \\
+Model \  thickness\ $(m)$                        &  0.3            \\
+Grid \ spacing\ $\Delta x $ $(m)$                &    0.005            \\
+Grid \ spacing\ $\Delta z $ $(m)$                &    0.01            \\
+Porosity\     $            $         &  0.5           \\
+Horizontal hydraulic conductivity\ $(m/day)$               &  0.001        \\ 
+Vertical   hydraulic conductivity\ $(m/day)$               &  0.001         \\ 
+Longitudinal dispersivity\ $(m)                 $         &  0.01          \\ 
+Transverse  vertical dispersivity\ $(m)         $         &  0.01          \\ 
+Diffusion coefficient\ $(m)         $         &  $5 \times 10^{-10}$          \\ 
+\bottomrule
+\end{tabular}
+\label{wallis_setup}
+\end{center}
+\end{table}
+    
+\subsection[Diffusion model setup]{Diffusion model setup}
+
+In the absence of groundwater flow inside the model domain molecular 
+diffusion acted as the only transport process while neither advection 
+nor hydrodynamic dispersion occurred. \cite{wallis_2016} found that the
+temporal and spatial variations of the temperature-field 
+had a significant impact on the diffusion rates.
+To consider this effect they incorporated the temperature-dependency
+of the diffusion coefficient into their model framework and obtained, 
+as a result, a significantly improved match with
+observed concentration data. For simplicity we neglect this dependency in this 
+modelling exercise while generally it would need to be considered.     
+ 
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Transport} 
+and select the {\color{blue}Parameter} button
+
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$ 
+{\color{blue}MT3DMS} $\rightarrow$ {\color{blue}DSP}, 
+enter a diffusion coefficient of 4.32 $\times$ $10^{-5}$ $m^2$ $days^{-1}$ 
+and then don't forget to click {\color{blue}OK} 
+
+\end{itemize}
+	
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1.0\textwidth, angle = 0]{bento_zones}
+%\includegraphics[height=0.3]{mt3dms_ex1_map.eps}
+%\includegraphics{mt3dms_ex1_map.eps}
+\caption[Position of Initial Chemistry zones]{Position of Initial Chemistry zones}
+\label{fig:bento_zones}
+\end{figure}
+
+\begin{table}[b]
+\caption{Solution compositions to define the initial water compositions and of the fluid circulating outside the bentonite rings.}
+\begin{center}
+\begin{tabular}{l c c c c}
+\hline
+ Aqueous      & $C_{Backgr}$            & $C_{init}$               & $C_{init}$                & $C_{init}$  \\
+ Component    & $(mol\ l^{-1}_w)$       & $(mol\ l^{-1}_w)$        & $(mol\ l^{-1}_w)$         & $(mol\ l^{-1}_w)$   \\ \hline
+ C(4)         & 8.600 $\times$ $10^{-4}$  & 8.890 $\times$ $10^{-4}$ & 8.890 $\times$ $10^{-4}$  & 8.890 $\times$ $10^{-4}$\\
+ Ca           & 6.479 $\times$ $10^{-2}$  & 1.017 $\times$ $10^{-2}$ & 2.373 $\times$ $10^{-2}$  & 4.525 $\times$ $10^{-3}$\\
+ Cl           & 2.332 $\times$ $10^{-1}$  & 2.332 $\times$ $10^{-1}$ & 2.332 $\times$ $10^{-1}$  & 2.332 $\times$ $10^{-1}$ \\
+ K            & 3.220 $\times$ $10^{-4}$  & 2.146 $\times$ $10^{-3}$ & 2.213 $\times$ $10^{-3}$  & 1.339 $\times$ $10^{-3}$\\
+ Mg           & 2.704 $\times$ $10^{-3}$  & 1.653 $\times$ $10^{-3}$ & 2.232 $\times$ $10^{-3}$  & 2.423 $\times$ $10^{-3}$\\
+ Na           & 1.090 $\times$ $10^{-1}$  & 2.185 $\times$ $10^{-3}$ & 1.500 $\times$ $10^{-1}$  & 2.291 $\times$ $10^{-3}$ \\ 
+ S(6)         & 5.100 $\times$ $10^{-3}$  & 5.100 $\times$ $10^{-3}$ & 5.100 $\times$ $10^{-3}$  & 5.100 $\times$ $10^{-3}$\\ 
+ pH           &   7.330	                  &  7.479                   & 7.390                     & 7.499 \\
+ pe           &   4                       &  4                       &   4                       & 4     \\ \hline
+\end{tabular}
+\label{ex_wallis_aqu_conc}
+\end{center}
+\end{table}
+	
+
+\begin{table}
+\caption{Initial exchanger compositions associated with the 3 different bentonite rings.}
+\begin{center}
+\begin{tabular}{l c c c}
+\hline
+ Exchanger   & $C_{init}$ Assembl 1     & $C_{init}$  Assembl 2     & $C_{init}$  Assembl 3 \\
+ Species     & $(mol\ l^{-1}_w)$        & $(mol\ l^{-1}_w)$         & $(mol\ l^{-1}_w)$   \\ \hline
+ CaX2        & 2.290 $\times$ $10^{-1}$ & 6.281 $\times$ $10^{-1}$  & 3.244 $\times$ $10^{-1}$\\
+ KX          & 3.768 $\times$ $10^{-2}$ & 5.444 $\times$ $10^{-2}$  & 5.458 $\times$ $10^{-2}$\\
+ MgX2        & 7.636 $\times$ $10^{-2}$ & 3.690 $\times$ $10^{-1}$  & 1.081 $\times$ $10^{-1}$\\
+ NaX         & 1.315  & 7.370 $\times$ $10^{-1}$  & 1.865 \\
+\end{tabular}
+\label{ex_wallis_ex_conc}
+\end{center}
+\end{table}
+
+
+\subsection[Reactive transport]{Reactive transport}
+	
+\begin{itemize}
+
+\item Copy the database file {\color{red} \textbf{pht3d\_datab.dat}} 
+that is provided for this exercise 
+into the folder that will contain all files for this exercise.
+
+\item Go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}Chemistry} and select the
+{\color{blue}Import database} button. ORTI will then read and interpret 
+the PHT3D database file.
+
+\item In this next step the initial concentrations of the aqueous components need to be defined. 
+The initial concentrations vary between the 3 different bentonite rings and therefore three different
+water compositions need to be entered as {\color{red} \textbf{Solutions 1-3}}. 
+Furthermore the composition of the water that is circulating 
+outside the bentonite rings is entered as the {\color{red} \textbf{Backgr}} solution. 
+The water compositions are listed in Table \ref{ex_wallis_aqu_conc}.
+Note, that the {\color{blue}Solution} and other Tabs allow you to copy/paste 
+concentrations values from external, e.g., Excel tables. 
+All 4 solutions are entered under the {\color{blue} \textbf{Solutions}} Tab.
+In that Tab first activate all relevant species by ticking the appropriate boxes for 
+$pH$, $pe$,  $C(4)$, $Ca$, $Cl$, $K$, $Mg$, $Na$ and $S(6)$
+
+\item In addition the initial concentrations of the four exchanger-species, i.e., $CaX2$, 
+$KX$, $MgX2$ and $NaX$ need to be entered for {\color{red} \textbf{Assembl1}}, 
+{\color{red} \textbf{Assembl2}} and {\color{red} \textbf{Assembl3}}, respectively,
+after activating the species. 
+The initial exchanger compositions are listed in Table \ref{ex_wallis_ex_conc}.
+Note, that the initial exchanger composition and the initial aqueous composition 
+provided in Table \ref{ex_wallis_ex_conc} are already in geochemical equilibrium.   
+That implies that in the absence of transport processes no reaction would proceed.      
+
+\item In the next step we need to define where the aqueous solutions 
+and the exchanger compositions will be employed. 
+
+\item First, {\color{red} \textbf{Backgr}} will be used to define a specified 
+concentration boundary condition at the outer fringe of the bentonite ring.
+This reflects the fact that the circulating water outside the bentonite rings 
+maintains a constant water composition. This is implemented by 
+defining the boundary type under {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}BTN} $\rightarrow$ {\color{blue}btn.12} and specify a boundary 
+type as -1 (= specified concentration boundary) along a vertical line near the outer fringe (x = 0.1425).
+Define a name for the boundary (such as bc\_circulation\_wq) in the dialogue.
+Secondly, we need to make sure that the {\color{red} \textbf{Backgr}} water composition
+is used at this boundary. To do this we normally need to define the initial water chemistry 
+at the same location (here a line) as the boundary condition type. 
+However, given that the {\color{red} \textbf{Backgr}} water composition is used 
+as the default water composition at all location where no other initial chemistry is defined,
+there is in this case no need to explicitly define the water composition for this boundary.   
+
+\item Finally, the different initial water and cation exchanger compositions are implemented
+through defining three different {\color{blue}Initial Chemistry} zones, with each 
+of the three zones corresponding to one of the 0.1m thick bentonite rings.  
+Define the 3 zones by going to 
+{\color{blue}Spatial Attributes} $\rightarrow$ 
+{\color{blue}PHT3D} $\rightarrow$ 
+{\color{blue}PH} $\rightarrow$ {\color{blue}ph.3} and define one after another 
+of the 3 {\color{blue}Initial Chemistry} zones (see Figure \ref{fig:bento_zones}). 
+For the uppermost zone (first bentonite ring) allocate a {\color{blue}Zone Value} of {\color{red} \textbf{1010}}, 
+allocate {\color{red} \textbf{2020}} for the central zone (second bentonite ring) and allocate 
+{\color{red} \textbf{3030}} for the zone in which the bottom bentonite ring is located.
+Setting the {\color{blue}Zone Value} to 3030 means that in this zone the chemistry is defined
+through the aqueous {\color{red} \textbf{Solution 3}}, {\color{red} \textbf{Mineral assemblage 0}},
+exchanger composition {\color{red} \textbf{Assembl 3}} and Surface {\color{red} \textbf{Site 0}}.
+No mineral or surface complexation reactions are considered in the reaction network,
+which is implemented by not activating any mineral phases or surface sites in the respective Tabs.  
+ 
+\item Now run PHT3D.
+
+\item Inspect the results by plotting concentration profiles of $NaX$ and $CaX2$ for 
+specific simulation times. 
+
+\item What would happen if you plotted the sum of $NaX$, $CaX2$, $KX$ and $MgX2$ ?
+
+\item Plot aqueous and exchanger species concentrations at selected distances from the heater element and interpret the breakthrough curves as wel as the differences between the 3 bentonites.   
+
+\end{itemize}	
+
+
+
+
+
+
+

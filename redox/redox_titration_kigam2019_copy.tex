@@ -1,0 +1,250 @@
+%\DeclareGraphicsExtensions{.png}
+\chapter{Redox Reactions}
+\def\shorttitle{Redox Reactions} 
+\section[Background]{Background}
+
+Understanding oxidation-reduction (redox) reactions that occur in natural 
+and contaminated systems is central to developing accurate conceptual and 
+quantitative models. Redox reactions involve the transfer of electrons 
+between constituents and therefore, changes in the oxidation state of 
+one or more elements. Changes in oxidation state of an element can 
+result in dramatic changes in its chemical and physical properties.  
+For example, iron in the plus three oxidation 
+state - Fe(III) - in surficial deposits renders 
+a reddish hew to Mars whereas iron in the plus II oxidation 
+state - Fe(II) - in surficial basalts on the Moon is, in no 
+small part, responsible for the blackness of the lunar mares. 
+Two important examples of redox reactions are the oxidation 
+of aqueous Fe(II) to Fe(III) or organic carbon by dissolved oxygen:
+
+\begin{equation}
+4Fe^{+2} + O_{2,aq} + 10H_2O \rightarrow 4Fe(OH)_{3,s} + 8H^+  \\
+\label{eq:fe2_oxidation}
+\end{equation}
+
+\begin{equation}
+CH_2O  + O_{2,aq} + 10H_2O \rightarrow CO_{2,aq} + H_2O \\
+\label{eq:om_reduction}
+\end{equation}
+
+Rather than representing formaldehyde, $CH_2O$ is often used to represent 
+one sixth of a glucose molecule.
+
+The classical approach to discussing redox reactions in aqueous geochemistry 
+is to split the redox reactions into two hypothetical 
+half reactions involving electrons. 
+Using this approach, reaction \ref{eq:fe2_oxidation} and \ref{eq:om_reduction} 
+would be broken up into the following half reactions:
+
+\begin{equation}
+Fe^{+2} + 3H_2O  \rightarrow Fe(OH)_{3,s} + 3H^+ + e^-  \\
+\label{eq:fe_half_reac}
+\end{equation}
+
+\begin{equation}
+CH_2O + H_2O \rightarrow CO_{2,aq} + 4H^+ + 4e^-  \\                    
+\label{eq:om_half_reac}
+\end{equation}
+
+\begin{equation}
+O_{2,aq} + 4H^+ + 4e^-  \rightarrow 2H_2O \\
+\label{eq:ox_half_reac}
+\end{equation}
+
+Mass action expressions are then written for the half reactions.
+For example, for the Fe(II)/Fe(III) half reaction, 
+the mass action expression is:
+
+\begin{equation}
+K = a_{Fe(OH)_{3,s}} a_{H^+}^3 a_{e^-}/a_{Fe}^{+2} a_{H_2O}^3 \\
+\label{eq:rdx5}
+\end{equation}
+
+The standard state of the $e^-$ is the same as other aqueous species,
+1 mole per kilogram water.  
+This approach comes from the field of electrochemistry, where the oxidation and 
+reduction half reactions can be made to occur in separate place
+connected, for example, 
+through a meter that measures the electromotive force (or power source) 
+and a salt bridge.
+In dilute solutions the activity of water can be equated with its mole fraction,
+which is essentially 1. If pure ferric hydroxide forms then it 
+can be assumed to be in 
+its standard state (mole fraction $Fe(OH)_{3,s}$
+equals 1), 
+so \ref{eq:rdx6} can be re-written:
+
+\begin{equation}
+K=a_{H^+}^3 a_{e^-}/a_{{Fe}^{+2}} \\    
+\label{eq:rdx7}
+\end{equation}
+                                                         
+Taking the base-10 logarithm, \ref{eq:rdx7} becomes: 
+\begin{equation}
+logK = 3loga_{H^+} + loga_{e^-} -loga_{{Fe}^{+2}}  \\                          
+\label{eq:rdx8}
+\end{equation}
+
+Analogous to the definition of $pH$,
+$loga_{e^-}$
+is defined as $pe$.
+This formalism is useful for graphically representing the 
+relative thermodynamic stability of redox-reactive species 
+in natural and contaminated systems 
+(typically in their standard state).
+
+Electrochemists have established logK values for 
+half reactions based on the 
+convention that the hydrogen gas -
+hydrogen ion half reaction
+\begin{equation}
+H_{2,g}  =  2H^+ + 2e^- \\   
+\label{eq:rdx9}
+\end{equation} 
+has an electromotive force and, therefore a logK 
+value of 0 for $H_{2,g}$ and $H^+$ in their 
+standard states (1 atmosphere and 1 mol/kgw, respectively).  
+Using this convention, logK values for half reactions can be assembled 
+in order of thermodynamic favorability, 
+called a redox ladder, such as Table \ref{tab:rdx1}.  
+Note that the logK values apply to all species in their standard state 
+(1 mol/kgw for aqueous species, pure solid phase activity 
+equals 1, and 1 atmosphere for gasses).  
+Also, the logK value for half reactions where solid phases are participants 
+depends on the thermodynamic stability of the solid phase.  
+For example, reduction of ferrihydrite (fhy) is more favorable than 
+reduction of goethite (based on the logK values for goethite that 
+applies to the Cape Cod aquifer, Kent et al., 2008) because goethite 
+is thermodynamically more stable than ferrihydrite.  
+Plots of $pH$ against $pe$ constructed using reactions and logK values like 
+those in Table \ref{tab:rdx1} are used to illustrate 
+trends expected in redox processes 
+with changes in pH. In the exercise that follows, we will explore these trends.
+
+\begin{table}[h]
+\topcaption{Half reactions and logK values for some redox-reactive species}
+\centering
+\footnotesize
+%\begin{tabular*}{0.4\textwidth}{@{\extracolsep{\fill}}lll}
+\begin{tabular}{cc}
+\toprule
+Half reactions, per electron																& logK \\ \hline
+0.25O2,aq + e- + H+ = 0.5H2O																& 21.52 \\
+0.2NO3- + e- + 1.2H+ = 0.1N2,aq + 0.6H2O										& 20.71 \\
+0.5MnO2:H2Os,pyrolucite + e- + 2H+ = 0.5Mn+2 + 1.5H2O				& 20.69 \\
+0.5HAsO4-2 + e- + 2H+   =  0.5As(OH)3,aq +  0.5H2O					& 19.80 \\
+FeOOH + e- + 3H+ = Fe+2 + 2H2O  fhy													& 17.91 \\
+FeOOH + e- + 3H+ = Fe+2 + 2H2O  Goethite (Kent et al. 2008)	& 13.52 \\
+0.125SO4-2 + e- + 1.125H+ = 0.125HS- + 0.5H2O								& 4.21 \\
+0.125CO3-2 + 1.25H+ + e- = 0.125CH4.aq + 0.375H2O						& 5.13 \\
+\bottomrule
+\label{tab:rdx1}
+\end{tabular}
+\end{table}	
+
+\section[PHREEQC Exercise 6]{PHREEQC Exercise 6}
+
+This series of exercises involves using PHREEQC to react 
+oxidized and reduced species. The oxidation reduction reactions 
+effect changes in pH and other chemical conditions.
+
+\begin{table}[h]
+\caption{Water compositions for the mixing exercise. Adjust Na to achieve charge balance for the oxic solution and 
+Cl to achieve charge balance for the anoxic solution.}
+\begin{center}
+\begin{tabular}{lccc} 
+\hline
+Parameter   & Oxic GW & Anoxic GW & Units \\ \hline
+pH          & 6.50 & 6.50 & -      \\
+pe          & 12   & 4    & -      \\
+Temperature & 21   & 21   & C      \\
+Alkalinity  & 710  & 710  & ueq/L  \\
+Na          & 780  & 580  & umol/L \\ 
+K           & 8.0  & 75   & umol/L \\
+Mg          & 18.0 & 53   & umol/L \\
+Ca          & 9.0  & 170  & umol/L \\ 
+Cl          & 82   & 550  & umol/L \\ 
+S(6)        & 24.0 & 100  & umol/L \\ 
+O(0)        & 500  & 0    & umol/L \\ 
+Fe(2)       & 0    & 179  & umol/L \\ \hline
+\end{tabular}
+\footnote{
+\label{redox_phc_table}
+\end{center}
+\end{table}
+
+
+\subsection[Mixing-induced redox reactions]{Mixing-induced redox reactions}
+
+\begin{itemize}
+\item Set up two solutions, one with $O_2$ and one with $Fe(II)$, using the compositions in Table \ref{redox_phc_table}. {\color{red} \textbf{MIX}} them in equal proportions.  (Keywords: {\color{red} \textbf{SOLUTION n}}, {\color{red} \textbf{SOLUTION m}}, {\color{red} \textbf{MIX o}}.).  
+The solutions begin with the same $pH$ and $alkalinity$. What about the $TCO_2$ concentration ? 
+$TCO_2$ is the sum of the concentrations of all carbonate-containing aqueous species. 
+	\begin{enumerate} 
+	\item What happens to the $pH$, $alkalinity$, and $TCO_2$ concentrations after mixing ?
+	\item What happens to the concentrations of $O_2$, $Fe(II)$, and $Fe(III)$ after mixing?  What are the dominant $Fe$ aqueous species?
+	\item What happens to the $PCO_2$ after mixing?
+	\end{enumerate} 
+\item Use the anoxic solution. Allow 10 umoles of $O_2(g)$ from the atmosphere ($PO_2$ = 0.2 atmospheres) to equilibrate with the solution. 
+(Keyword: {\color{red} \textbf{EQUILIBRIUM\_PHASES n}}.)
+  \begin{enumerate} 
+	\item What happens to the $pH$, $alkalinity$, and $TCO_2$ concentrations after mixing ?
+	\item What happens to the concentrations of $O_2$, $Fe(II)$, and $Fe(III)$ after mixing?  What are the dominant $Fe$ aqueous species?
+	\item What happens to the $PCO_2$ after mixing?
+  \end{enumerate}
+\item Repeat the previous exercise where first 100 $\mu$moles then 1000 $\mu$moles of $O_2$ from the atmosphere equilibrate with the anoxic solution, but allow ferrihydrite (Fe(OH)3(a)) or goethite (Goethite) to precipitate until it reaches equilibrium.
+	\begin{enumerate}  
+	\item What happens to the $pH$, $alkalinity$, and $TCO_2$ concentrations after mixing ?
+	\item What happens to the concentrations of $O_2$, $Fe(II)$, and $Fe(III)$ after mixing?  What are the dominant $Fe$ aqueous species ?
+	\item What happens to the $PCO_2$ after mixing ?
+	\item What happens when the solution is allowed to equilibrate with atmospheric $PCO_2$ ?
+	\end{enumerate} 
+\item Simulate reacting the oxic solution with 500 umoles of amorphous $FeS$ ($FeS(ppt)$) (~44 mg) allowing $Fe(OH)3(a)$ to precipitate. 
+	\begin{enumerate}  
+	\item What got oxidized ? What did not get oxidized? What was the $pH$ ?
+	\item Repeat the simulation, this time allowing the suspension to equilibrate with atmospheric $O_2$. What was the $pH$ ? What got oxidized ?
+	\end{enumerate}  
+\end{itemize} 
+
+\subsection[Redox titration]{Redox titration}
+
+The next PHREEQC exercise compares the standard sequence of oxidation-reduction reactions 
+predicted using the redox ladder to the sequence in which oxidants (electron acceptors) 
+actually get reduced by organic carbon based on thermodynamic considerations.   
+The exercise uses the keyword {\color{red} \textbf{REACTION n}} to add $CH_2O$, 
+which represents one sixth of a glucose molecule, to a suspension with aqueous and solid-phase oxidants.  
+As $CH_2O$ is added it reacts with the oxidants that are most thermodynamically favorable. T
+hermodynamic favorability depends on concentrations and solid-phase solubilities 
+(which depend on $pH$ for some important oxidants).  
+Thus the order in which the oxidants react with $CH_2O$ may change during the course 
+of the redox titration as the chemical conditions change.  
+
+\textbf{Note, that you will need to use either the {\color{red} \textbf{Wateq4f.dat}} 
+or {\color{red} \textbf{Minteq.v4.dat}} database, 
+because the Phreeqc.dat database does not include arsenic.}
+
+
+\begin{itemize}
+\item Create a PHREEQC input file and set up the initial solution and solid-phase compositions 
+in the suspension using the data in Table 6.3.  
+Assume the suspension has one kilogram of water.  
+(Keywords: {\color{red} \textbf{SOLUTION n}}, {\color{red} \textbf{EQUILIBRIUM_PHASES n}}).  
+Adjust the chloride concentration to insure charge balance of the solution. 
+Two solid phases with reduced species may precipitate if they become supersaturated: 
+amorphous FeS (FeS(ppt) in Phreeqc) and siderite.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

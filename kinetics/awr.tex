@@ -1,0 +1,256 @@
+\section{Modelling bioremediation processes}
+In order to be able to design active bioremediation systems and to understand passive bioremediation (natural attenuation), mechanistic descriptions that quantify microbial activity are needed. Since both the rate of microbial growth and the rate of contaminant utilization are highly dependent on the amount of biomass available to catalyze the reactions, such models must have the capability to predict both transient and spatial variations in biomass. To model the production of biomass and the related consumption and production of other chemicals, the key steps are (1) to formulate the rate expressions for the reaction kinetics and (2) to determine the stoichiometry of the biodegradation reactions and, in order to describe the temporal variations.
+
+In the macroscopic mathematical descriptions of microbial growth dynamics aimed at governing laboratory or field scale processes, many of the complex interdependencies that are known at the microscopic scale are commonly neglected and described by empirical formulations based on the classical works of \cite{michmen} and \cite{monod}. The expression describing a specific bacterial growth rate, $v_{sp}$, observed in many batch experiments is:
+\begin{equation}
+v_{sp} = v_{max} \frac{C_{org}}{K_{org} + C_{org}}
+\label{eq:v_sp}
+\end{equation}
+where $C_{org}$ is the concentration of the organic substrate, $v_{max}$ is an assymptotic maximum specific uptake rate and $K_{org}$ is the half-saturation constant, which is the substrate concentration at which the actual uptake rate equals $v_{max} / 2$. Based on equation \ref{eq:v_sp}, the total uptake rate $v_m$ considers the dependency of the change of microbial mass on the actual microbial concentration $X$ itself:
+\begin{equation}
+v_{m} = v_{max} \frac{C_{org}}{K_{org} + C_{org}} X
+\label{eq:v_m}
+\end{equation}
+
+An additional (potential) growth limitation by electron acceptor availability might be incorporated into \ref{eq:v_m}, leading to:
+\begin{equation}
+v_{m} = v_{max} \frac{C_{org}}{K_{org} + C_{org}} \frac{C_{ea}}{K_{ea} + C_{ea}} X
+\label{eq:v_m_ea}
+\end{equation}
+where $C_{ea}$ is the electron acceptor concentration and $K_{ea}$ is the appropriate half-saturation constant.
+
+The complete mass balance equation for the microbial mass, $X$, describing the change of microbial concentration as a function of time, includes both a microbial growth and decay term:
+\begin{equation}
+\frac{\partial X}{\partial t} = \frac{\partial X_{growth}}{\partial t} + \frac{\partial X_{decay}}{\partial t}
+\end{equation}
+with
+\begin{equation}
+\frac{\partial X_{growth}}{\partial t} = Y_x v_{max} \frac{C_{org}}{K_{org} + C_{org}} \frac{C_{ea}}{K_{ea} + C_{ea}} X = Y_x v_m
+\label{eq:X_growth}
+\end{equation}
+in which $Y_x$ is a stoichiometric factor and
+\begin{equation}
+\frac{\partial X_{decay}}{\partial t} = -v_{dec} X
+\label{eq:X_decay}
+\end{equation}
+where $v_{dec}$ is a decay rate constant.
+
+During growth ($v_m > 0$), both organic substrate and electron acceptors are consumed at rates that are proportional to $v_m$, which will be illustrated in the following example of toluene degradation under sulfate-reducing conditions.
+
+\subsection{PHREEQC Example: Kinetic toluene degradation}
+The stoichiometry of the reactions that describe the microbial degradation of organic compounds depends on the efficiency of the microorganisms to divert electrons (gained in the oxidation step) to either biomass generation or towards electron acceptors. Assuming that 10\% of the carbon is incorporated into biomass, the oxidation of toluene under sulfate-reducing conditions can be described by the following overall reaction:
+
+\begin{eqnarray}
+C_7H_8 + 0.14NH_4^+ + 4.15 SO_4^{-2} + 2.58H_2O + 1.86H^+ \rightarrow  \nonumber \\
+ \ \  \  \  \  6.30HCO_3^- + 0.14 C_5H_7O_2N + 4.15 H_2S
+\label{eq:tol_sulf}
+\end{eqnarray}
+
+Equation \ref{eq:tol_sulf} shows that the complete mineralization of 1 mol of toluene consumes 4.15 mol of sulfate (during growth) and yields 0.14 mol of sulfate-reducing bacteria (represented by the genralized chemical formula for biomass: $C_5H_7O_2N$). Therefore:
+
+\begin{equation}
+\frac{\partial X_{growth}}{\partial t} = 0.14 v_m
+\end{equation}
+
+and
+
+\begin{equation}
+\frac{\partial C_{sulf}}{\partial t} = -4.15 v_m
+\end{equation}
+
+These equations can be implemented in PHREEQC to compute the temporal development of toluene, sulfate and the microbial mass in a batch experiment. Tables \ref{tab:tol_sulf_conc} and \ref{tab:tol_sulf_const} list the initial conditions and rate constants for the simulation.
+
+\begin{table}[hb]
+\topcaption{Initial concentration for simulation of a batch experiment of toluene degradation under sulfate-reducing conditions.}
+
+\centering
+\footnotesize
+\begin{tabular*}{0.5\textwidth}{@{\extracolsep{\fill}}ll}
+\toprule
+Component & Concentration \\
+          & mol/l \\
+\midrule
+Toluene  & $1.0 \cdot 10^{-4}$ \\
+N & $1.0 \cdot 10^{-4}$ \\
+S(6) &  $4.5 \cdot 10^{-4}$ \\
+Sulfred$^1$ &  $1.0 \cdot 10^{-8}$ \\
+
+\bottomrule
+\raggedright $^1$ Sulfred: sulfate reducing bacteria
+\end{tabular*}
+\label{tab:tol_sulf_conc}
+\end{table}
+
+\begin{table}[b]
+\topcaption{Rate constants for simulation of a batch experiment of toluene degradation under sulfate-reducing conditions.}
+
+\centering
+\footnotesize
+\begin{tabular*}{0.5\textwidth}{@{\extracolsep{\fill}}ll}
+\toprule
+Component & Constant \\
+\midrule
+$K_{sulf}$ (mol/l)    & $1.0 \cdot 10^{-5}$ \\
+$K_{toluene}$ (mol/l) & $1.0 \cdot 10^{-5}$ \\
+$v_{max}$ (1/day)       & 5.0                 \\
+$v_{dec}$ (1/day)       & 0.1                 \\
+
+\bottomrule
+\end{tabular*}
+\label{tab:tol_sulf_const}
+\end{table}
+
+The input file {\color{red}toluene\_degradation.phrq} is available and can be opened
+in PHREEQC for Windows. Two new aqueous species are defined in the input file that represent toluene (species name: Toluene) and $X$ (species name: Sulfred, since X is already reserved for exchange species). 
+
+The rate expressions for toluene degradation and biomass decay are defined under the keyword \textbf{RATES}. They are programmed in BASIC, which can be interpreted by PHREEQC so that any type of user-defined rate expression can be modelled.
+
+\begin{quote}
+{\color{red}
+	RATES \\
+	Toluene\_sulf \\
+    -start \\
+    1   k\_Tolu    = 1e-05 \\
+    2   k\_Sulf    = 1e-05 \\
+    4   v\_up\_max  = 5.0/86400 \\
+    10  mTolu     = TOT("Toluene") \\
+    22  mSulf     = TOT("S(6)") \\
+    30  mSulfred  = TOT("Sulfred") \\
+    32  IF (mTolu $<$ 1e-08) THEN GOTO 200 \\
+    34  IF (mSulf $<$ 1e-09) THEN GOTO 200 \\
+    40  mon\_Tolu  = mTolu / (k\_Tolu + mTolu) \\
+    50  mon\_Sulf  = mSulf / (k\_Sulf + mSulf) \\
+    80  growth    = v\_up\_max*mon\_Tolu*mon\_Sulf*mSulfred \\
+    100 rate      = growth \\
+    110 moles     = rate * TIME \\
+    200 SAVE moles \\
+    -end \\ 
+}
+ \\
+{\color{red}
+Sulfred \\
+    -start \\
+   10 v\_decay   = 0.1/86400 \\
+   15 c\_min     = 1e-08 \\
+   20 mSulfred  = TOT("Sulfred") \\
+   30 IF (mSulfred - c\_min  $>$ 0) THEN inhibit\_fac\_decay = (mSulfred - c\_init)/mSulfred \\
+   35 IF (mSulfred - c\_min  = 0) THEN inhibit\_fac\_decay = 0 \\
+   40 IF (mSulfred - c\_min  $<$ 0) THEN inhibit\_fac\_decay = 0 \\
+  190 rate      = v\_decay*mSulfred*inhibit\_fac\_decay \\
+  200 moles     = rate * TIME \\
+  220 SAVE moles \\
+ -end \\
+}
+\end{quote}
+
+Try to understand the syntax here. In lines 1, 2 and 4 of the toluene degradation rate block, the constants from table \ref{tab:tol_sulf_const} are specified. Then, the total concentrations of the aqueous components Toluene, S(6) (sulfate) and sulfate reducing bacteria are read from PHREEQC's internal memory (lines 10, 22 and 30). Then in lines 32 and 34, a check is carried out to make sure that the concentrations of toluene and sulfate are sufficiently high. Otherwise, the rest of the code is skipped, which means that the rate becomes zero. Lines 40, 50 and 80 implement the actual rate expression according to equation \ref{eq:X_growth}. The number of moles that react are calculated by multiplying the rate times the duration of the time step (the TIME parameter) in line 110 and passed back to PHREEQC in line 200 with the SAVE statement.
+
+The rate expression for the decay of the sulfate reducing bacteria is constructed in a similar way under the identifier Sulfred. Note that an extension of equation \ref{eq:X_decay} is used in line 30 to limit the decay rate by multiplying with $(X - X_{init})/X$, where $X_{init}$ is the initial concentration of sulfate reducing bacteria.
+
+The \textbf{KINETICS} keyword actually incorporated the rate expressions into the PHREEQC simulation. The names of the rate expressions are listed (Toluene\_sulf and Sulfred) and the identifier -steps takes care of the temporal discretization. The -formula identifiers control the stoichiometric proportions of aqueous species which are released or consumed per mole kinetic reactant. In this example, for case a, 0.14 moles of sulfate reducing bacteria are produced for each mole of toluene reacted, which removes 0.14 moles of $\text{C}_5\text{H}_7\text{O}_2\text{N}$ from the solution. A negative stoichiometric coefficient indicates that a species is removed from the solution for each mole of kinetic reactant formed, which is why the stoichiometric coefficient for toluene is -1.
+
+The keyword \textbf{USER\_GRAPH} control the graphical output of this simulation. If you go to the Chart tab in PHREEQC for Windows and start the calculations you can even see the chart being filled with data points during the calculation. The BASIC statements GRAPH\_X, GRAPH\_Y and GRAPH\_SY allocate numbers to the x-, y- and secondary y-axes respectively. The identifiers are basically self-explanatory.
+
+Notice that two cases are considered in this example: case a and case b. Case b differs from case a in that the effects of the different valence state of bacteria (compared to the end-product $\co$) and the related geochemical changes are not considered. All sulfate is consumed during bacterial growth but none during bacterial decay.
+
+Run the model for case a first and look a the chart. Notable is the lag-period of several days before the degradation affects the aqueous concentrations of toluene and sulfate. Its length depends largely on the initial bacterial concentration and on $v_{max}$, the maximum uptake rate (values given in tables \ref{tab:tol_sulf_const}). The removal of the initial toluene mass (0.1 mmol) is reached after 14 days, at a time when approximately 0.415 mmol of sulfate are depleted. The microbial (net) growth then stops immediately ($v_m = 0$) and the microbial mass is subsequently changing at the rate given by equation \ref{eq:X_decay}, thereby consuming the remaining 0.35 mmol of sulfate.
+
+You can switch to case b by switching the \#-signs in front of the -formula identifier under \textbf{KINETICS}. Now all sulfate is consumed during bacterial growth but none during bacterial decay. Run the simulation and observe the resulting chart.
+
+\subsection{PHREEQC Exercise 5: Kinetic BTEX degradation}
+Of course, the formulations for microbial growth above apply only to the uptake of a single substrate, whereas contamination often involves numerous (organic) compounds. The (possibly simultaneous) uptake of these substrates can be incorporated into the modeling approach described above. The model of \cite{kincel89} states that the growth of the degrading microbial community is simply the sum of the growth rates arising from degradation of individual organic contaminants:
+\begin{equation}
+\frac{\partial X}{\partial t} = \left[ \left(\sum_{n=1}^{n_{org}} \frac{\partial X_{n}}{\partial t}\right) - v_{dec} \right] X
+\end{equation}
+where, in analogy to equation \ref{eq:X_growth}, each of the growth terms $\frac{\partial X_{n}}{\partial t}$ can be derived from:
+\begin{equation}
+\frac{\partial X_{n}}{\partial t} = Y_x v_{max}^n \frac{C_{org,n}}{K_{org,n} + C_{org,n}} \frac{C_{ea}}{K_{ea} + C_{ea}}
+\label{eq:X_growthn}
+\end{equation}
+
+The uptake rates $v_{max}^n$ can differ between different substrates. In this way, it is possible to model varying degradation rates of different electron donors. This can be necessary when, for example, benzene degrades more slowly in a BTEX (benzene, toluene, ethylbenzene, xylenes) plume than the other compounds. In this exercise, you will model a case of a simultaneous uptake of BTEX constituents by one microbial group. Different initial amounts of organic compounds are present (Table \ref{tab:btex_conc}) and the initial sulfate mass is increased compared to the first example.
+
+\begin{table}[hb]
+\topcaption{Initial concentration for simulation of a batch experiment of BTEX degradation.}
+
+\centering
+\footnotesize
+\begin{tabular*}{0.5\textwidth}{@{\extracolsep{\fill}}ll}
+\toprule
+Component & Concentration \\
+          & mol/l \\
+\midrule
+Benzene  & $4.0 \cdot 10^{-4}$ \\
+Toluene  & $3.0 \cdot 10^{-4}$ \\
+Ethylbenzene  & $1.0 \cdot 10^{-4}$ \\
+Xylene  & $2.5 \cdot 10^{-4}$ \\
+N & $1.0 \cdot 10^{-4}$ \\
+S(6) &  $5.0 \cdot 10^{-4}$ \\
+Sulfred$^1$ &  $1.0 \cdot 10^{-8}$ \\
+
+\bottomrule
+\raggedright $^1$ Sulfred: sulfate reducing bacteria
+\end{tabular*}
+\label{tab:btex_conc}
+\end{table}
+
+\begin{table}[hb]
+\topcaption{Rate constants for simulation of a batch experiment of BTEX degradation.}
+
+\centering
+\footnotesize
+\begin{tabular*}{0.5\textwidth}{@{\extracolsep{\fill}}ll}
+\toprule
+Component & Constant \\
+\midrule
+$K_{sulf}$ (mol/l)    & $1.0 \cdot 10^{-5}$ \\
+$K_{benzene}$ (mol/l) & $1.0 \cdot 10^{-5}$ \\
+$K_{toluene}$ (mol/l) & $1.0 \cdot 10^{-5}$ \\
+$K_{ethylbenzene}$ (mol/l) & $1.0 \cdot 10^{-5}$ \\
+$K_{xylene}$ (mol/l) & $1.0 \cdot 10^{-5}$ \\
+$v_{max,sulf,benzene}$ (1/day)       & 0.1   \\
+$v_{max,sulf,toluene}$ (1/day)       & 5.0   \\
+$v_{max,sulf,ethylbenzene}$ (1/day)  & 0.5   \\
+$v_{max,sulf,xylene}$ (1/day)  			 & 1.0   \\
+$v_{dec}$ (1/d)       & 0.1                 \\
+
+\bottomrule
+\end{tabular*}
+\label{tab:btex_const}
+\end{table}
+
+The corresponding reaction equations are, for benzene:
+
+\begin{eqnarray}
+C_6H_6 + 0.12NH_4^+ + 3.45 SO_4^{-2} + 2.64H_2O + 1.38H^+ \rightarrow \nonumber \\
+ \ \  \  \  \ 5.4HCO_3^- + 0.12 C_5H_7O_2N + 3.45 H_2S
+\end{eqnarray}
+and for ethylbenzene and xylene(s):
+\begin{eqnarray}
+C_8H_10 + 0.16NH_4^+ + 4.85 SO_4^{-2} + 2.52H_2O + 2.34H^+ \rightarrow \nonumber \\
+ \ \  \  \  \ 7.2HCO_3^- + 0.16 C_5H_7O_2N + 4.85 H_2S
+\end{eqnarray}
+
+The PHREEQC input file for this exercise is already prepared and available as {\color{red} btex\_degradation.phrq}. However, you still need to insert some numbers to make it work. Fill in the parameters from table \ref{tab:btex_const} at the appropriate locations (these are marked with \#-signs).
+
+Run the file and inspect the change of BTEX with time on the Chart tab. Write down the order in which the 4 different compounds degrade:
+
+\begin{enumerate}
+
+\item 
+
+\item
+
+\item
+
+\item
+
+\end{enumerate}
+
+The \textbf{USER\_GRAPH} keyword block is set up in such a way that the concentrations of the individual BTEX compounds are plotted in the chart. Modify it to have the concentrations of the biomass and nitrogen displayed instead.
+
+\begin{itemize}
+
+\item Explain the temporal concentration patterns of the biomass and nitrogen.
+
+\end{itemize}

@@ -1,0 +1,388 @@
+\chapter{Single-Species Transport}
+\def\shorttitle{Single-Species Transport} %
+
+\section{MT3DMS Exercise 1, Part 1: Single-Species 2-D Transport Simulation}
+The main purpose of this first exercise is to learn the use of MODFLOW and MT3DMS 
+for the analysis of a 2-D contaminant transport problem under both 
+natural-gradient and under manipulated hydraulic conditions. 
+The effect of different transport solution techniques on 
+plume migration will be illustrated.
+
+\subsection{Background: Groundwater Flow}
+A simple synthetic aquifer system is considered.
+A sketch of the problem is shown in Figure \ref{fig:single_spec_fig1}. 
+The aquifer is unconfined and drained by a river. We consider that the flow is mainly perpendicular
+to the river. In the numerical model a fixed head boundary can be assumed 
+for the western boundary of the domain. The southern and northern boundaries 
+can for simplicity be considered as no-flow boundaries assuming that the flow is mainly 
+oriented from the West towards the East. 
+The model domain has an extension of 250 m in East-West direction and 120 m in North-South direction.
+A hydraulic head of 11 m represents the situation at the western boundary. 
+A fixed hydraulic head of 10.0 m represents the river water level, assuming that 
+the aquifer and the river have a good hydraulic connection. 
+A uniform background horizontal hydraulic conductivity of 10 m/d is assumed. 
+A zone with a a slightly higher hydraulic conductivity prevails in a zone of old 
+river channel deposits. A drinking water extraction 
+well is located in the South-East corner of the model domain.
+
+
+\subsection{Background: Solute Transport}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=1.0\textwidth, angle = 0]{mt3dms_ex1_map}
+%\includegraphics[height=0.3]{mt3dms_ex1_map.eps}
+%\includegraphics{mt3dms_ex1_map.eps}
+\caption[Schematic illustration of the contaminated site]{Schematic illustration of the contaminated site}
+\label{fig:single_spec_fig1}
+\end{figure}
+
+The contaminant source is represented by a small region in the North-West of the domain. 
+The concentration in the source zone is 10 mg/L throughout the whole zone,
+as indicated in Figure \ref{fig:single_spec_fig1}. 
+Clean water enters the upstream boundary, eventually draining to the river 
+under natural flow conditions. The boundary conditions along the northern 
+and southern model boundaries are implicitly defined as zero mass flux conditions. 
+All relevant physical transport parameters are listed in Table \ref{single_spec_table_1}.
+They are assumed to be uniform throughout the whole model.
+In the exercise we will use the model to determine the maximum allowable 
+pumping rate in the extraction well such that the contaminant 
+concentrations in that well will remain below 10 \micro g/L.
+We will test various model scenarios and assess the affect of the model discretisation
+on the model results and of the selection of the solution technique for advectice transport.
+
+\begin{table}[hb]
+\caption{Flow and solute transport parameters used for MT3DMS Exercise 1.}
+\begin{center}
+\begin{tabular}{lc} 
+\toprule
+Parameter                                            &         Value \\
+\midrule
+Flow simulation type                                 &        steady state \\
+Simulation time (days)                               &  > 800 (until stable) \\
+Model \  extent\ column\ direction\ $ (m)$           &  250            \\
+Model \  extent\ row\ direction\ $ (m)  $            &  120            \\
+Model \  thickness\ $(m)$                            &   15            \\
+Model \ top\ elevation\ $(m)$                        &   15            \\
+Horizontal hydraulic conductivity (background)\ $(m/day)$         &   10     \\
+Horizontal hydraulic conductivity (old channel)\ $(m/day)$         &   25     \\  
+Porosity $\theta$                                   &           0.3  \\
+Piezometric head upstream boundary\ $(m) $           &  11        \\ 
+Piezometric head downstream boundary\ $(m) $         &  10            \\ 
+Longitudinal dispersivity $\alpha_L$                &           1.0 m \\
+Horizontal transverse dispersivity $\alpha_{TH}$    &           0.1 m \\
+Effective diffusion coefficient D$^{\star}$          &             0  \\
+\bottomrule
+
+\end{tabular}
+\label{single_spec_table_1}
+\end{center}
+\end{table}
+
+\subsection{Setting up the flow model}
+
+To set up the flow model proceed as follows:
+
+\begin{itemize}
+
+\item In ORTI, create a new model and save it in a new and separate directory (folder).
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}1.Model} 
+$\rightarrow$ {\color{blue}Model} to specify the model dimension {\color{blue}('2D')} and type {\color{blue}('Free')}
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}1.Model} 
+$\rightarrow$ {\color{blue}Grid} to specify
+the model grid as described in Table \ref{single_spec_table_1}. For the first simulations 
+select a spacing of 5 m in x direction and 2.5 m in y direction
+
+\item Set the Top of the aquifer in {\color{blue}Spatial Variables} $\rightarrow$ {\color{blue}MODFLOW} 
+$\rightarrow$ {\color{blue}dis.6}, and set input for {\color{blue}one\_value} to 15 m. 
+Do not forget to click on the {\color{blue}OK} button. 
+The bottom is already set to the default value of 0 and does not need to be modified.
+
+\item In order to correctly position the spatial objects involved in this model, 
+import a simple map by going to {\color{blue}Parameters} $\rightarrow$ 
+{\color{blue}1.Model} 
+$\rightarrow$ 
+{\color{blue}Map.} 
+and select the file 
+{\color{blue}mt3dms\_ex1.png}.
+Note, that only png files can be imported as background maps.
+The map must have the same size as the domain and will be positioned directly with 
+its corner at the model boundaries. The map can either be active or hidden under
+the {\color{blue}Results Panel} $\rightarrow$ {\color{blue}1.Model} $\rightarrow$ {\color{blue}Map}.
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}Time} $\rightarrow$ 
+and set the  {\color{blue} Total Simulation Time} to 800 days. 
+Then define the {\color{blue}Step Size} to 25 days. Leave the {\color{blue}Step Mode} as Linear. 
+
+\item Set the boundary conditions for heads by 
+selecting {\color{blue}Spatial Variables} $\rightarrow$ {\color{blue}Modflow} $\rightarrow$ 
+{\color{blue}BAS6} $\rightarrow$ {\color{blue}bas.3 Boundary Conditions} by using a (background)
+IBOUND (Modflow) value of 1 to define active model grid cells. 
+Use the {\color{blue}Zone Tool} in the {\color{blue}Add Zone} panel to add zones 
+of fixed head BC. For this purpose select the line tool, go into the domain and click
+the first point around coordinates (0.5, 119) and the second at (0.5, 0.5). 
+This will draw a line at the inflow boundary of the domain.
+When the second point is selected (clicked), a dialog appears that allows to set the 
+value of the zone. Set the value to -1 (fixed head BC). 
+Leave the value for {\color{blue}Media} at the default value of 1 (active grid cell).
+
+\item In the same dialog, create another line to represent the fixed head boundary for the river. 
+For this purpose select the {\color{blue}Polygon Tool} 
+and simply click along the river. 
+To end the drawing of the zone right-click on the last point. 
+The value to be entered is again -1.
+
+\item To allocate the correct head values at the fixed head boundaries, 
+use {\color{blue}Spatial Variables} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ 
+{\color{blue}BAS6}
+$\rightarrow$ {\color{blue}bas.5 Initial Heads}. 
+Define a value of 10 in the dialog box.
+This value will be used throughout the domain as a starting head for the computations.
+Note, that this value will not change during the iterations at all location in the model grid for which 
+the boundary was previously defined to be a fixed head boundary condition (i.e., the value was set to -1).
+In order to specify the fixed head values, draw a line at the same place as the inflow BC 
+and attribute a value of 11 m. As long as the model grid is relatively 
+coarse it is not necessary to put the boundary condition (BC) definition
+and the heads definition at exactly the same place. 
+However if a more refined grid is used, this will be necessary. 
+In this case it is possible to select one {\color{blue}Zone}, open the {\color{blue}Zone} dialog, 
+and the copy the coordinates and reuse/paste them into new {\color{blue}Zone} 
+anywhere in the model.
+
+\item To define the horizontal hydraulic conductivity value 
+select {\color{blue}Spatial Variables} 
+$\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}LPF} $\rightarrow$ 
+{\color{blue}lpf.8 Horizontal Hydraulic Conductivity} and set the value to 10 m/d.
+
+\item To define the horizontal hydraulic conductivity value in the old river channel zone
+select {\color{blue}Spatial Variables} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ 
+{\color{blue}LPF} $\rightarrow$ {\color{blue}lpf.8 Horizontal Hydraulic Conductivity} 
+and use the {\color{blue}Polygon Tool} to define the outline of the zone of higher 
+hydraulic conductivity and set the value to 25 m/d.
+ 
+
+\item To define a (uniform) porosity value, select {\color{blue}Spatial Variables} 
+$\rightarrow$ {\color{blue}MT3DMS} $\rightarrow$ {\color{blue}btn.11} 
+and set the value to 0.3. 
+
+\item For the inital model runs do not (yet) specify the well.
+
+\item Save the model such that your recent changes will not be lost.
+
+\end{itemize}
+
+
+
+\subsection{Running the flow model}
+
+You have now completed to set up the flow model and you are ready to run MODFLOW.
+This step will provide MT3DMS with the flow field that is used to compute 
+advective-dispersive transport.
+
+\begin{itemize}
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}2.Flow} $\rightarrow$ and press 
+the {\color{blue}Write Button}.
+
+\item Select {\color{blue}Parameters} $\rightarrow$ {\color{blue}2.Flow} $\rightarrow$ and press
+the {\color{blue}Run Button}.
+
+\item When the calculation has finished, a window appears, which shows the last lines of the 
+main MODFLOW output file. Verify that the last line shows the total simulation time (here 800 days).  
+If this is not the case then there was an error in the run and the model input needs to be reassessed and debugged.
+
+
+\end{itemize}
+
+\subsection{Visualising hydraulic heads}
+
+\begin{itemize}
+
+\item Visualise your flow simulation results by selecting 
+{\color{blue}Results} $\rightarrow$ {\color{blue}2.Flow} $\rightarrow$ {\color{blue}Head}. 
+The {\color{blue}Time Step} that is to be visualised can be changed in {\color{blue}Results} 
+$\rightarrow$ {\color{blue}1.Model} $\rightarrow$ {\color{blue}Time}.
+
+\end{itemize}
+
+The contours should show a steady-state head distribution similar to that 
+shown in Figure \ref{fig:single_spec_ex1_heads}.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=1.0\textwidth, angle = 0]{mt3dms_ex1_heads.eps}
+
+\caption[Hydraulic head distribution under natural-gradient conditions.]{Hydraulic head distribution under natural-gradient conditions.}
+\label{fig:single_spec_ex1_heads}
+\end{figure}
+
+
+\subsection{Setting up the transport model}
+
+\begin{itemize}
+
+\item Set the boundary conditions for concentrations by selecting 
+{\color{blue}Spatial Variables} $\rightarrow$ {\color{blue}MT3DMS} 
+$\rightarrow$ {\color{blue}btn.12 Boundary Conditions} (this is the ICBUND value). 
+The value must be equal to 1 (= active cell) throughout the domain. In addition 
+a {\color{blue}Zone} must be created (a polygon) to approximately replicate 
+the source and the value for this {\color{blue}Zone} must be set to -1 
+to specify a constant concentration boundary condition.
+
+\item Define the initial concentrations by selecting 
+{\color{blue}Spatial Variables} $\rightarrow$ {\color{blue}MT3DMS} 
+$\rightarrow$ {\color{blue}btn.13 Concentrations}. 
+Use the same coordinates as defined previously to allocate 
+an initial concentration of 10 mg/L to this {\color{blue}Zone}.
+
+\item Define the advection package by selecting 
+{\color{blue}Parameters} $\rightarrow$ {\color{blue}3.Transport} $\rightarrow$ 
+{\color{blue}Parameters}. In the dialog box choose {\color{blue}ADV} and  
+{\color{blue}adv.1} then {\color{blue}MIXELM: Method}. 
+Select {\color{blue}TVD} for the initial transport model runs.
+
+\item Define the dispersivity to be used by selecting (in the same dialog), 
+the {\color{blue}DSP} $\rightarrow$ {\color{blue}dsp.2} option and 
+enter a value of 1 for the longitudinal 
+dispersivity. Enter also 0.1 for TRPT under {\color{blue}DSP} $\rightarrow$ {\color{blue}dsp.3}. 
+
+\item Run the transport model by selecting 
+{\color{blue}Parameters} $\rightarrow$ 
+{\color{blue}3.Transport} $\rightarrow$ and pressing the {\color{blue}Write Button}. 
+This will write all required {\color{blue}MT3DMS} 
+input files. Then press the {\color{blue}Run Button} to start the transport simulation.
+
+\item A MsDos window will appear and you will see rapidly streaming numbers 
+until the simulation is finished. After the end of the simulation
+you should see the message $END$ $OF$ $MODEL$ $OUTPUT$. 
+
+\end{itemize}
+
+\subsection{Breakthrough curves and contour plots}
+
+To visualise the breakthrough curve for the contaminant at a specific
+location proceed as follows:
+
+\begin{itemize}
+
+\item Visualize the concentration contours under
+{\color{blue}Results} $\rightarrow$ {\color{blue}3.Transport} $\rightarrow$ {\color{blue}Tracer}. 
+You can change the {\color{blue}Time Step} to visualise the results for other simulation times. 
+Also, after selecting a time it is possible to use the mouse wheel to changes times.
+
+\item Define an observation well by going to 
+{\color{blue}Spatial Variables} $\rightarrow$ {\color{blue}OBSERVATION} 
+$\rightarrow$ {\color{blue}obs.1 Observations } and 
+use the {\color{blue}Zone Tool} to draw a point at the desired location.
+
+\item Visualise the breakthrough curve by selecting 
+{\color{blue}Results} $\rightarrow$ {\color{blue}5.Observation} $\rightarrow$ {\color{blue}Breakthrough}, 
+then select the name of the {\color{blue}Observation} point you just created. 
+A dialog will appear. Select {\color{blue}Value} and the breakthrough curve for this 
+location will appear. The data used for the curve can be exported and used in a spreadsheet
+or other postprocessing tools.
+
+\end{itemize}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.7\textwidth, angle = 0]{mt3dms_ex1_btc.eps}
+\caption[Concentration breakthrough curve]{Concentration breakthrough curve}
+\label{fig:single_spec_ex1_btc}
+\end{figure}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=1.0\textwidth, angle = 0]{mt3dms_ex1_plume}
+%\includegraphics[height=0.9\textwidth, angle = 270]{mt3dms_ex1_2dcont.eps}
+\caption[Concentration contours after a 800 day simulation time under 
+pumping conditions]{Concentration contours after a 800 day simulation time under 
+pumping conditions under pumping conditions}
+\label{fig:mt3dms_ex1_2dcont}
+\end{figure}
+
+\subsection{Impact pumping well on contaminant plume behaviour}
+
+\begin{itemize}
+
+\item At the location of the well (indicated in the map), 
+add a well in the model by going to 
+{\color{blue}Spatial Variables} $\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ 
+{\color{blue}wel.1} and create a (point) {\color{blue}Zone}. 
+Select a first estimate for the discharge rate of the well. 
+Note that negative rates are used for extraction (discharge)
+and positive values are used for recharge rate. 
+The unit used in this excercise is $m^3/d$.
+
+\item Rewrite the {\color{blue}MODFLOW} input files (to do so press the {\color{blue}Write Button}
+and then rerun the flow model.
+
+\item Also rewrite the {\color{blue}MT3DMS} input files and rerun the transport model.
+
+\item To visualise the simulated concentrations at the well an observation point must be
+set at the location of the extraction well.
+
+\item Run the model multiple times to determine the maximum pumping rate for which 
+the contaminant concentration remains under 10$\micro$g/L.  
+
+\end{itemize}
+
+\subsection{Effect of Solution Techniques}
+
+Now let us first examine the effect of the employed transport solution technique 
+on the accuracy of simulation results.
+
+\begin{itemize}
+ 
+\item Export the breakthrough curve obtained at the observation point as obtained when using
+the TVD advection option to an ASCII file. 
+
+\item Then change the advection solution option to Upstream Finite-Difference, rerun the model 
+and also to MOC, respectively. Export the calculated concentrations to new ASCII files. 
+Note that dispersion and sink/source terms are always solved using the standard 
+Finite-Difference method and the GCG implicit matrix solver.
+Use Excel or other tools to graph the three breakthrough curves.
+
+\end{itemize} 
+
+The TVD and MOC solutions are nearly identical, as both solutions are only 
+minimally affected by numerical dispersion. The Upstream Finite-Difference solution, 
+on the other hand, shows a significant amount of numerical dispersion.
+In addition, check the mass balance errors for each solution. TVD and FD should have
+close to zero mass balance errors, while MOC has a large mass balance error at the
+beginning. However it should diminish quickly, which is typical for 
+particle-tracking based solution techniques.
+
+\subsection{Varying the grid resolution}
+
+With iPHT3D it is possible to easily vary the model discretisation
+without the need to change any other model parameters.
+To test this effect on the breakthrough curve otained with the Finite-Difference solution technique, 
+go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}1.Model} 
+$\rightarrow$ {\color{blue}Domain} and change the grid cell size.	 
+
+\subsection{Simulating simple contamination remediation methods}
+%	 
+Go back to the case in which no drinking water extraction takes place and use the model to simulate some basic contaminant remediation and/or attenuation scenarios.
+\begin{enumerate}
+	\item \textbf{Pump-and-treat}: Illustrate how the contaminant plume could be
+      intersected by adding a pump and treat system at >= 80 m downstream of the source zone. Determine the
+      pumping rate that would be required to prevent contaminant discharge to the river. Consider 
+	  installing multiple wells.
+	  %
+	\item \textbf{Encapsulate the source zone with a low-permeability barrier}: Illustrate
+	  the impact a physical barrier constructed of low-permeability material downstream of the contaminant
+	  plume source and/or encapsulate the source zone with low permeability material. Illustrate the impact
+	  on both the groundwater flow and on contaminant transport behavior. Experiment with the design of 
+	  the barrier and create some figures that document the efficiency of your designs on preventing, 
+	  delaying or minimizing contaminant discharge to the river.
+	  %	  
+	\item \textbf{Natural attenuation scenario}: Add a first-order biodegradation reaction as a chemical
+	  reaction into the contaminant transport simulation. Determine the first-order reaction rate constant
+	  (and the corresponding half-life) that is required such that the contaminant concentration $C_{dis}$ in
+	  the groundwater discharging to the river does not exceed 0.001 $C_{source}$ (ie the concentration you
+	  defined at the contaminant source).
+
+\end{enumerate}

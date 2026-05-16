@@ -1,0 +1,454 @@
+\newpage
+\section[PHT3D Exercise 7: Pyrite oxidation during deep well injection]{PHT3D Exercise 7: Pyrite oxidation during deep well injection}
+\subsection[Background]{Background}
+
+Managed aquifer recharge is increasingly used to enhance the sustainable development of water supplies. Common recharge techniques include aquifer storage and recovery (ASR), infiltration ponds, river bank filtration and deep-well injection. Following recharge the water quality of the injectant is typically altered by a multitude of geochemical processes during subsurface passage and storage. Relevant geochemical processes that affect the major ion chemistry include microbially mediated redox reactions, mineral dissolution/precipitation, sorption and ion-exchange. The hydrochemical conditions and changes that occur under these circumstances, in particular the temporal and spatial changes of pH and redox conditions, are in many cases the controlling factor for the fate of micropollutants such as herbicides and pharmaceuticals. Similarly, changes in mineralogical composition such as dissolution and precipitation of iron- or aluminiumoxides may affect the mobility of trace metals as well as the attachment and subsequent decay of pathogenic viruses. Laboratory and field-scale experimental studies are aimed at investigating such processes under controlled conditions and to eventually develop a better qualitative and quantitative understanding of their complex interactions, both site-specific and at a fundamental level. \
+\cite{prommer_stuyfzand_2005} carried out a reactive transport 
+modelling study to analyse the data collected during a deep well 
+injection experiment in an anaerobic, pyritic aquifer near Someren in Southern Netherlands. 
+
+This exercise replicates some of the key processes that were identified
+to influence water quality changes during subsurface passage. 
+Pyrite oxidation will be defined as a kinetic process in which the
+reaction rate depends on the water temperature. 
+For simplicity we include temperature as a seperate aqueous (mobile) component
+called {\color{red} \textbf{Tmp}}.
+The reaction rate expression expression has been programmed such 
+that the value of the component {\color{red} \textbf{Tmp}} is read
+and used during the computation of the reaction rate. 
+
+\subsection[Setting up the flow problem]{Setting up the flow problem}
+
+To simplify the original, fully three-dimensional model for this exercise, 
+the flow model is defined as a two-dimensional model for a single stratigraphic layer. Aerobic surface water is injected through an injection well and extracted 
+at an extraction well located 100 away from the injection well. 
+
+\begin{itemize}
+
+\item Use the data supplied in Table \ref{ex_model_grid} to set up the flow model. 
+Note that the geometry is defined for a half-model due to the symmetry of the problem.
+Neglect background groundwater flow and use for simplicity fixed head cells at the left 
+(x = 0 m) and the right (x = 200 m) model boundary to allow 
+exchange of water across these boundaries.
+
+\item Check your simulated heads in the injection well (24.22 m) and in the recovery well (15.78 m).
+You can also visualise the heads along a profile that goes across the injection and extraction well
+by going to
+{\color{blue}Observation} $\rightarrow$ {\color{blue}OBS} $\rightarrow$ {\color{blue}obs.1 Observation} 
+and defining a line. 
+
+\end{itemize}
+
+\begin{table}
+\caption{Flow and transport parameters used for the deep well injection problem.}
+\begin{center}
+\begin{tabular}{lc} \hline
+Flow simulation                     & steady state \\
+Total simulation time $(days)$       & 360  \\
+Time steps length $(days)$       & 2 \\
+Model \  length\ (column direction) \ $ (m)      $         &  200            \\
+Model \  width\  (row direction) \ $ (m)      $         &   80            \\
+Grid \ spacing\ $\Delta x $ (m)                &   10            \\
+Grid \ spacing\ $\Delta y $ (m)                &   10            \\
+Total Porosity\     $            $         &  0.35           \\
+Effective Porosity\     $            $         &  0.35           \\
+Horizontal hydraulic conductivity\ $(m d^{-1})           $         &  10         \\  
+Piezometric head upstream (left) boundary\ $(m)          $         &  20           \\ 
+Piezometric head downstream (right) boundary\ $(m)        $         &  20           \\ 
+Depth target aquifer $(m \ below \ sealevel)   $         &  between -300 and -310          \\ 
+x-Position injection well $(m)   $         & 145          \\
+y-Position injection well $(m)   $         &   5         \\
+x-Position recovery well $(m)    $         &  55          \\
+y-Position recovery well $(m)    $         &   5         \\
+1/2 Flow rate injection well $(m^3/day)   $         &  500         \\
+1/2 Flow rate recovery well $(m^3/day)    $         &  500         \\
+Longitudinal dispersivity\ $(m)         $         &  1          \\ 
+Transversal  dispersivity\ $(m)         $         &  0.1          \\ \hline
+
+\end{tabular}
+\label{ex_model_grid}
+\end{center}
+\end{table}
+
+\section[Setting up the nonreactive transport problem]{Setting up the nonreactive transport problem}
+
+\begin{itemize}
+
+\item If the simulated heads agree, use MT3DMS to simulate a simple tracer experiment
+to estimate the travel times between the injection and the recovery well. 
+Set the tracer concentration in the background water to 0 and set 
+the tracer concentration in the injection well to 1. Include some observation 
+points on the axis between injection and recovery well to allow the visualisation
+of breakthrough curves.
+
+\item What is your simulated travel time to the mid-point between 
+injection and recovery well ? It should be approximately 20 days.
+If your result differs, try to debug the problem before proceeding.
+
+\item When does the recovery well receive 100\% of the injection concentration ? 
+
+\end{itemize} 
+
+\subsection[Setting up the reactive transport problem]{Setting up the reactive transport problem}
+
+Once the tests with the nonreactive model indicate that the model is working properly,
+proceed with the reactive transport model. 
+
+\begin{itemize}
+
+
+
+\item Copy the reaction database that was developed for this problem into the folder where the ORTI model is located. 
+
+\item Activate the relevant aqueous components that are needed to simulate the reactive transport of the chemicals listed in Table 1 of \cite{prommer_stuyfzand_2005}. Also include  {\color{red} \textbf{Tmp}} (Temperature). 
+For simplicity do not include  {\color{red} \textbf{DOC}} and ion exchange species. 
+From the minerals listed add only  {\color{red} \textbf{Pyrite (kinetic version)}} 
+and \\ {\color{red} \textbf{Fe(OH)3(a)}} to the reaction network.  
+
+\item Define the initial concentrations (background water composition and mineral concentrations)
+in the appropriate ORTI Tab. Use the 
+water composition as listed in Table \ref{ex_pyr_caqu}.
+For the temperature {\color{red} \textbf{Tmp}} enter a value of 0.017, which
+corresponds to 1/1000 of the temperature in Celcius. 
+For pyrite use an initial concentration of 0.05 mol/l bulk volume and define 
+it under the {\color{blue} \textbf{Phase}} Tab.
+Note that the oxidation rate of pyrite is, among other factors, depending on the 
+pyrite concentration. Where pyrite is present at higher concentrations the reaction
+will proceed faster. 
+
+\item Define the water composition of the injected water as $Solution 1$.
+Use the water composition measured at the 21 January 1997, as
+listed in Table \ref{ex_pyr_caqu}. For the temperature use a
+value of 0.0019 to represent a temperature of 1.9 C. 
+
+\begin{table}[hb]
+\caption{Aqueous concentrations of the ambient groundwater and the injectant.}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+ Aqueous component       & $C_{init}$               & $C_{inject}$      \\
+                         & $(mol\ l^{-1}_w)$        & $(mol\ l^{-1}_w)$      \\ \hline
+ pH                      &   6.68                   &  7.1            \\
+ pe                      &   -2.45                  & 13.5            \\
+ Na                      & 6.75 $\times$ $10^{-4}$  & 1.26 $\times$ $10^{-3}$ \\ 
+ Cl                      & 2.54 $\times$ $10^{-4}$  & 1.82 $\times$ $10^{-3}$ \\
+ K                       & 1.34 $\times$ $10^{-4}$  & 1.23 $\times$ $10^{-4}$ \\
+ Ca                      & 2.06 $\times$ $10^{-3}$  & 1.87 $\times$ $10^{-3}$ \\
+ Mg                      & 5.88 $\times$ $10^{-4}$  & 3.25 $\times$ $10^{-4}$ \\
+ O(0)                    & 0                        & 8.13 $\times$ $10^{-4}$ \\
+ N(5)                    & 0                        & 3.54 $\times$ $10^{-4}$ \\
+ N(3)                    & 0                        & 0 \\
+ N(0)                    & 0                        & 0 \\
+ Amm                     & 0                        & 0 \\
+ S(6)                    & 5.52 $\times$ $10^{-5}$  & 4.90 $\times$ $10^{-4}$ \\
+ S(-2)                   & 0                        & 0 \\
+ Fe(2)                   & 1.04 $\times$ $10^{-4}$  & 0 \\
+ Fe(3)                   & 1.34 $\times$ $10^{-12}$ & 2.68 $\times$ $10^{-7}$ \\
+ Si                      & 2.81 $\times$ $10^{-4}$  & 3.03 $\times$ $10^{-4}$ \\
+ C(4)                    & 8.45 $\times$ $10^{-3}$  & 3.14 $\times$ $10^{-3}$ \\
+ C(-4)                   & 0                        & 0 \\
+ DOC                     & 0                        & 1.00 $\times$ $10^{-4}$ \\
+ Tmp                     & 0.017                    & 0.0019 \\ \hline
+\end{tabular}
+\label{ex_pyr_caqu}
+\end{center}
+\end{table}
+ 
+\item Attribute this water composition to the injection well 
+under {\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}PHT3D} $\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.4 Source \/ Sink} and define a zone 
+(a single point in this instance) at the well location. 
+
+\item Make sure that the reaction rate parameters 1 - 5 for the kinetically
+controlled pyrite oxidation are set to values of 16, .67, 0.5, -.11 and 115, respectively.
+
+\item Set a specified concentration boundary conditions at the left model 
+boundary to define that the flux that occurs across this boundary 
+has the same water composition as the ambient water.   
+
+To specify the water composition for this boundary select 
+{\color{blue}Spatial Attributes} $\rightarrow$ {\color{blue}PHT3D} 
+$\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.4 Source \/ Sink} 
+and define a line along the boundary and 
+set the ${\color{blue}Zone\ Value}$ to the value representing
+the ambient water composition, i.e., to 0.
+Set the ${\color{blue}Zone \ name}$ to ${\color{blue}WQ\_leftbound}$ 
+or any other suitable name.
+
+\item Select the TVD scheme as advection package and define the dispersivities.
+
+\item Run the reactive transport model.
+
+\item Inspect the results by visualising 2D contours: 
+Check how far did oxygen penetrate into the aquifer 
+at the end of the simulation time ?
+
+\item Visualise the concentrations of {\color{red} \textbf{O(0)}}, {\color{red} \textbf{N(5)}} 
+and {\color{red} \textbf{S(6)}} at the extraction well by defining an observation well 
+at the location of the extraction well.  
+This can be done by selecting {\color{blue}Spatial Attributes} 
+$\rightarrow$ {\color{blue}MODFLOW} $\rightarrow$ {\color{blue}Observation} 
+$\rightarrow$ {\color{blue}OBS}$\rightarrow$ {\color{blue}obs.1 observation} 
+and adding the observation location and defining a name 
+for the observation point. Once the location is defined breakthrough 
+curves can be visualised in the  ${\color{blue}Results}$ section.
+
+\end{itemize} 
+
+\section[Seasonally changing redox zonation]{Seasonally changing redox zonation}
+
+In the following part of the exercise we attempt to mimic the effects of a 
+seasonally changing injection water temperature. 
+This will result in a dynamically changing redox zonation.
+To simulate this effect proceed as follows:
+
+\begin{itemize}
+
+\item To effectively consider the transiently changing water compositions, 
+ORTI allows to efficiently create multiple water compositions.
+to create the 12 different solutions that only differ with respect 
+to their temperature allow first allow the model to have 12 solutions. 
+To do so set in {\color{blue}PHT3D} $\rightarrow$ {\color{blue}PH} 
+$\rightarrow$ {\color{blue}ph.6 specific options}
+set {\color{red}NB\_solu} to 12. After that re-import the database and open the 
+chemistry dialog where you can now define up to 12 solutions. 
+Then copy solution 1 to the next 11 (using ctrl+C and ctrl+v) and change the 
+temperature to 8, 5, 9, 12, 15, 18, 22, 25, 21, 14, and 12, respectively. 
+
+\item In final step of this part of the exercise the newly created temporally varying 
+solutions (water compositions) have to be attributed to different stress-periods.
+This can be done by going to {\color{blue}Spatial Attributes} 
+$\rightarrow$ {\color{blue}PHT3D} $\rightarrow$ {\color{blue}PH} 
+$\rightarrow$ {\color{blue}ph.4 Source \/ Sink} and 
+by modifying the previously defined 
+input that was created for a constant injectant water composition to an 
+input that will invoke a temporally (monthly) changing water composition.
+The numbers in the first column refer to the simulation time (simulation day nr) 
+and the numbers in the second column refer to the number of the 
+solution composition that will be used for the time period. 
+
+{\color{red}
+\begin{quote}
+0	1 \\
+30	2 \\
+60	3 \\
+90	4 \\
+120	5 \\
+150	6 \\
+180	7 \\
+210	8 \\
+240	9 \\
+270	10 \\
+300	11 \\
+330	12 \\
+\end{quote}}
+
+\item Rerun the reactive transport model and inspect 
+the oxygen and nitrate concentrations and how the vary with time and in space.
+
+Note that the heat transport approximation in this exercise is not very accurate
+as it ignores the retardation that occurs as a result of heat transfer between
+the injectant and the sediment matrix. 
+While neglected here, it is possible to use MT3DMS/PHT3D to describe 
+the relevant heat transport equation exactly. 
+More details are described, for example, in \cite{seibert_2014}.   
+
+\end{itemize}
+
+\section[Fate of a redox-sensitive micropollutant]{Fate of a redox-sensitive micropollutant}
+
+In the next part or the exercise the fate of the pharmaceutical compound 
+phenazone will be simulated and the impact of the seasonally 
+changing redox zonation will be investigated. 
+
+Various laboratory experiments
+have demonstrated that phenazone is biodegradable under
+oxic conditions \citep{phdzuelke} by the aerobic 
+bacterium $Phenylobakterium$ $immobile$. 
+Batch experiments with sterilised
+and non-sterilised filter material suggest that aerobic microbial
+degradation is the most important removal process.
+Sorption of phenazone to filter material, sludge, or soil was
+found to be negligible. 
+The simulations follow the model approach described in \cite{greskowiak_2006}. 
+In the numerical model it was
+therefore assumed that phenazone degrades solely under
+aerobic conditions and that the degradation rate of
+phenazone depends on the dissolved oxygen concentration, a behaviour
+previously encountered with selected other micropollutants such as 
+pesticides. It was also assumed that the degradation
+rate of phenazone is temperature-dependent, as its degradation,
+like that of organic matter, relies on microbial metabolism.
+
+\begin{equation}
+{r_{phena} = r_{phena,max} {\frac{C_{ox}}{(k_{phena,ox} + C_{ox})}} C_{phena} f_T }
+\label{eq:phenazone_deg}
+\end{equation}
+
+where $r_{phena,max}$ is the degradation rate constant,
+$k_{phena,ox}$ is the half-saturation concentration, 
+and $C_{phena}$ is the concentration of phenazone. 
+The dependence  of the reaction rate 
+on the temperature T ($^{\circ}$C) is considered through 
+the empirical function, $f_T$, as proposed by \cite{oconnel_1990} 
+and \cite{kirschbaum_1995}:
+
+\begin{equation}
+{f_{T} = exp({\alpha + \beta T (1 - 0.5 {\frac{T}{T_{opt}}})  )}}
+\label{eq:temp_dep}
+\end{equation}
+
+where $\alpha$ and $\beta$ are fitting parameters and $T_{opt}$ is the optimal
+temperature for the degradation reaction. In the PHREEQC database 
+the reaction rate expression for phenazone 
+as used in  \cite{greskowiak_2006} is formulated such that  the reaction 
+will only proceed in the presence of dissolved oxygen.
+There are two paramters, i.e., ${\color{blue} parm(1)}$
+and ${\color{blue} parm(2)}$ that can be subsequently entered and/or varied 
+within ORTI under the ${\color{blue} Rates}$ Tab. If additional parameters 
+should be edited this can be achieved by editing the 
+rate expression below accordingly. 
+
+{\color{red}
+\begin{quote}
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\\
+Phenazone \\
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\\
+\# from Greskowiak et al. 2006 (EST)
+-start \\
+ 7 mTmp   = 1000 * tot("Tmp") \\
+10  Cphena = TOT("Phenazone") \\
+20  Cox = TOT("O(0)") \\
+26  a = -1.5; \\
+27  b = 0.18; \\
+28  Topt = 15 \\
+30  fT = exp(a+b*mTmp*(1-0.5*mTmp/Topt)) \\
+34  rph\_max = parm(1) \\
+36  Khalf = parm(2) \\
+50  rate = fT* rph\_max*(Cox/(Khalf+Cox)) * Cphena \\
+70 moles = rate * TIME \\
+200 save moles \\
+-end \\
+\end{quote}}
+
+To include {\color{red} \textbf{Phenazone}} take the following steps 
+
+\begin{itemize}
+
+\item Activate the species {\color{red} \textbf{Phenazone}} 
+in the ${\color{blue} Solutions}$ Tab.
+Enter an aqueous concentration 
+of 1.0 $\times$ $10^{-6}$ mol/L for Phenazone for  
+${\color{blue} Solutions}$ 1-12 but not for
+${\color{blue} Solution}$ 0, i.e., 
+not for the background water composition.
+
+\item Define the reaction rate parameters for Phenazone under the 
+${\color{blue} Rates}$ Tab. First, activate the Phenazone kinetics 
+by ticking the first (C) box, but not the second (IM) box.
+The latter would make Phenazone an immobile species.
+Add a value of 5.0 $\times$ $10^{-6}$ 
+for parm1 (reaction rate constant) and 
+4.0 $\times$ $10^{-4}$ for parm2. Finally add \\
+${\color{blue} Phenazone\ -1.0\ C11H12N2O\ 1.0}$ as ${\color{blue} Formula}$ \\
+for phenazone to define the stoichiometry of the degradation reaction.
+
+\end{itemize}
+
+In the simulations of \cite{greskowiak_2006} it showed that 
+the redox sensitivity (i.e., oxygen availability) dominated 
+over the temperature effects on the phenazone degradation rates.
+In their study this behaviour resulted in significantly higher 
+removal rates during the colder month of the year, 
+when the aerobic zone of the aquifer was significantly larger. 
+
+A similar behaviour can also be seen if the breakthrough behaviour of 
+phenazone is visualised at the extraction well.    
+
+\section[Mobilization of arsenic]{Mobilization of arsenic}
+
+In the next part or the exercise we are going to model the release of arsenic 
+during oxidation of arsenopyrite and its subsequent sorption to ferrihydrite (HfO). 
+In a first step we will model the dissolution of \emph{Arsenopyrite}. 
+The rate expression that is used for \emph{Arsenopyrite} will simply be linked
+to the rate of the computed pyrite oxidation:
+
+{\color{red}
+\begin{quote}
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\\
+Arsenopyrite \\
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\\
+-start \\
+  6 moles = parm(1) * get(1) \\
+200 save moles \\
+-end \\
+\end{quote}}
+
+The stoichiometric ratio at which arsenopyrite will be dissolved, compared to pyrite, is determined
+by {\color{red} \textbf{parm(1)}}. For example, if {\color{red} \textbf{parm(1)}} is set to
+\emph{0.001} the dissolution of 1 mmol pyrite will be accompanied by 
+the dissolution of 1 $\micro$mol \emph{Arsenopyrite}.   
+This is achieved by including {\color{red} \textbf{put(1)}}
+in the rate expression for pyrite:
+
+{\color{red}
+\begin{quote}
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# \\
+Pyrite \\
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# \\
+-start \\
+... \\
+... \\
+... \\
+90 moles = moles\_oxy + moles\_nitr + moles\_0 \\
+100 if (moles $\>$ m) then moles = m \\
+150 put(moles,1) \\
+200 save moles \\
+-end \\
+\end{quote}}
+
+We do now expand the last simulation and include additionally the two aqueous components 
+\emph{As(5)} and \emph{As(3)} as well as the kinetic minerals \emph{Fe(OH)3(a)} and \emph{Arsenopyrite} in the reaction network. 
+
+\begin{itemize}
+
+\item Set the initial concentration for \emph{Arsenopyrite} to 0.01 mol/l$_{bulk}$.
+
+\item Set the reaction rate constants for \emph{Fe(OH)3(a)} to 2 $\times$ 10$^{-13}$
+and define that the ratio of \emph{Arsenopyrite} / \emph{Pyrite} dissolution 
+is 0.001 (i.e., parm(1) = 0.001 for \emph{Arsenopyrite}).
+
+\item Run the simulation and plot a breakthrough curve for \emph{As(5)} and \emph{As(3)} at the extraction well and at a location half-way between injection and the extraction well.
+Save the breakthrough curves from the observation wells to ASCII files.
+
+\item Now include surface complexation reactions by 
+activating the two surface species \emph{Hfo\_w} and \emph{Hfo\_s}.
+Then define the surface site densities for both of these species as 0.2 mol per mol of ferrihydrite 
+and 0.005 mol per mol of ferrihydrite, respectively. Define those concentrations in the {\color{blue} \textbf{Site\_back}} column in the {\color{blue} \textbf{Surface}} Tab. 
+Then add \emph{Fe(OH)3(a)} under the {\color{blue} \textbf{name}} 
+column and {\color{blue} \textbf{kinetic}} under the {\color{blue} \textbf{switch}} column, 
+both also in the {\color{blue} \textbf{Surface}} Tab.  
+This will establish that the number of sorption sites is directly 
+linked to the concentration of the (kinetically reacting) 
+mineral phase \emph{Fe(OH)3(a)}. 
+Finally, define among the global PHT3D parameters that the {\color{blue} \textbf{no\_edl}} 
+option is used for the simulation.
+To do so set in 
+{\color{blue}PHT3D} $\rightarrow$ {\color{blue}PH} $\rightarrow$ {\color{blue}ph.6 specific options}
+set {\color{red}SU\_OPT} to {\color{blue} \textbf{no\_edl}}. 
+This means that electric double layer calculations in the surface complexation 
+model will be omitted.  
+    
+
+\item Run the model and inspect again the \emph{As(5)} and \emph{As(3)} breakthrough curves at the extraction well
+
+\item Compare the new results with the previous results (model run without surface complexation).
+
+\end{itemize}
+
+
+
+
+
+
+
+

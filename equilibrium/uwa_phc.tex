@@ -1,0 +1,108 @@
+\newpage
+
+\section{Your first PHREEQC input file}
+To do calculations, you need to tell the program what it has to do. This is done via input files that
+contain a list of instructions. So-called \textit{keywords} are used that have an intuitive meaning. The keyword
+SOLUTION for example is used to define the (measured) composition of our water sample. Within
+the keyword data blocks, \textit{identifiers} are used to set various options. For example, the identifier \textbf{-units}
+can be set to mg/l if the reported concentrations are in mg/l.
+Let's look at an example to make things more clear. Say that we have some pure water in which we
+have dissolved $10^{-4}$ moles of the mineral fluorite (so the only dissolved ions are \ca\ and \f) and we want to know
+the distribution of species in the water sample. This is then what your input file looks like:
+
+\begin{quote}
+SOLUTION 1 \\
+-units mmol/kgw \# these are the default units \\
+Ca 0.1 \\
+F 0.2 \\
+END \\
+\end{quote}
+
+In setting up this example problem we have used ''\textit{millimoles}'' to express the mass of Ca and F rather than ''\textit{milligrams}''. Historically, weight-based units of concentration like mg/L were used by geochemists and these are still the concentration units preferred by the regulatory community.  So why use ''\textit{millimoles}'' rather than ''\textit{milligrams}'' ?  One advantage of using millimoles can be illustrated by considering the drinking water limits for arsenic and uranium established by the United States Environmental Protection Agency. The drinking water limit for arsenic is 10 micrograms per liter ($\micro$g/L) and that for uranium is 30 $\micro$g/L. These units make it appear as if it takes more uranium than arsenic to contaminate a drinking-water supply.  However, if we convert the drinking water limits to moles, we see that the drinking water limit for arsenic and uranium is the same: 0.13 micromoles/L (umoles/L). Thus, it takes the same number of arsenic or uranium atoms to contaminate a source of drinking water so that it exceeds the drinking water limit.  In chemistry, we are generally concerned with how many atoms or ions there are rather than how much they weigh. 
+This is particularly important when considering reaction stoichiometry. 
+Note that we will need to consider mass when treating isotopic fractionation, 
+which will be discussed later.
+This input file tells PHREEQC that we have a solution, which is given the number 1 (the significance of these numbers will become clear later). The units of the concentrations are specified in mmol/kgw. The concentrations are simply entered after the element names. The input datablock is terminated by the keyword END, which tells PHREEQC to stop reading the input file and perform the calculations for this input datablock. The \# sign indicates a comment: All text that follows on the same line is ignored when the input file is read.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\textwidth]{screenshot_progress}
+\caption[Screenshot of the input editor and the progress window after the calculations have finished]{Screenshot of the input editor and the progress window after the calculations have finished. The panel to the right of the input editor shows the keywords and identifiers that can be used in PHREEQC.}
+\label{fig:screenshot_progress}
+\end{figure}
+
+To start the calculations, click Calculations $\rightarrow$ Start in the main menu or press the green arrow button on the toolbar. The program will now show a window with information on the progress of the calculations. When the calculations are finished, the caption of the button on the bottom end of this window changes from 'Cancel' to 'Done' (figure \ref{fig:screenshot_progress}). Press it to go to the output editor where you will find the results of your calculations.
+
+The output file contains a lot of data and it is easy to get lost in all the numbers. The results of the speciation calculations are reported under the heading `Beginning of initial solution calculations'. Under `Solution composition', the molality and the number of moles of each element are reported. These should be equal to the concentrations that were entered under the SOLUTION keyword, although small deviations may occur when the mass balance could not be solved exactly. The next group of data is `Description of solution', which lists some characteristics of the solution, for example pH and ionic strength. The molalities and activities of all the aqueous species are reported under `Distribution of species'. Here for each element the molality is given (it is the same number as under `Solution composition') and the molalities of each of the aqueous species of that element sum up to
+this molality (mass balance!). In our example it can be observed that 99.84 \% of all Ca is present as uncomplexed \ca. The remainder is present as the complexes \caf\ and \caoh. The last block of data consists of the 'Saturation indices' calculated by the program.
+
+\subsection{PHREEQC Exercise 1: Cape Karoo mineral water}
+
+According to the label on the bottle, Cape Karoo mineral water derives from dolerite rock. The chemical composition of the water reflects the mineralogy of the host rock. Using the concentrations reported on the bottle label we can (1) check the accuracy of the chemical analysis and (2) calculate the speciation of this water.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.4\textwidth]{cape_karoo}
+\caption[Label of Karoo mineral water]{Label of Karoo mineral water.}
+\label{fig:karoo}
+\end{figure}
+
+The PHREEQC input file is given below. Only the pH (= 6.8) has not been entered yet. Look up the identifier to specify pH and enter it in the input file.
+
+\begin{quote}
+
+SOLUTION 1 Cape Karoo still \\
+-units	mg/l \\
+\ldots \# enter pH on this line \\
+Na					29 \\
+K						0.9 \\
+Mg					2.2 \\
+Ca					34 \\
+Cl					46 \\
+S(6)				6.8 \\
+N						0.29 \\
+F						0.72 \\
+Fe					0.08 \\
+Alkalinity	83 as CaCO3 \\
+END \\
+\end{quote}
+
+The concentrations here are entered as mg/l. Because PHREEQC recalculates all concentrations to moles it is important to specify what molecular weights must be used for recalulating mass-based units (such as mg/l). In this case, alkalinity was reported as \cc\ and the statement `as CaCO3' after the concentration ensures that the recaculation is done using the molecular weight of \cc. 
+
+Redox sensitive species can have different valence states. Elemental sulfur in sulfate (\su) has a valence of +6 and therefore, the element name S(6) indicates the sulfate ion. The same holds for nitrogen and iron, but because the label does not specify what form they are in, we omit the valence state. If we knew, however, that nitrogen for example was present in the form of \no, we would have entered N(5), because in \no\ nitrogen has a charge of +5.
+
+Another special case is \bi, which can not be entered directly but is specified here as Alkalinity (note that element names are case sensitive). In natural waters were the alkalinity comes from carbonate species, this is a valid assumption. The different options for specifying TIC, alkalinity and pH are listed in appendix I.
+
+\begin{itemize}
+
+\item What is the percent error of the electrical balance of this chemical analysis? Answer: \ldots\ldots. Because its absolute value is less than 5 \% we may conclude that the analysis is acceptable.
+
+\item The label lists no concentration for silica, Si. How would the calculation of the electrical balance change if we include this element?
+
+\item How much is the ionic strength (equation \ref{eq:ionic_strength}) that PHREEQC has calculated? Answer: $I =$ \ldots\ldots.
+
+\item What are the 2 most dominant \ca\ species and their concentrations? Answer: 
+
+\begin{enumerate}
+\item \ldots\ldots, concentration = \ldots\ldots, 
+
+\item \ldots\ldots, concentration = \ldots\ldots.
+\end{enumerate}
+
+
+\item We did not enter the oxidation state of nitrogen. What does PHREEQC produce as the dominant form of nitrogen?  
+
+\item Is this realistic? If not, what do you think is the actual chemical form of nitrogen in Karoo water? Answer ...
+
+
+\begin{enumerate}
+\item The dominant form of nitrogen predicted by PHREEQC is \ldots\ldots\ldots 
+
+\item The most likely form of nitrogen in Karoo water is \ldots\ldots\ldots
+
+\end{enumerate}
+
+\end{itemize}
+
+
+\newpage
