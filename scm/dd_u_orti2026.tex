@@ -1,4 +1,4 @@
-\section[PHT3D Exercise 5 Transport of uranium in a fractured rock aquifer]{PHT3D Exercise 5 Transport of uranium in a fractured rock aquifer}
+\section[PHT3D Exercise 9 Transport of uranium in a fractured rock aquifer]{PHT3D Exercise 9 Transport of uranium in a fractured rock aquifer}
 
 In this exercise we will investigate the transport of solutes 
 in a fractured aquifer system. The exercise will illustrate 
@@ -74,8 +74,8 @@ of water representing the tailings fluids. \\
 To run this first conservative transport model follow these steps:
 
 \begin{itemize}
-\item set the duration of the simulation (parameters/model/time) to 100 years 
-(translate in days)
+\item check the duration of the simulation (parameters/model/time). 
+It should be 73000 days (approximately 200 years).
 \item	set the position of the pit for the initial concentration 
 of the tracer. We will suppose that the initial concentration 
 is homogeneous over the whole pit. 
@@ -188,9 +188,8 @@ present case the effect of matrix diffusion can still be significant.
 To compare your results to the previous single domain simulation 
 display the breakthrough curves again (i.e., {\color{blue}\textbf{Tracer}}
 for the same observation point {\color{blue}\textbf{creek$\_$obs}} as above), 
-export the concentration and compare the two breakthrough curves in excel. 
+export the concentration and compare the two breakthrough curves in excel. \\
 
-\\
 If you have time
 \begin{itemize}
 \item Think about what are the major differences between the simulated 
@@ -217,9 +216,10 @@ First we consider the ambient groundwater composition, to which we refer
 to as {\color{blue}\textbf{background solution}}. 
 Secondly, we consider the composition 
 of the tailings fluids, which we refer 
-to as (i.e., {\color{blue}\textbf{Solution 1}}).
+to as {\color{blue}\textbf{Solution 1}}.
 For simplicity we assume that the tailings fluids have the same composition
-throughout the entire pit. Both compositions are listed in Table \ref{ex_dd_u}.
+throughout the entire pit. 
+Both compositions are listed in Table \ref{ex_dd_u}.
 \\
 To establish the first multi-component simulation
 
@@ -248,7 +248,7 @@ as initial and boundary conditions.
 By default the {\color{blue}\textbf{background solution}} is used to
 assign the initial concentrations throughout the entire model domain.
 However, {\color{blue}\textbf{Solution 1}} has to be assigned 
-to the specific zone in teh model that represents 
+to the specific zone in the model that represents 
 the location of the pit, which contains 
 the tailings fluids. 
 We will use the same zone for the pit as the one we used in 
@@ -284,9 +284,9 @@ verify that your coordinates are copied correctly.
 Should cut and paste not work properly you can simply manually
 modify the coordinates to those used in the tracer simulation. 
 For the {\color{blue}\textbf{zone value}}, 
-assign the value {\color{blue}\textbf{1.0.0.0}}, 
+assign the value {\color{blue}\textbf{1000}}, 
 which means you assign the water composition
-defined defined {\color{blue}\textbf{Solution 1}} to this zone, together with
+{\color{blue}\textbf{Solution 1}} to this zone, together with
 the Phase/Mineral assemblage {\color{blue}\textbf{0}}, 
 Exchanger {\color{blue}\textbf{0}}
 and Surface {\color{blue}\textbf{0}}. 
@@ -417,13 +417,14 @@ represent end members of the solution compositions that would
 result from pit-water entering the fracture zone.  
 Experiments were conducted in artificial pit-water, 
 artificial groundwater, and two other groundwater compositions 
-prepared based on mixing calculations of the two end members.  
+prepared, based on mixing calculations of the two end members.  
 The end-member artificial groundwater was designated AGW1, 
 the artificial pit-water APW, the two mixtures AGW3 and AGW4.  
 Compositions were presented in Table \ref{ex_u_scm}
 
 \begin{table}[hb]
-\caption{Synthetic solutions used in U(VI) sorption-desorption experiments.  All concentrations are in millimoles per liter except pH (NIST pH scale).}
+\caption{Synthetic solutions used in U(VI) sorption-desorption experiments.  
+All concentrations are in moles per liter except pH and P$_{CO_2}$.}
 \begin{center}
 \begin{tabular}{l c c c c}
 \hline
@@ -469,10 +470,10 @@ at equilibrium in each of the solution used in the experiments.}
 \hline
  Solution                & Total U(VI)              & Dissolved U(VI)         & Sorbed U(VI)        \\
                          & $(mol\ l^{-1}_w)$        & $(mol\ l^{-1}_w)$       & $(mol\ l^{-1}_w)$   \\ \hline
- AGW1                    & 8.00 $\times$ $10^{-7}$  & 1.90 $\times$ $10^{-7}$ & 6.10 $\times$ $10^{-7}$ & \\
- APW                     & 3.08 $\times$ $10^{-5}$  & 2.16 $\times$ $10^{-5}$ & 1.06 $\times$ $10^{-5}$ & \\ 
- AGW3                    & 3.80 $\times$ $10^{-6}$  & 1.40 $\times$ $10^{-6}$ & 2.40 $\times$ $10^{-6}$ & \\
- AGW4                    & 1.80 $\times$ $10^{-6}$  & 1.25 $\times$ $10^{-6}$ & 5.50 $\times$ $10^{-7}$ & \\ \hline
+ AGW1                    & 8.00 $\times$ $10^{-7}$  & 1.90 $\times$ $10^{-7}$ & 6.10 $\times$ $10^{-7}$ \\
+ APW                     & 3.08 $\times$ $10^{-5}$  & 2.16 $\times$ $10^{-5}$ & 1.06 $\times$ $10^{-5}$ \\ 
+ AGW3                    & 3.80 $\times$ $10^{-6}$  & 1.40 $\times$ $10^{-6}$ & 2.40 $\times$ $10^{-6}$ \\
+ AGW4                    & 1.80 $\times$ $10^{-6}$  & 1.25 $\times$ $10^{-6}$ & 5.50 $\times$ $10^{-7}$ \\ \hline
 \end{tabular}
 \label{ex_u_scm2}
 \end{center}
@@ -484,8 +485,8 @@ at equilibrium in each of the solution used in the experiments.}
 \begin{tabular}{l c c c}
 \hline
  Surface reaction           \\ \hline
- $SOH$ + $UO_2^{2+}$ + $H_2O$ + $CO_2$ = $SOHUO_2HCO_3+$ + $H^+$  \\
- $SOH$ + $UO_2^{2+}$ + $H_2O$ + $CO_2$ = $SOUO_2H_2CO_3$ + $2H^+$  \\ \hline
+ $SOH$ + $UO_2^{2+}$ + $H_2O$ + $CO_2$ = $SOHUO_2HCO_3^+$ + $H^+$  \\
+ $SOH$ + $UO_2^{2+}$ + $H_2O$ + $CO_2$ = $SOUO_2H_2CO_3$ + $2H^+$ \\ \hline
 \end{tabular}
 \label{ex_u_scm3}
 \end{center}
@@ -525,11 +526,17 @@ and select {\color{blue}\textbf{Surface}}.
 Now, activate the surface with the name {\color{blue}\textbf{Surf\_a}} 
 and enter 2.0 $\times$ $10^{-4}$ as the surface site
 concentration under {\color{blue}\textbf{Site\_back}}.
-This will cause the aqueous uranium that migrates away
-from the pit to undergo surface complexation reactions,
+As we define this concentration as background concentration
+it will be applied throughout the model domain.
+The initial occupancy of the surface sites will be automatically 
+determined at the start of the simulation, i.e., there will be 
+an equilibration step that makes sure that the aqueous composition(s)
+and the surface(s) are in equilibrium.
+The presence of the surface sites will cause the aqueous uranium 
+that migrates away from the pit to undergo surface complexation reactions,
 with the variable extent of the sorption being a function 
 of the spatially and temporally variable geochemical conditions.
-\item The present model is using the {\color{blue}\textbf{-no\_edl}} 
+\item The present model is using the {\color{blue}\textbf{no\_edl}} 
 option, which means that the surface complexation reactions
 do not consider any electric double layer effects.
 If required, this can be changed under 
@@ -543,7 +550,16 @@ could be entered.
 \end{itemize}
 
 Now rerun PHT3D and investigate how much the sorption reactions have impacted 
-the uranium transport behaviour.   
+the uranium transport behavior. Note, that the correct up-scaling of the 
+laboratory results to the field-scale model is a non-trivial task 
+and still an area of active research. Up-scaling needs in particular to take into 
+account the changes in liquid to solid (i.e., number of surface site) 
+ratio between the samples investigated in the laboratory and the 
+field conditions. The number of sites used here (2.0 $\times$ $10^{-4}$)
+is at the lower (conservative) end of the range for this value.  
+You can study the strong impact of this parameter on the breakthrough 
+behaviour of uranium by rerunning the model with a 10-fold increased
+surface site concentration of 2.0 $\times$ $10^{-3}$.    
 
 \subsection{Impact of mineral buffering}
 

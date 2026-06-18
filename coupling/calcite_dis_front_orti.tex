@@ -1,0 +1,470 @@
+\chapter[Evaluating mineral reaction fronts with PHT3D]{Mineral reaction fronts}
+\def\shorttitle{Evaluating mineral reaction fronts with PHT3D} % Abbreviated chapter title for right top header
+
+
+\section[PHT3D Exercise 1: Calcite Dissolution Front]{PHT3D Exercise: Calcite Dissolution Front}
+
+This exercise introduces the concept of reaction front migration, one of the most fundamental and ubiquitous hydrogeochemical processes associated with mineral reactions: the displacement of a groundwater that is in chemical equilibrium with a carbonate mineral by a chemically inert, undersaturated solution.
+
+The numerical model that is used to illustrate the concept consists of a one-dimensional column (100\,m long, $1\,\mathrm{m} \times 1\,\mathrm{m}$ cross-section) initially saturated with a water in equilibrium with calcite. A sodium chloride solution (NaCl, $0.001\ mol/L$, pH\,=\,7) is
+injected at the upstream boundary at a constant flow rate.
+This inflow water contains no calcium and no inorganic carbon, and is
+therefore strongly undersaturated with respect to calcite.
+As the NaCl front advances through the column, calcite dissolves wherever
+the injected water comes into contact with the mineral, releasing
+$\mathrm{Ca^{2+}}$ and carbonate species into solution.
+A sharp dissolution front develops and propagates downstream.
+
+This exercise is relevant to a wide range of natural and engineered
+systems, including the flushing of carbonate aquifers, $\mathrm{CO_2}$
+storage, and \textit{in-situ} leaching of mineral
+ore deposits.
+
+% ------------------------------------------------------------
+\subsection[Spatial discretisation and flow problem]{Spatial discretisation and flow problem}
+% ------------------------------------------------------------
+
+The problem is set up as a simple one-dimensional flow and transport
+problem with dimensions and properties as defined in
+Table~\ref{calcite_flow}. To construct the MODFLOW model that underlies the transport problem proceed as follows:
+
+\begin{itemize}
+
+\item In ORTI, create a new model and save it in a new and separate
+directory to avoid any confusion with other models.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model}
+select the {\color{blue}Model} button and specify the attributes of the
+new model. Select {\color{blue}2D horizontal/Column} for {\color{blue}Dimension},
+{\color{blue}confined} for {\color{blue}Type} and
+{\color{blue}MODFLOW series} for {\color{blue}Group}.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Model}
+select the {\color{blue}Grid} button and specify the model domain.
+Define a column that is 100\,m long with a $1\,\mathrm{m} \times
+1\,\mathrm{m}$ cross-section, discretised into 20 cells of 5\,m length.
+Note that the model discretisation can be easily changed again later.
+
+\item Select {\color{blue}Parameters} and select the
+{\color{blue}Time} button.
+Set the {\color{blue}Total Simulation Time} to 100 days and select a
+time {\color{blue}Step size} of 1 day.
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}MODFLOW} $\rightarrow$ {\color{blue}DIS} $\rightarrow$
+{\color{blue}dis.6 Top of Layers (TOP)} and set the top of the model
+to 1\,m.
+Confirm with {\color{blue}OK}.
+The bottom defaults to 0\,m and does not need to be changed.
+
+\item Set the boundary conditions for hydraulic heads by going to
+{\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}MODFLOW} $\rightarrow$
+{\color{blue}BAS6} $\rightarrow$
+{\color{blue}bas.3 Boundary Conditions}
+and setting the background value to 1 (= active cell) for all cells.
+After that select {\color{blue}Zone} and use the {\color{blue}Zone Tools}
+to draw a point at the last (downstream) cell.
+The value for this zone needs to be set to $-1$ to define a fixed-head
+boundary condition.
+By setting the boundary condition type to $-1$ the hydraulic head at
+that grid cell will remain unchanged over the entire simulation period,
+i.e., it will remain at the value specified as the initial head.
+
+\item Set initial hydraulic heads by going to
+{\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}MODFLOW} $\rightarrow$
+{\color{blue}BAS6} $\rightarrow$
+{\color{blue}bas.5 Initial Heads}
+and set the {\color{blue}Backg.} value to 1\,m.
+Then press {\color{blue}'OK'} to confirm the value.
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}MODFLOW} $\rightarrow$
+{\color{blue}LPF} $\rightarrow$
+{\color{blue}lpf.8}
+to specify the hydraulic conductivity to $10\ m/day$.
+
+\item Add an injection well at the upstream (first) cell by going to
+{\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}MODFLOW} $\rightarrow$
+{\color{blue}WEL}
+and creating a point Zone at the first cell.
+Set the injection flow rate to $0.5\ m^3/day$.
+Note that a positive value represents injection (recharge) and a
+negative value represents extraction (pumping).
+With a porosity of 0.25 and a cross-sectional area of
+$1\,\mathrm{m} \times 1\,\mathrm{m}$, this flow rate produces a pore
+velocity of $v = Q / (n \cdot A) = 0.5 / (0.25 \times 1) = 2\ m/day$,
+so the advective travel time across the full 100\,m column is 50 days.
+
+\end{itemize}
+
+\begin{table}[t]
+\caption{Flow and transport parameters used in the calcite dissolution exercise.}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Flow simulation                                   & steady state \\
+Total simulation time\ $(days)$                   & 100          \\
+Time step length\ $(days)$                        & 1            \\
+Number of grid cells\ $(-)$                       & 20           \\
+Grid spacing\ $\Delta x\ (m)$                     & 5            \\
+Model length\ $(m)$                               & 100          \\
+Model width $\times$ height\ $(m \times m)$       & $1 \times 1$ \\
+Hydraulic conductivity\ $(m/day)$                 & 10           \\
+Effective porosity\ $(-)$                         & 0.25         \\
+Pore velocity\ $(m/day)$                          & 2            \\
+Injection flow rate\ $(m^3/day)$                  & 0.5          \\
+Longitudinal dispersivity\ $\alpha_L\ (m)$        & 0.01         \\
+\bottomrule
+\end{tabular}
+\label{calcite_flow}
+\end{center}
+\end{table}
+
+% ------------------------------------------------------------
+\subsection{Running MODFLOW}
+% ------------------------------------------------------------
+
+You have now completed the setup of the flow model and you are ready
+to run MODFLOW.
+
+\begin{itemize}
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow}
+use the {\color{blue}Write Button} to write all the input files
+required to run MODFLOW.
+
+\item Under {\color{blue}Parameters} $\rightarrow$ {\color{blue}Flow}
+use the {\color{blue}Red Arrow} button to start the MODFLOW simulation.
+
+\item When the calculation has finished, a window appears which shows
+the last lines of the main MODFLOW output file.
+Verify that the last line confirms a successful simulation.
+
+\item Inspect the flow results by selecting
+{\color{blue}Results} $\rightarrow$
+{\color{blue}Flow} $\rightarrow$
+{\color{blue}Head}.
+The head field should show a linearly decreasing profile from upstream
+to downstream, consistent with uniform one-dimensional flow.
+
+\end{itemize}
+
+% ------------------------------------------------------------
+\subsection[Data input for solute transport]{Data input for solute transport}
+% ------------------------------------------------------------
+
+For the simulation of solute transport of the mobile components the
+model parameters that control advective and dispersive transport
+need to be entered.
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$
+{\color{blue}Transport} and select the {\color{blue}Parameter} button.
+
+\item In the dialog box that subsequently appears, select
+{\color{blue}ADV} and select under {\color{blue}adv.1 Solver Parameters}
+the {\color{blue}TVD} (ULTIMATE) as the Solution Scheme.
+Leave the default parameters and click {\color{blue}ok}.
+The TVD scheme is recommended here because the very low dispersivity
+relative to the grid spacing ($\alpha_L = 0.01\,\mathrm{m}$ versus
+$\Delta x = 5\,\mathrm{m}$) would otherwise cause numerical oscillations
+with a standard finite-difference scheme.
+
+\item Select {\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}MT3DMS} $\rightarrow$
+{\color{blue}DSP},
+enter a longitudinal dispersivity value of 0.01\,m and click
+{\color{blue}OK}.
+Leave all other dispersivity ratios and diffusion coefficients at
+their default values.
+
+\item Go to {\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}MT3DMS} $\rightarrow$
+{\color{blue}BTN} $\rightarrow$
+{\color{blue}btn.11}
+and specify the effective porosity to be 0.25.
+
+\end{itemize}
+
+% ------------------------------------------------------------
+\subsection[PHT3D reaction definition]{PHT3D reaction definition}
+% ------------------------------------------------------------
+
+In this simple exercise the main geochemical reaction, i.e., calcite dissolution, is defined as an equilibrium reaction between the aqueous solution and the mineral calcite. All required species and thermodynamic data are available in the standard PHREEQC database.
+
+\begin{itemize}
+
+\item Copy the database file that is going to be used for the PHT3D
+simulation into the folder that contains all files for this exercise
+and name the file {\color{red}\textbf{pht3d\_datab.dat}}.
+You can use the standard PHREEQC database for this example.
+
+\item Go to {\color{blue}Parameters} $\rightarrow$
+{\color{blue}Chemistry} and select the
+{\color{blue}Import database} button.
+ORTI will then read and interpret the PHT3D database file.
+
+\item Click on the {\color{blue}Chemical Reaction} button to open the
+reaction definition dialog.
+
+\item Within the new dialog box go to the {\color{blue}Solution} Tab
+and select the aqueous components that you want to include in the model.
+For this exercise activate: $C(4)$, $Ca$, $Cl$, $Na$, $pe$ and $pH$.
+
+\item Then click the {\color{blue}Phases} Tab and activate
+{\color{blue}Calcite} as an equilibrium mineral phase.
+
+\end{itemize}
+
+Note that $C(4)$ and $Ca$ are the key reactive components.
+When the injected NaCl water contacts calcite, the mineral will dissolve
+to supply both $\mathrm{Ca^{2+}}$ and carbonate species to the aqueous solution. $Na$ and $Cl$ are both conservative tracers that travel at the advective pore velocity without reacting. Including both $pH$ and $pe$ is required for PHREEQC to correctly compute the carbonate speciation.
+
+% ------------------------------------------------------------
+\subsection[Initial and inflow concentrations]{Initial and inflow concentrations}
+% ------------------------------------------------------------
+
+The initial water composition represents a natural groundwater in
+equilibrium with calcite. These concentrations used to define the initial water composition were obtained by running a PHREEQC equilibrium calculation for a solution in contact with calcite at pH\,=\,9.91.
+The inflow water ($0.001\ mol/L$ NaCl) contains sodium and chloride
+only, and neither calcium nor inorganic carbon.
+Both water compositions are listed in Table~\ref{calcite_aq} and th e initial mineral concentration is given in Table~\ref{calcite_min}.
+
+\begin{table}[t]
+\caption{Aqueous concentrations used in the calcite dissolution exercise.}
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+Aqueous component & $C_{init}$ & $C_{inflow}$ \\
+                  & $(mol\ l^{-1}_w)$ & $(mol\ l^{-1}_w)$ \\ \hline
+pH   &  9.91                      &  7.00                      \\
+pe   &  4.00                      &  4.00                      \\
+C(4) &  $1.228 \times 10^{-4}$   &  0                         \\
+Ca   &  $1.228 \times 10^{-4}$   &  0                         \\
+Na   &  0                         &  $1.000 \times 10^{-3}$   \\
+Cl   &  0                         &  $1.000 \times 10^{-3}$   \\ \hline
+\end{tabular}
+\label{calcite_aq}
+\end{center}
+\end{table}
+
+\begin{table}[t]
+\caption{Initial mineral concentration used in the calcite dissolution exercise.}
+\begin{center}
+\begin{tabular}{l c}
+\hline
+Mineral                  & $C_{init}$             \\
+                         & $(mol\ l^{-1}_{vol})$  \\ \hline
+Calcite ($\mathrm{CaCO_3}$) & $1.000 \times 10^{-4}$ \\ \hline
+\end{tabular}
+\label{calcite_min}
+\end{center}
+\end{table}
+
+Note that mineral concentrations in PHT3D are expressed as moles per
+litre of \textit{bulk volume} $(mol\ l^{-1}_{vol})$, not per litre of
+water. The initial calcite concentration of $1.0 \times 10^{-4}\ mol\ l^{-1}_{vol}$ is intentionally small such that the dissolution front will reach the downstream end of the model within the 100-day simulation.
+
+\noindent To enter these values into ORTI proceed as follows:
+
+\begin{itemize}
+
+\item The composition of the initial water needs to be entered under
+the {\color{blue}Solutions} Tab in the {\color{blue}Background} column.
+Activate all relevant species by ticking the appropriate boxes for
+$pH$, $pe$, $C(+4)$, $Ca$, $Na$ and $Cl$
+and enter the concentrations provided in Table~\ref{calcite_aq}.
+
+\item In the next step define the inflow water composition by entering
+the values from Table~\ref{calcite_aq} in the
+{\color{blue}Solution 1} column under the {\color{blue}Solutions} Tab.
+The {\color{blue}Background} water composition will automatically be
+used to define the initial concentrations throughout the domain.
+
+\item Enter the initial mineral concentration from Table~\ref{calcite_min}
+under the {\color{blue}Phase} Tab in the {\color{blue}Backgr Mol} field.
+Leave the {\color{blue}Backgr SI} at the default value of 0,
+which means calcite is assumed to be at equilibrium with the initial
+water composition.
+
+\item To allocate the inflow water composition to the upstream injection
+boundary, go to
+{\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}PHT3D} $\rightarrow$
+{\color{blue}PH} $\rightarrow$
+{\color{blue}ph.4 Source Sink}
+and create a point Zone at the same location as the injection well
+(first cell).
+Set the {\color{blue}Zone Value} to 1.
+This instructs PHT3D to use {\color{blue}Solution 1} as the chemical
+composition of the water entering the column through that well cell.
+
+\end{itemize}
+
+% ------------------------------------------------------------
+\subsection[Running PHT3D]{Running PHT3D}
+% ------------------------------------------------------------
+
+You are now ready to run the reactive transport simulation.
+
+\begin{itemize}
+
+\item Go to {\color{blue}Parameters} $\rightarrow$
+{\color{blue}Chemistry} and use the {\color{blue}Write Button} to write
+all the input files required to run PHT3D.
+
+\item Then go to {\color{blue}Parameters} $\rightarrow$
+{\color{blue}Chemistry} and use the {\color{blue}Red Arrow Button} to
+start PHT3D.
+The simulation consists of 100 time steps of 1 day each.
+
+\item After the simulation completes, verify that no error messages
+appear and that the run finished at the expected total simulation
+time of 100 days.
+
+\end{itemize}
+
+% ------------------------------------------------------------
+\subsection[Visualisation of simulation results]{Visualisation of simulation results}
+% ------------------------------------------------------------
+
+After the end of the simulation visualise the results in various ways.
+
+\begin{itemize}
+
+\item Define a concentration profile observation by going to
+{\color{blue}Spatial Attributes} $\rightarrow$
+{\color{blue}Observation} $\rightarrow$
+{\color{blue}OBS} $\rightarrow$
+{\color{blue}obs.1} $\rightarrow$
+{\color{blue}Zone}
+and draw a horizontal line spanning the entire column length.
+Name this zone $column\_profile$.
+
+\item In the {\color{blue}Results} panel select a time step by going to
+{\color{blue}Results} $\rightarrow$
+{\color{blue}Model} $\rightarrow$
+{\color{blue}Tstep}
+and select, for example, {\color{blue}25}.
+Then select a species by going to
+{\color{blue}Results} $\rightarrow$
+{\color{blue}Chemistry} $\rightarrow$
+{\color{blue}Species}
+and choose, for example, {\color{blue}Ca}.
+You can easily move forward and backward in time by clicking
+{\color{blue}Tstep} once more and then using your keyboard arrows.
+
+\item Go to {\color{blue}Results} $\rightarrow$
+{\color{blue}Observation}
+and select {\color{blue}Profile}.
+In the following dialog select the profile along $column\_profile$,
+choose {\color{blue}Value} as the averaging method, and select
+multiple species simultaneously (Ca, C(4), Na, Cl, pH, Calcite)
+to compare their profiles.
+Use the {\color{blue}Export} button to save the data to an ASCII file
+for further post-processing in a spreadsheet.
+
+\item Repeat the visualisation for time steps 10, 25, 50 and 75 days to
+observe the progressive migration of the dissolution front through the
+column.
+
+\item If the simulation has been set up correctly, the expected results
+should show the following: (i) chloride and sodium advance as sharp
+fronts at the pore velocity ($\approx 2\ m/day$), acting as conservative
+tracers; (ii) within the zone contacted by the NaCl inflow water,
+calcite dissolves and $\mathrm{Ca^{2+}}$ and $C(4)$ are released into
+solution; (iii) ahead of the dissolution front the water composition
+remains unchanged, with Ca and $C(4)$ at their initial equilibrium
+values ($1.228 \times 10^{-4}\ mol\ l^{-1}_w$) and pH\,=\,9.91;
+(iv) once the local calcite supply is exhausted, the pH tends toward
+that of the injected solution (pH\,=\,7).
+
+\item Save the simulated concentration profiles at days 25, 50 and 75
+so you can compare them with the results from your model variants below.
+
+\end{itemize}
+
+% ------------------------------------------------------------
+\subsection[Model variants and discussion]{Model variants and discussion}
+% ------------------------------------------------------------
+
+Once you have successfully reproduced the base case simulation, explore
+the following model variants and reflect on the questions below.
+
+\subsubsection*{Effect of initial calcite concentration}
+
+Increase the initial calcite concentration from $1.0 \times 10^{-4}$ to
+$1.0 \times 10^{-3}\ mol\ l^{-1}_{vol}$ and re-run the simulation.
+
+\begin{itemize}
+
+\item How does the higher calcite concentration affect the position and
+sharpness of the dissolution front after 100 days?  Why?
+
+\item How does the dissolved $\mathrm{Ca^{2+}}$ concentration profile
+change?  What is the maximum dissolved $\mathrm{Ca^{2+}}$ concentration
+in the column and how does it compare to the equilibrium value?
+
+\item Under what conditions would you expect the dissolution front to
+slow down or stall?
+
+\end{itemize}
+
+\subsubsection*{Effect of dispersivity}
+
+Reset the initial calcite concentration to
+$1.0 \times 10^{-4}\ mol\ l^{-1}_{vol}$.
+Then increase the longitudinal dispersivity from 0.01\,m to 1.0\,m
+and re-run the simulation.
+
+\begin{itemize}
+
+\item Compare the concentration profiles of Ca, Cl and Calcite at day
+50 between the low- and high-dispersivity cases.
+How does dispersivity affect the sharpness of the dissolution front?
+
+\item Does dispersivity affect the \textit{total} amount of calcite
+dissolved after 100 days?  Explain your answer.
+
+\end{itemize}
+
+\subsubsection*{Conservative versus reactive fronts}
+
+\begin{itemize}
+
+\item At day 50, compare the position of the $\mathrm{Cl^-}$ front
+(conservative tracer) with that of the $\mathrm{Ca^{2+}}$ front.
+Are they at the same location?  If not, explain why they might differ.
+
+\item Sketch (or export and annotate) a figure showing the Cl, Ca, $C(4)$
+and Calcite profiles at days 25, 50 and 75.
+Use this to explain the concept of a \textit{dissolution front} in your
+own words.
+
+\item How would the simulation change if the inflow water also contained
+dissolved $\mathrm{CO_2}$ (i.e.,\ $C(4) > 0$ at lower pH)?
+Would calcite dissolve faster or slower?
+Would the dissolution front propagate faster or slower than the
+$\mathrm{Cl^-}$ front?
+
+\end{itemize}
+
+\subsubsection*{Connection to \textit{in situ} leaching}
+
+\begin{itemize}
+
+\item This exercise is conceptually related to \textit{in situ} recovery
+(ISR) of metals, where a lixiviant solution is injected to dissolve a
+target mineral. Drawing on the results of this exercise, what controls the rate at which a dissolution front advances through an ore body?
+
+\item If this were a copper-bearing system instead of a calcite system,
+what additional geochemical reactions and complications would you expect
+to encounter?
+
+\end{itemize}
+
+% \end{document}

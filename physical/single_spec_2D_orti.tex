@@ -1,6 +1,6 @@
-\chapter{Single-Species Transport}
-\def\shorttitle{Single-Species Transport} %
-
+\chapter{Evaluating groundwater flow and solute transport with MODFLOW and MT3DMS}
+\def\shorttitle{Solute Transport} %
+% HP we could add a little background here \section{background}
 \section{MT3DMS Exercise 1, Part 1: Single-Species 2-D Transport Simulation}
 The main purpose of this first exercise is to learn the use of MODFLOW and MT3DMS 
 for the analysis of a 2-D contaminant transport problem under both 
@@ -299,7 +299,7 @@ or other postprocessing tools.
 %\includegraphics[height=0.9\textwidth, angle = 270]{mt3dms_ex1_2dcont.eps}
 \caption[Concentration contours after a 800 day simulation time under 
 pumping conditions]{Concentration contours after a 800 day simulation time under 
-pumping conditions under pumping conditions}
+pumping conditions.}
 \label{fig:mt3dms_ex1_2dcont}
 \end{figure}
 
@@ -352,14 +352,14 @@ minimally affected by numerical dispersion. The Upstream Finite-Difference solut
 on the other hand, shows a significant amount of numerical dispersion.
 In addition, check the mass balance errors for each solution. TVD and FD should have
 close to zero mass balance errors, while MOC has a large mass balance error at the
-beginning. However it should diminish quickly, which is typical for 
-particle-tracking based solution techniques.
+beginning. However, it should diminish quickly, which is typical for 
+particle-tracking-based solution techniques.
 
 \subsection{Varying the grid resolution}
 
-With iPHT3D it is possible to easily vary the model discretisation
+With ORTI3D it is possible to easily vary the model discretisation
 without the need to change any other model parameters.
-To test this effect on the breakthrough curve otained with the Finite-Difference solution technique, 
+To test this effect on the breakthrough curve obtained with the Finite-Difference solution technique, 
 go to {\color{blue}Parameters} $\rightarrow$ {\color{blue}1.Model} 
 $\rightarrow$ {\color{blue}Domain} and change the grid cell size.	 
 

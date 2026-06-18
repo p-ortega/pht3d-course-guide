@@ -153,42 +153,46 @@
 \fancyfoot{} % Clear current setting
 \fancyfoot[LE,RO]{\thepage} % Page number on the left on even pages, to the right on odd pages
 \rhead[]{\normalsize\slshape \fancyplain{}{\shorttitle}}    % Right top header
-\include{intro/text_ipht3d}
+
 \lhead[\normalsize\slshape\fancyplain{}{Chapter \thechapter}]{} % Left top header
 \thispagestyle{empty} % Suppress page number on separator page
 
+\include{intro/text_orti}
 \include{physical/single_spec_2D_orti}
+\include{physical/franken_transport_orti}
 % \include{physical/single_spec_3d}
-% \include{physical/franken_transport_orti}
 \include{equilibrium/text_kigam2019}
 % \include{physical/text}
 \include{equilibrium/phreeqc_mineral_reactions}
 \include{coupling/theory}
 % \include{coupling/engesgaard_kipp_ipht3d}
+\include{coupling/calcite_dis_front_orti}
 \include{coupling/franken_orti}
-% \include{coupling/walter_ipht3d}
-\include{kinetics/kin_intro}
+\include{coupling/walter_ipht3d}
 \include{redox/redox_titration_kigam2019}
-
-% \include{exchange/text_orti}
-% \include{exchange/haerens_orti_bordeaux}
+\include{kinetics/kin_intro}
+\include{kinetics/prommer_stuyfzand_orti}
+\include{redox/greskowiak_orti}
+\include{kinetics/prommer_davis_barry_orti}
+\include{exchange/text_orti}
+\include{exchange/haerens_orti_shenzhen}
 % \include{exchange/wallis_bentonite_orti}
 % \include{scm/surface_ipht3d}
 % \include{scm/kent_et_al_ipht3d}
 % \include{scm/dd_u_ipht3d_final}
 %\include{redox/redox_titration}
 \include{scm/surface_ipht3d}
-\include{scm/kent_et_al_ipht3d}
-% \include{scm/dd_u_ipht3d_final}
+\include{scm/kent_et_al_orti}
+\include{scm/dd_u_orti2026}
 %\include{scm/bhasker_ipht3d}
 % \include{redox/greskowiak_orti}
 
 %\include{kinetics/intro}
 %\include{kinetics/aerob}
 %\include{kinetics/awr}
-%\include{kinetics/prommer_davis_barry_ipht3d}
+
 %\include{arsenic/arsenic_vp_orti}
-\include{kinetics/prommer_stuyfzand_ipht3d_sustech}
+
 %\include{kinetics/isotopes_ipht3d}
 \backmatter%
 \bibliography{references/references}

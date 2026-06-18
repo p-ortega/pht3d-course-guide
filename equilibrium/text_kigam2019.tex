@@ -1,7 +1,9 @@
-\chapter{Calculation of a sample's equilibrium composition: Speciation and saturation indices}
-\def\shorttitle{Speciation and saturation indices} % Abbreviated chapter title for right top header
+\chapter{Evaluating groundwater compositions with PHREEQC}
+\section{Background}
 
-This chapter will be dedicated to equilibrium chemistry. The kinetics of geochemical processes, i.e., the description of how and at what rate a system approaches equilibrium, will be discussed later. The reader is also referred to the standard textbooks on aqueous geochemistry for an elaborate treatment of this subject as well as for a more detailed treatment of equilibrium chemistry \citep[e.g.][]{ap2005, stumorg}.
+This section will briefly introduce how the concept of equilibrium chemistry, and specifically the modelling of equilibrium reactions, can be used to evaluate groundwater quality. Beyond this brief introduction, the reader is referred to the standard textbooks on aqueous geochemistry for an elaborate treatment of this subject  \citep[e.g.][]{ap2005, stumorg}.
+
+\section{Speciation}
 
 Essential to the description of the equilibrium composition of a geochemical system is the law of mass action. According to this law, the distribution of the species in the reaction:
 \begin{equation}
@@ -35,7 +37,7 @@ The equilibrium constant is formally dimensionless because the concentration of 
 
 Application of the law of mass action requires that the activities of the species are to be known. Generally, however, we are only provided with \textit{concentrations} (because those are analyzed in the laboratory), which do not equal activities because of (1) electrostatic shielding and (2) the formation of aqueous complexes. Geochemical models can take these effects into account, which will be explained below.
 
-\section{Electrostatic shielding}
+\subsection{Electrostatic shielding}
 Activities reflect the tendency of ions to react and form a precipitate \citep{ap2005}. An ion in solution is surrounded by water molecules and other dissolved ions that act as a shield and reduce the reactivity of the ion. This effect can be corrected for by using a so-called activity coefficient that relates the activity of an ion to its concentration, for example \ca:
 \begin{equation}
 [\ca]=\gamma_{\ca} \cdot \frac{\slt{\ca}}{\slt[0]{\ca}} = \gamma_\ca \cdot \slt{\ca}
@@ -57,7 +59,7 @@ where $z_i$ is the charge of ion $i$ (e.g. 2 for \ca).
 
 Although these calculations can be awkward, they are straightforward and can still be done by hand, so the effect of electrostatic shielding is quite easily corrected for.
 
-\section{Formation of aqueous complexes}
+\subsection{Formation of aqueous complexes}
 The second reason why the activity of an ion is lower than its concentration is that it forms aqueous complexes with other ions. Laboratory analyses typically report the total concentration of an ion, which may be present in many different complexes, e.g. \ca:
 \begin{equation}
 \sum \ca = \slt{\ca} + \slt{\caoh} + \slt{\caco} + \slt{\caso} + \slt{\capo} + \slt{\caf} + \ldots
@@ -77,7 +79,7 @@ This requires an iterative procedure (figure \ref{fig:flowchart}). As a first es
 
 \newpage
 
-\subsection{Your first PHREEQC input file}
+\section{Creating your first PHREEQC input file}
 To do calculations, you need to tell the program what it has to do. This is done via input files that
 contain a list of instructions. So-called \textit{keywords} are used that have an intuitive meaning. The keyword
 SOLUTION for example is used to define the (measured) composition of our water sample. Within
@@ -113,7 +115,7 @@ To start the calculations, click Calculations $\rightarrow$ Start in the main me
 The output file contains a lot of data and it is easy to get lost in all the numbers. The results of the speciation calculations are reported under the heading `Beginning of initial solution calculations'. Under `Solution composition', the molality and the number of moles of each element are reported. These should be equal to the concentrations that were entered under the SOLUTION keyword, although small deviations may occur when the mass balance (equation \ref{eq:massbalance}) could not be solved exactly. The next group of data is `Description of solution', which lists some characteristics of the solution, for example pH and ionic strength. The molalities and activities of all the aqueous species are reported under `Distribution of species'. Here for each element the molality is given (it is the same number as under `Solution composition') and the molalities of each of the aqueous species of that element sum up to
 this molality (mass balance!). In our example it can be observed that 99.84 \% of all Ca is present as uncomplexed \ca. The remainder is present as the complexes \caf\ and \caoh. The last block of data consists of the 'Saturation indices' calculated by the program.
 
-\subsection{PHREEQC Exercise 1: S. Pellegrino mineral water}
+\section{PHREEQC Exercise 1: S. Pellegrino mineral water}
 
 Since being acquired by the Swiss company Nestle, S. Pellegrino mineral water has become available many places around the world.  The S. is presumably an abbreviation for San, since it comes from the San Pellegrino district of Italy. It comes from springs in the Dolomite Mountains of northern Italy. According to the company’s website, hydrogeologic studies have shown that the water originates as snow melt and acquires its composition from interactions with volcanic and carbonate rocks during a 30-year journey underground from recharge to discharge.  Carbon dioxide is added during bottling
 
@@ -191,7 +193,7 @@ Is this within 10 \% of the reported specific conductance?
 
 \newpage
 
-\section{Saturation state}
+\section{Determining the saturation state of a water sample}
 
 The saturation index is an important parameter in aqueous geochemistry as it provides information on the minerals the groundwater has been in contact with and on which minerals are likely to precipitate or dissolve.
 
@@ -212,7 +214,7 @@ At equilibrium $IAP_\text{gyps}$ equals $K_\text{gyps}$, so $SI_\text{gyps} = 0$
 
 
 
-\subsection{Calcite saturation state and uranium(VI) speciation in sea water}
+\section{Calcite saturation state and uranium(VI) speciation in sea water}
 The basic principles of calculating a water's composition at equilibrium were presented in a landmark paper by \citet{garrels_thompson1963} and the theoretical framework presented therein continues to be applied in present-day geochemical models. Using a combination of equilibrium equations from the law of mass action and mass balance relations (as explained in the previous section), they calculated the distribution of dissolved species (speciation) in seawater at \unit{25}{\celsius} and $1.013 \cdot 10^5$ Pa (1 atm) pressure. Their results have been summarized in Figure \ref{fig:garrels}, which shows the effects of both (1) the formation of aqueous complexes and (2) electrostatic shielding. Sodium (\na), for example, hardly forms any aqueous complex but due to electrostatic effects its activity amounts to only 75 \% of its total concentration. More than 90 \% of the carbonate ion (\cb) is tied up in a complex and it can be seen that its activity amounts to a mere 2 \% of its total concentration when the effect of electrostatic shielding is taken into account as well.
 
 \begin{figure}[tb]
@@ -299,7 +301,7 @@ pH  & 7.8   & 7.3   & 9.62  \\
 \label{tab:fluor}
 \end{table}
 
-\subsection{PHREEQC Exercise 2: Fluoride-rich waters}
+\section{PHREEQC Exercise 2: Fluoride-rich waters}
 Fluorite is a common mineral in volcanic rocks and an important source of fluoride in groundwater. High fluoride concentration in drinking water are known to cause fluorosis, a painful crippling disease. That is why the WHO drinking water standard is 1.5 mg/l, although this may even be too high for arid areas where people consume a lot of water.
 
 \begin{itemize}
